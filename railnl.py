@@ -36,9 +36,10 @@ class Railnl:
     def stations_dictionary(self) -> dict:
          return self.stations
 
+    # Find the highest number of station connections
     def max_connections(self) -> int:
-        return max(self.stations[station].number_of_connections() for station in self.stations.keys())
-            
+        connections = lambda station: self.stations[station].number_of_connections()
+        return max(connections(station) for station in self.stations.keys())
           
 
     
