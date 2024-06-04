@@ -15,7 +15,6 @@ class Railnl:
                         station = Station(name, float(x), float(y))
                         self.stations[name] = station
 
-
     def load_connections(self) -> None:
         with open("data/ConnectiesHolland.csv") as f:
                     for line in f:
@@ -28,7 +27,6 @@ class Railnl:
     def max_connections(self) -> int:
         print(self.stations.keys())
         return max(self.stations[station].number_of_connections() for station in self.stations.keys())
-
 
 if __name__ == "__main__":
     railnl = Railnl()

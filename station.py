@@ -1,8 +1,10 @@
 class Station:
-    def __init__(self, name: str, x: float, y: float):
-        self.name = name
-        self.x = x
-        self.y = y
+    """Station class containing location and connections."""
+
+    def __init__(self, name: str, lat: float, long: float):
+        self.name = name    
+        self.lat = lat  
+        self.long = long  
         self.connections: dict["Station", int] = {}
 
     def add_connection(self, other: "Station", afstand: int) -> None:
@@ -10,4 +12,6 @@ class Station:
 
     def number_of_connections(self) -> int:
         return len(self.connections)
-
+    
+    def location(self) -> tuple:
+        return (self.lat, self.long)
