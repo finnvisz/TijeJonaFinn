@@ -1,4 +1,4 @@
-from our_station import Station
+from our_station import Station # type: ignore
 
 class Railnl:
 
@@ -7,31 +7,37 @@ class Railnl:
         self.load_stations()
         self.load_connections()
     
+    # Create and append Station objects to self.stations dictionary
     def load_stations(self) -> None:
-        with open("data/StationsHolland.csv") as f:
-                    for line in f:
+        with open("data/StationsHolland.csv") as file:
+                    for line in file:
                         if line == "\n":
                             break
-                        name, x, y = line.strip().split(',')
-                        station = Station(name, float(x), float(y))
+                        
+                        # Create station object from extracted triple
+                        name, lat, long = line.strip().split(',')
+                        station = Station(name, float(lat), float(long))
                         self.stations[name] = station
 
+    # Add connections to Station objects in self.stations
     def load_connections(self) -> None:
         with open("data/ConnectiesHolland.csv") as f:
                     for line in f:
                         if line == "\n":
                             break
+
+                        # Use our_station add_connection method on extracted
                         station1, station2, afstand = line.strip().split(',')
-                        self.stations[station1].add_connection(self.stations[station2], afstand)
-                        self.stations[station2].add_connection(self.stations[station1], afstand)
+                        station1 = self.stations[station1]
+                        station2 = self.stations[station2]
+                        station1.add_connection(station2, afstand)
+                        station1.add_connection(station2, afstand)
+
+    def stations_dictionary(self) -> dict:
+         return self.stations
 
     def max_connections(self) -> int:
-        print(self.stations.keys())
         return max(self.stations[station].number_of_connections() for station in self.stations.keys())
-
-if __name__ == "__main__":
-    railnl = Railnl()
-    print(railnl.max_connections())
             
           
 
