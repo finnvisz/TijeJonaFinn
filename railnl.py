@@ -1,6 +1,7 @@
-from station import Station
+from our_station import Station
 
 class Railnl:
+
     def __init__(self) -> None:
         self.stations: dict[str, "Station"] = {}
         self.load_stations()
@@ -30,7 +31,6 @@ class Railnl:
 
 if __name__ == "__main__":
     railnl = Railnl()
-    
     print(railnl.max_connections())
             
           
