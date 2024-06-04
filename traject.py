@@ -4,3 +4,4 @@ class Traject:
         self.time = 0
 
     def add_connection(self, station1: "Station", station2: "Station", duur: int) -> None:
+        self.connections_used.append([station1.name, station2.name, duur])
