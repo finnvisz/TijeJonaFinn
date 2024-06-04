@@ -13,7 +13,6 @@ class Railnl:
                         station = Station(name, x, y)
                         self.stations[name] = station
 
-
     def load_connections(self) -> None:
         with open("data/ConnectiesHolland.csv") as f:
                     for line in f:
@@ -22,4 +21,4 @@ class Railnl:
                         station1, station2, afstand = line.strip().split(',')
                         station1.add_connection(station2, afstand)
 
-
+    # Git commit oefen
