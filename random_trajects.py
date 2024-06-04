@@ -4,6 +4,7 @@ from typing import Any
 from our_station import Station
 from railnl import Railnl
 from traject import Traject
+import matplotlib.pyplot as plt
 
 # load in all the stations and connections
 railnl = Railnl()
@@ -34,3 +35,21 @@ while number_of_trajects < 7:
     number_of_trajects += 1
     print(traject.connections_used)
     trajects.append(traject)
+
+
+plt.figure(figsize=(15, 15))
+for tra in trajects:
+    for connection in tra.connections_used:
+        x_values = [railnl.stations[connection[0]].long, railnl.stations[connection[1]].long]
+        y_values = [railnl.stations[connection[0]].lat, railnl.stations[connection[1]].lat]
+        plt.plot(x_values, y_values, marker='o', linestyle='-')
+        # Annotate start station
+        plt.text(railnl.stations[connection[0]].long, railnl.stations[connection[0]].lat, connection[0], ha='center')
+        # Annotate end station
+        plt.text(railnl.stations[connection[1]].long, railnl.stations[connection[1]].lat, connection[1], ha='center')
+plt.title('Railway Network')
+plt.xlabel('X Coordinate')
+plt.ylabel('Y Coordinate')
+plt.grid(True)
+plt.savefig('railway_network.png')
+plt.close()
