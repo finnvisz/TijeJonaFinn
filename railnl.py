@@ -10,9 +10,8 @@ class Railnl:
                         if line == "\n":
                             break
                         name, x, y = line.strip().split(',')
-                        station = Station(name, x, y)
+                        station = Station(name, float(x), float(y))
                         self.stations[name] = station
-        print(self.stations)
 
 
     def load_connections(self) -> None:
@@ -31,8 +30,8 @@ class Railnl:
 
 if __name__ == "__main__":
     railnl = Railnl()
-    railnl.load_connections()
     railnl.load_stations()
+    railnl.load_connections()
     print(railnl.max_connections())
             
           
