@@ -3,6 +3,8 @@ from station import Station
 class Railnl:
     def __init__(self) -> None:
         self.stations: dict[str, "Station"] = {}
+        self.load_stations()
+        self.load_connections()
     
     def load_stations(self) -> None:
         with open("data/StationsHolland.csv") as f:
@@ -30,8 +32,7 @@ class Railnl:
 
 if __name__ == "__main__":
     railnl = Railnl()
-    railnl.load_stations()
-    railnl.load_connections()
+    
     print(railnl.max_connections())
             
           
