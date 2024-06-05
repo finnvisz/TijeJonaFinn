@@ -1,42 +1,57 @@
 from our_station import Station # type: ignore
 
-class Railnl():
-    """Class loading stations and connections into station objects."""
+class Railnl:
+    """Class containing all stations and their connections."""
 
     def __init__(self) -> None:
+        """Creates Railnl object, loads stations and connections into it."""
         self.stations: dict[str, "Station"] = {}
-        self.load_stations()
-        self.load_connections()
+        self.load_stations("data/StationsHolland.csv")
+        self.load_connections("data/ConnectiesHolland.csv")
     
-    # Create and append Station objects to self.stations dictionary
-    def load_stations(self) -> None:
-        with open("../data/StationsHolland.csv") as file:
-                    for line in file:
-                        if line == "\n":
-                            break
-                        
-                        # Create station object from extracted triple
-                        name, lat, long = line.strip().split(',')
-                        station = Station(name, float(lat), float(long))
-                        self.stations[name] = station
+    def load_stations(self, filepath: str) -> None:
+        """Load stations from data file into self.stations.
+        
+        - Pre: filepath is a valid path to a CSV file containing station data.
+        CSV file is formatted as follows:
+        `StationName,latitude,longitude`
+        
+        - Post: self.stations contains all stations from the file.
+        """
+        # Open file
+        with open(filepath) as file:
+            # and read lines until EOF
+            while (line := file.readline()) != "":
+                # Create station object from extracted triple
+                name, lat, long = line.strip().split(',')
+                station = Station(name, float(lat), float(long))
+                # And add to internal dictionary
+                self.stations[name] = station
 
     # Add connections to Station objects in self.stations
-    def load_connections(self) -> None:
-        with open("../data/ConnectiesHolland.csv") as f:
-                    for line in f:
-                        if line == "\n":
-                            break
-                        
-                        # Read station names as strings
-                        stat1_s, stat2_s, afstand = line.strip().split(',')
+    def load_connections(self, filepath: str) -> None:
+        """Load connections from data file into the stations of self.stations.
+        
+        - Pre: filepath is a valid path to a CSV file containing connection data.
+        CSV file is formatted as follows:
+        `StationName1,StationName2,afstand`
+        
+        - Post: station objects in self.stations contain their connections.
+        """
+        # Open file
+        with open(filepath) as file:
+            # and read lines until EOF
+            while (line := file.readline()) != "":      
+                # Read station names as strings
+                stat1_s, stat2_s, afstand = line.strip().split(',')
 
-                        # Find station object corresponding to station string
-                        stat1_o = self.stations[stat1_s] 
-                        stat2_o = self.stations[stat2_s]
+                # Find station object corresponding to station string
+                stat1_o = self.stations[stat1_s] 
+                stat2_o = self.stations[stat2_s]
 
-                        # Use add_connection method on extracted
-                        stat1_o.add_connection(stat2_o, afstand)
-                        stat2_o.add_connection(stat1_o, afstand)
+                # Use add_connection method on station objects
+                stat1_o.add_connection(stat2_o, afstand)
+                stat2_o.add_connection(stat1_o, afstand)
 
     def stations_dictionary(self) -> dict:
         return self.stations
