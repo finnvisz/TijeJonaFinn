@@ -3,16 +3,16 @@
 import random
 from typing import Any
 from our_station import Station # type: ignore
-from railnl import Railnl # type: ignore
+from load import Load_in # type: ignore
 from traject import Traject # type: ignore
 import matplotlib.pyplot as plt # type: ignore
 
-railnl = Railnl() # Load station data 
+load = Load_in() # Load station data 
 trajects: list[Any] = []
 
 for _ in range(6):
     time_used = 0
-    current_station = random.choice(list(railnl.stations_dictionary().values()))
+    current_station = random.choice(list(load.stations_dictionary().values()))
     traject = Traject()
 
     while True:
@@ -45,12 +45,12 @@ for _ in range(6):
 plt.figure(figsize=(15, 15))
 for tra in trajects:
     for connection in tra.connections_used:
-        x_values = [railnl.stations[connection[0]].long, railnl.stations[connection[1]].long]
-        y_values = [railnl.stations[connection[0]].lat, railnl.stations[connection[1]].lat]
+        x_values = [load.stations[connection[0]].long, load.stations[connection[1]].long]
+        y_values = [load.stations[connection[0]].lat, load.stations[connection[1]].lat]
         plt.plot(x_values, y_values, marker='o', linestyle='-')
         # Annotate stations
-        plt.text(railnl.stations[connection[0]].long, railnl.stations[connection[0]].lat, connection[0], ha='center')
-        plt.text(railnl.stations[connection[1]].long, railnl.stations[connection[1]].lat, connection[1], ha='center')
+        plt.text(load.stations[connection[0]].long, load.stations[connection[0]].lat, connection[0], ha='center')
+        plt.text(load.stations[connection[1]].long, load.stations[connection[1]].lat, connection[1], ha='center')
 plt.title('Railway Network')
 plt.xlabel('X Coordinate')
 plt.ylabel('Y Coordinate')

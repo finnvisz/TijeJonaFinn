@@ -1,11 +1,11 @@
 from manim import *
-from railnl import Railnl # type: ignore
+from load import Load_in # type: ignore
 
 class Map(MovingCameraScene):
 
     # Obtain station name object dictionary via Railnl class
     def setup(self):
-        load = Railnl()
+        load = Load_in()
         self.station_dictionary = load.stations_dictionary()
 
     # Instantiate points and labels to appear
