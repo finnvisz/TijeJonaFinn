@@ -1,6 +1,7 @@
 from our_station import Station # type: ignore
 
 class Railnl:
+    """Class loading data into station objects."""
 
     def __init__(self) -> None:
         self.stations: dict[str, "Station"] = {}
@@ -25,21 +26,26 @@ class Railnl:
                     for line in f:
                         if line == "\n":
                             break
+                        
+                        # Read station names as strings
+                        stat1_s, stat2_s, afstand = line.strip().split(',')
 
-                        # Use our_station add_connection method on extracted
-                        station1, station2, afstand = line.strip().split(',')
-                        station1 = self.stations[station1]
-                        station2 = self.stations[station2]
-                        station1.add_connection(station2, afstand)
-                        station1.add_connection(station2, afstand)
+                        # Find station object corresponding to station string
+                        stat1_o = self.stations[stat1_s] 
+                        stat2_o = self.stations[stat2_s]
+
+                        # Use add_connection method on extracted
+                        stat1_o.add_connection(stat2_o, afstand)
+                        stat2_o.add_connection(stat1_o, afstand)
 
     def stations_dictionary(self) -> dict:
          return self.stations
 
     # Find the highest number of station connections
     def max_connections(self) -> int:
-        connections = lambda station: self.stations[station].number_of_connections()
-        return max(connections(station) for station in self.stations.keys())
-          
+        stations = self.stations.keys()
 
+        # Find amount of connections using amount_connecting method
+        connections = lambda station: self.stations[station].amount_connecting()
+        return max(connections(station) for station in stations)
     

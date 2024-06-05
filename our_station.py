@@ -10,7 +10,7 @@ class Station:
     def add_connection(self, other: "Station", afstand: int) -> None:
         self.connections[other] = afstand
 
-    def number_of_connections(self) -> int:
+    def amount_connecting(self) -> int:
         return len(self.connections)
     
     def location(self) -> tuple:
