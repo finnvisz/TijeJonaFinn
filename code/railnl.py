@@ -10,7 +10,7 @@ class Railnl():
     
     # Create and append Station objects to self.stations dictionary
     def load_stations(self) -> None:
-        with open("data/StationsHolland.csv") as file:
+        with open("../data/StationsHolland.csv") as file:
                     for line in file:
                         if line == "\n":
                             break
@@ -22,7 +22,7 @@ class Railnl():
 
     # Add connections to Station objects in self.stations
     def load_connections(self) -> None:
-        with open("data/ConnectiesHolland.csv") as f:
+        with open("../data/ConnectiesHolland.csv") as f:
                     for line in f:
                         if line == "\n":
                             break
