@@ -1,6 +1,6 @@
 from our_station import Station # type: ignore
 
-class Railnl:
+class Railnl():
     """Class loading stations and connections into station objects."""
 
     def __init__(self) -> None:
@@ -39,7 +39,7 @@ class Railnl:
                         stat2_o.add_connection(stat1_o, afstand)
 
     def stations_dictionary(self) -> dict:
-         return self.stations
+        return self.stations
 
     # Find the highest number of station connections
     def max_connections(self) -> int:

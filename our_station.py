@@ -22,6 +22,9 @@ class Station:
     def connection_duration(self, station):
         return self.connections[station]
     
+    def station_name(self):
+        return self.name
+    
     # Check if station has connections
     def has_connections(self):
         if len(self.connections) > 0:
