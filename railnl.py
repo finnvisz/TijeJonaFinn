@@ -1,7 +1,7 @@
 from our_station import Station # type: ignore
 
 class Railnl:
-    """Class loading data into station objects."""
+    """Class loading stations and connections into station objects."""
 
     def __init__(self) -> None:
         self.stations: dict[str, "Station"] = {}
@@ -48,4 +48,3 @@ class Railnl:
         # Find amount of connections using amount_connecting method
         connections = lambda station: self.stations[station].amount_connecting()
         return max(connections(station) for station in stations)
-    

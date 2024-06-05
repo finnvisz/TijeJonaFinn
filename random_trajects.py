@@ -1,16 +1,12 @@
 #algoritm to make a random solution
 import random
 from typing import Any
-from our_station import Station
-from railnl import Railnl
-from traject import Traject
-import matplotlib.pyplot as plt
+from our_station import Station # type: ingore
+from railnl import Railnl # type: ignore
+from traject import Traject # type: ignore
+import matplotlib.pyplot as plt # type: ingore
 
-# load in all the stations and connections
 railnl = Railnl()
-railnl.load_stations()
-railnl.load_connections()
-
 number_of_trajects = 0
 trajects: list[Any] = []
 
@@ -28,7 +24,7 @@ while number_of_trajects < 7:
         # tel de duur van die verbinding op bij time_used als dat <= 120 is
         if time_used + int(current_station.connections[connection]) <= 120:
             time_used += int(current_station.connections[connection])
-            traject.add_connection(current_station, connection, int(current_station.connections[connection]))
+            traject.add(current_station, connection, int(current_station.connections[connection]))
             current_station = connection
         else:
             break
