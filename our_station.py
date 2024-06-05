@@ -15,3 +15,15 @@ class Station:
     
     def location(self) -> tuple:
         return (self.lat, self.long)
+    
+    def connecting_stations(self):
+        return self.connections.keys()
+    
+    def connection_duration(self, station):
+        return self.connections[station]
+    
+    # Check if station has connections
+    def has_connections(self):
+        if len(self.connections) > 0:
+            return True
+        return False

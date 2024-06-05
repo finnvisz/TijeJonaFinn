@@ -1,33 +1,43 @@
-#algoritm to make a random solution
+"""Algorithm script finding 7 random railroad routes."""
+
 import random
 from typing import Any
-from our_station import Station # type: ingore
+from our_station import Station # type: ignore
 from railnl import Railnl # type: ignore
 from traject import Traject # type: ignore
-import matplotlib.pyplot as plt # type: ingore
+import matplotlib.pyplot as plt # type: ignore
 
-railnl = Railnl()
-number_of_trajects = 0
+railnl = Railnl() # Load station data
+number_of_trajects = 0  
 trajects: list[Any] = []
 
 while number_of_trajects < 7:
     time_used = 0
-    current_station = random.choice(list(railnl.stations.values()))
+    current_station = random.choice(list(railnl.stations_dictionary().values()))
     traject = Traject()
 
     while True:
-        # kies random verbinding uit de connections die je hebt
-        if not current_station.connections:
-            # If there are no connections available, break out of the loop
-            break
-        connection = random.choice(list(current_station.connections.keys()))
-        # tel de duur van die verbinding op bij time_used als dat <= 120 is
-        if time_used + int(current_station.connections[connection]) <= 120:
-            time_used += int(current_station.connections[connection])
-            traject.add(current_station, connection, int(current_station.connections[connection]))
+
+        # Break if current_station has no connections
+        if not current_station.has_connections():
+            break 
+        
+        # Find random connection from current_station
+        connection = random.choice(list(current_station.connecting_stations()))
+
+        # Calculate new total duration of route
+        duration = int(current_station.connection_duration(connection))
+        total = time_used + duration
+
+        # Continue if connection is possible considering time_used
+        if total <= 120:
+            time_used = total
+            traject.add(current_station, connection, duration)
             current_station = connection
+
         else:
             break
+
     number_of_trajects += 1
     print(traject.connections_used)
     trajects.append(traject)
