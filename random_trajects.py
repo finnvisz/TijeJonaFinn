@@ -7,11 +7,10 @@ from railnl import Railnl # type: ignore
 from traject import Traject # type: ignore
 import matplotlib.pyplot as plt # type: ignore
 
-railnl = Railnl() # Load station data
-number_of_trajects = 0  
+railnl = Railnl() # Load station data 
 trajects: list[Any] = []
 
-while number_of_trajects < 7:
+for _ in range(6):
     time_used = 0
     current_station = random.choice(list(railnl.stations_dictionary().values()))
     traject = Traject()
@@ -35,10 +34,10 @@ while number_of_trajects < 7:
             traject.add(current_station, connection, duration)
             current_station = connection
 
+        # Else consider traject finished
         else:
             break
 
-    number_of_trajects += 1
     print(traject.connections_used)
     trajects.append(traject)
 
