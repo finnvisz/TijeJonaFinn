@@ -12,20 +12,16 @@ trajects: list[Any] = []
 
 for _ in range(6):
     time_used = 0
-    current_station = random.choice(list(load.stations_dictionary().values()))
+    current_station = random.choice(list(load.get_stations_dictionary().values()))
     traject = Traject()
 
-    while True:
-
-        # Break if current_station has no connections
-        if not current_station.has_connections():
-            break 
-        
+    # Break when no connections are left in current station
+    while current_station.has_connections():
         # Find random connection from current_station
         connection = random.choice(list(current_station.connecting_stations()))
 
         # Calculate new total duration of route
-        duration = int(current_station.connection_duration(connection))
+        duration = current_station.connection_duration(connection)
         total = time_used + duration
 
         # Continue if connection is possible considering time_used
