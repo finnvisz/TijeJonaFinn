@@ -7,7 +7,7 @@ from our_station import Station
 
 if __name__ == "__main__":
     data = Load_in("Holland")
-    algorithm = RandomAlgorithm()
+    algorithm = RandomAlgorithm(data)
     algorithm.make_picture()
     score = Score(algorithm)
     print(score.calculate())

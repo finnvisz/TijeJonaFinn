@@ -3,9 +3,10 @@ from load import Load_in
 from traject import Traject
 import random
 
+
 class RandomAlgorithm(Algorithm):
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, load: Load_in) -> None:
+        super().__init__(load)
 
     def run(self) -> None:
         for _ in range(7):

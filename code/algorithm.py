@@ -1,15 +1,14 @@
 """Algorithm script finding 7 random railroad routes."""
 
-import random
 from typing import Any
-from our_station import Station # type: ignore
 from load import Load_in # type: ignore
-from traject import Traject # type: ignore
 import matplotlib.pyplot as plt # type: ignore
+import matplotlib.cm as cm
+import numpy as np
 
 class Algorithm:
-    def __init__(self) -> None:
-        self.load = Load_in("Holland")
+    def __init__(self, load: Load_in) -> None:
+        self.load = load
         self.trajects: list[Any] = []
 
     
@@ -19,13 +18,16 @@ class Algorithm:
 
     def make_picture(self):
         self.run()
+        num_trajects = len(self.trajects)
+        colors = plt.get_cmap('tab10', num_trajects)  # 'tab10' colormap has 10 distinct colors
+
         plt.figure(figsize=(15, 15))
-        for traject in self.trajects:
+        for idx, traject in enumerate(self.trajects):
+            color = colors(idx)
             for connection in traject.connections_used:
                 x_values = [self.load.stations[connection[0]].long, self.load.stations[connection[1]].long]
                 y_values = [self.load.stations[connection[0]].lat, self.load.stations[connection[1]].lat]
-                plt.plot(x_values, y_values, marker='o', linestyle='-')
-                # Annotate stations
+                plt.plot(x_values, y_values, marker='o', linestyle='-', color=color)
                 plt.text(self.load.stations[connection[0]].long, self.load.stations[connection[0]].lat, connection[0], ha='center')
                 plt.text(self.load.stations[connection[1]].long, self.load.stations[connection[1]].lat, connection[1], ha='center')
         plt.title('Railway Network')
