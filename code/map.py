@@ -1,5 +1,5 @@
 from manim import *
-from load import Load_in # type: ignore
+from load import Load_in 
 
 class Map(MovingCameraScene):
 

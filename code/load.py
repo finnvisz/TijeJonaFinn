@@ -54,8 +54,7 @@ class Load_in:
                 stat1_o.add_connection(stat2_o, afstand)
                 stat2_o.add_connection(stat1_o, afstand)
 
-                # add the connections to this class so we know 
-                # what all the connections we need to use are
+                # add the connections to this class
                 self.connections.append((stat1_o, stat2_o))
                 self.connections.append((stat2_o, stat1_o))
 
