@@ -42,7 +42,7 @@ class Algorithm:
             self.trajects.append(traject)
 
 
-    def make_picture(self):
+    def make_picture(self) -> None:
         self.random_algorithm()
         plt.figure(figsize=(15, 15))
         for tra in self.trajects:
