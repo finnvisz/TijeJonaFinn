@@ -1,6 +1,12 @@
 """File in root dir because of import difficulties"""
 # TODO: Allow relative imports to put tests in pytest folder
-from railnl import Railnl
+# import os
+
+# current = os.pwd()
+# previous = ...
+# previous/data/station.csv
+
+from load import Load_in as Railnl
 
 
 def test_load_stations():
