@@ -47,6 +47,7 @@ class Map(MovingCameraScene):
     
         self.create_points_labels()
         self.create_connections()
+        print(self.create_connections())
 
         # Set camera to instantiated points and labels
         self.camera.frame.move_to(self.station_points)
