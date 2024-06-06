@@ -1,4 +1,4 @@
-from our_station import Station # type: ignore
+from our_station import Station
 
 class Load_in:
     """Class containing all stations and their connections."""

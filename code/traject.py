@@ -1,4 +1,4 @@
-from our_station import Station # type: ignore
+from our_station import Station
 
 class Traject:
     """Object class of train routes between stations."""

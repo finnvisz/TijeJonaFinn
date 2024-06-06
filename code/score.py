@@ -2,7 +2,7 @@ from random_algorithm import RandomAlgorithm
 
 class Score:
     def __init__(self) -> None:
-        self.algorithm = RandomAlgorithm()
+        self.algorithm = Algorithm()
         self.algorithm.make_trajects()  # Ensure trajects are generated
         self.Min = 0
         self.T = 0

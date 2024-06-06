@@ -35,3 +35,5 @@ class RandomAlgorithm:
                     break
             self.trajects.append(traject)
 
+    
+
