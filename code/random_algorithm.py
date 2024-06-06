@@ -7,7 +7,7 @@ class RandomAlgorithm:
     def __init__(self) -> None:
         self.algorithm = Algorithm()
         self.trajects = self.algorithm.trajects
-        self.data = Load_in()
+        self.data = Load_in("Holland")
 
     def make_trajects(self) -> None:
         for _ in range(7):

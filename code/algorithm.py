@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 class Algorithm:
     def __init__(self) -> None:
-        self.load = Load_in()
+        self.load = Load_in("Holland")
         self.trajects: list[Any] = []
     
 
