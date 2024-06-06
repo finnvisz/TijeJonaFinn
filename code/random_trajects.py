@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt # type: ignore
 load = Load_in() # Load station data 
 trajects: list[Any] = []
 
-for _ in range(6):
+for _ in range(7):
     time_used = 0
     current_station = random.choice(list(load.get_stations_dictionary().values()))
     traject = Traject()
@@ -53,3 +53,31 @@ plt.ylabel('Y Coordinate')
 plt.grid(True)
 plt.savefig('railway_network.png')
 plt.close()
+
+
+# bereken k
+T = 0
+Min = 0
+total_connections_used = set()
+
+for tra in trajects:
+    Min += tra.time
+    for con in tra.connections_used:
+        # Ensure that each connection is a tuple
+        total_connections_used.add(tuple(con))
+    if tra.time != 0:
+        T += 1
+
+tot_connections_available = set(load.connections)
+p = len(total_connections_used) / len(tot_connections_available)
+K = p * 10000 - (T * 100 + Min)
+
+print(total_connections_used)
+print(len(total_connections_used))
+print(len(tot_connections_available))
+
+print('K is {}'.format(K))
+print('p is {}'.format(p))
+print('T is {} trajecten'.format(T))
+print('Min is {} minuten'.format(Min))
+

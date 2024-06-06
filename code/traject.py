@@ -9,3 +9,4 @@ class Traject:
 
     def add(self, station1: "Station", station2: "Station", duur: int) -> None:
         self.connections_used.append([station1.name, station2.name, duur])
+        self.time += duur
