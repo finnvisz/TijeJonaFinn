@@ -1,9 +1,9 @@
 from random_algorithm import RandomAlgorithm
 
 class Score:
-    def __init__(self) -> None:
-        self.algorithm = Algorithm()
-        self.algorithm.make_trajects()  # Ensure trajects are generated
+    def __init__(self, algorithm: "Algorithm") -> None:
+        self.algorithm = algorithm
+        self.algorithm.run()  # Ensure trajects are generated
         self.Min = 0
         self.T = 0
         self.total_connections_used = set()
@@ -17,12 +17,8 @@ class Score:
             if traject.time != 0:
                 self.T += 1
 
-        tot_connections_available = set(map(tuple, self.algorithm.data.connections))
-        print(tot_connections_available)
+        tot_connections_available = set(map(tuple, self.algorithm.load.connections))
         p = len(self.total_connections_used) / len(tot_connections_available)
         K = p * 10000 - (self.T * 100 + self.Min)
         return K
-
-score = Score()
-print(score.calculate())
 

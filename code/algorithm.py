@@ -12,41 +12,16 @@ class Algorithm:
         self.load = Load_in("Holland")
         self.trajects: list[Any] = []
 
-
-    def random_algorithm(self):
-        for _ in range(7):
-            time_used = 0
-            current_station = random.choice(list(self.load.stations_dictionary().values()))
-            traject = Traject()
-
-            # Break when no connections are left in current station
-            while current_station.has_connections():
-                # Find random connection from current_station
-                connection = random.choice(list(current_station.connecting_stations()))
-
-                # Calculate new total duration of route
-                duration = int(current_station.connection_duration(connection))
-                total = time_used + duration
-
-                # Continue if connection is possible considering time_used
-                if total <= 120:
-                    time_used = total
-                    traject.add(current_station, connection, duration)
-                    current_station = connection
-
-                # Else consider traject finished
-                else:
-                    break
-
-            print(traject.connections_used)
-            self.trajects.append(traject)
+    
+    def run(self):
+        raise NotImplementedError("Subclasses should implement this!")
 
 
     def make_picture(self):
-        self.random_algorithm()
+        self.run()
         plt.figure(figsize=(15, 15))
-        for tra in self.trajects:
-            for connection in tra.connections_used:
+        for traject in self.trajects:
+            for connection in traject.connections_used:
                 x_values = [self.load.stations[connection[0]].long, self.load.stations[connection[1]].long]
                 y_values = [self.load.stations[connection[0]].lat, self.load.stations[connection[1]].lat]
                 plt.plot(x_values, y_values, marker='o', linestyle='-')
@@ -60,27 +35,6 @@ class Algorithm:
         plt.savefig('railway_network.png')
         plt.close()
 
-    def calculate_K(self) -> int:
-        T = 0
-        Min = 0
-        total_connections_used = set()
 
-        for tra in self.trajects:
-            Min += tra.time
-            for con in tra.connections_used:
-                # Ensure that each connection is a tuple
-                total_connections_used.add(tuple(con))
-            if tra.time != 0:
-                T += 1
-
-        tot_connections_available = set(self.load.connections)
-        p = len(total_connections_used) / len(tot_connections_available)
-        K = p * 10000 - (T * 100 + Min)
-        return K
-
-
-algorithm = Algorithm()
-algorithm.make_picture()
-print(algorithm.calculate_K())
 
 

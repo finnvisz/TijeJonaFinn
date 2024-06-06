@@ -3,16 +3,14 @@ from load import Load_in
 from traject import Traject
 import random
 
-class RandomAlgorithm:
+class RandomAlgorithm(Algorithm):
     def __init__(self) -> None:
-        self.algorithm = Algorithm()
-        self.trajects = self.algorithm.trajects
-        self.data = Load_in("Holland")
+        super().__init__()
 
-    def make_trajects(self) -> None:
+    def run(self) -> None:
         for _ in range(7):
             time_used = 0
-            current_station = random.choice(list(self.data.stations_dictionary().values()))
+            current_station = random.choice(list(self.load.stations_dictionary().values()))
             traject = Traject()
 
             # Break when no connections are left in current station
