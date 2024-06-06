@@ -5,7 +5,7 @@ class Map(MovingCameraScene):
 
     # Obtain station name object dictionary via Railnl class
     def setup(self):
-        load = Load_in()
+        load = Load_in("Holland")
         self.station_dictionary = load.stations_dictionary()
         self.dot_dictionary = {}
 

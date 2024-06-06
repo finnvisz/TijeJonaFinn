@@ -3,12 +3,12 @@ from our_station import Station # type: ignore
 class Load_in:
     """Class containing all stations and their connections."""
 
-    def __init__(self) -> None:
+    def __init__(self, maprange: str) -> None:
         """Creates Railnl object, loads stations and connections into it."""
         self.stations: dict[str, "Station"] = {}
         self.connections = []
-        self.load_stations("data/StationsHolland.csv")
-        self.load_connections("data/ConnectiesHolland.csv")
+        self.load_stations(f"data/Stations{maprange}.csv")
+        self.load_connections(f"data/Connecties{maprange}.csv")
     
     def load_stations(self, filepath: str) -> None:
         """Load stations from data file into self.stations.
