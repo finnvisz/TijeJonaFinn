@@ -1,3 +1,4 @@
+from .algorithm import Algorithm
 from .random_algorithm import RandomAlgorithm
 
 class Score:
