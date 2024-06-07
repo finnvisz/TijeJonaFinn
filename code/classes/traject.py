@@ -1,4 +1,4 @@
-import station_class
+from .station_class import Station
 
 class Traject:
     """Object class of train routes between stations."""

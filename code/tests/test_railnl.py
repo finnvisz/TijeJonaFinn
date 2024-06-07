@@ -1,5 +1,4 @@
-from ..classes import railnl
-
+from ..classes.railnl import RailNL
 
 def test_load_stations():
     # Create a Railnl object
@@ -7,5 +6,3 @@ def test_load_stations():
 
     # Print the stations dictionary directly
     print(railnl.stations)
-
-test_load_stations()

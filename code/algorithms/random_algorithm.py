@@ -1,4 +1,4 @@
-import algorithm
+from .algorithm import Algorithm
 from ..classes.railnl import RailNL
 from ..classes.traject import Traject
 import random
