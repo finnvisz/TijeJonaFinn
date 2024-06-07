@@ -21,7 +21,7 @@ class Station:
         return (self.lat, self.long)
     
     def connecting_stations(self):
-        return self.connections.keys()
+        return self.connections
     
     def connection_duration(self, station) -> int:
         return self.connections[station]

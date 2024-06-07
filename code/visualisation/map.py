@@ -1,57 +1,83 @@
 from manim import *
 from ..classes.railnl import RailNL 
+from ..classes.station_ import Station
 
 class Map(MovingCameraScene):
 
-    # Obtain station name object dictionary via Railnl class
-    def setup(self):
-        load = RailNL("Holland")
-        self.station_dictionary = load.stations_dictionary()
-        self.dot_dictionary = {}
+    # Obtain station name object dictionary via load class
+    def setup(self) -> None:
+        load: "RailNL" = RailNL("Holland")
 
-    # Instantiate points and labels to appear
-    def create_points_labels(self):
+        self.station_name_dict: dict[str, Station] = load.stations_dictionary()
+        self.station_dot_dict: dict[Station, Dot] = {}
+        self.dot_location_dict: dict[Dot, list] = {}
+        self.traject_dots_dict: dict[list[Station, Station, int], list[Dot, Dot]] = {}
+
         self.station_points = VGroup()
         self.station_labels = VGroup()
+        self.station_connections = VGroup()
 
-        # Iterate over station name, object tuples in dictionary
-        for name, object in self.station_dictionary.items():
-
-            # Create dot from station object location 
-            lat, long = object.location()
+    # Create points VGroup
+    def create_points(self) -> VGroup:
+        
+        # Create dot from station object location 
+        for station in self.station_name_dict.values():
+            lat, long = station.location()
             position = lat * LEFT + long * UP
             dot = Dot(point = position, radius = 0.008)
 
-            # Add station dot pair to dict
-            self.dot_dictionary[object] = dot
+            # Add dots to relevant dictionaries and VGroup
+            self.station_dot_dict[station] = dot
+            self.dot_location_dict[dot] = position
+            self.station_points.add(dot)
 
-            # Create label from station name 
+        return self.station_points
+
+    # Create label VGroup
+    def create_labels(self) -> VGroup:
+
+        # Create label from station name
+        for name, station in self.station_name_dict.items():
+            dot = self.station_dot_dict[station]
             label = Text(f"{name}").move_to(dot)
             label.scale(0.03)
 
-            # Add point and label to VGroups
-            self.station_points.add(dot)
+            # Add label to VGroup
             self.station_labels.add(label)
 
-    def create_connections(self):
-        self.station_connections = VGroup()
-        for station, dot_start in self.dot_dictionary.items():
-            for connecting in station.connecting_stations():
-                dot_end = self.dot_dictionary[connecting]
-                line = Line(start = dot_start.get_center(), end = dot_end.get_center(), stroke_width = 0.25)
+        return self.station_labels
+
+    # Create connections VGroup
+    def create_connections(self) -> VGroup:
+
+        # For each station find associated dot and assosiated connection dot
+        for station, dot_s in self.station_dot_dict.items():
+            for connecting, time in station.connecting_stations().items():
+                dot_e = self.station_dot_dict[connecting]
+                s = dot_s.get_center()
+                e = dot_e.get_center()
+                line = Line(start = s, end = e, stroke_width = 0.25)
+
+                # Add connection to dictionary and VGroup
+                self.traject_dots_dict[station, connecting, time] = [dot_s, dot_e]
                 self.station_connections.add(line)
 
+        return self.station_connections
+
+    # Play scene showing labels, points and connections
     def construct(self):
-    
-        self.create_points_labels()
-        self.create_connections()
+
+        # Create VGroups
+        points = self.create_points()
+        labels = self.create_labels()
+        connections = self.create_connections()
 
         # Set camera to instantiated points and labels
         self.camera.frame.move_to(self.station_points)
-        self.camera.frame.set_height(1.25 * self.station_points.height)
+        self.camera.frame.set_height(1.1 * self.station_points.height)
     
         # Fade labels in, transform into points
-        self.play(FadeIn(self.station_labels), run_time = 2)
-        self.play(Transform(self.station_labels, self.station_points), run_time = 2)
-        self.play(FadeIn(self.station_connections), run_time = 2)
+        self.play(FadeIn(labels), run_time = 2)
+        self.play(Transform(labels, points), run_time = 2)
+        self.play(FadeIn(connections), run_time = 2)
         self.wait(2)
