@@ -1,4 +1,4 @@
-from station_ import Station
+from station_ import Station # type: ignore
 
 class RailNL:
     """Class containing all stations and their connections."""

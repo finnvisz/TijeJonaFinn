@@ -2,7 +2,7 @@ from railnl import RailNL
 from algorithms.algorithm import Algorithm
 from algorithms.random_algorithm import RandomAlgorithm
 from algorithms.score import Score
-from station_ import Station
+from station_ import Station # type: ignore
 
 
 if __name__ == "__main__":
