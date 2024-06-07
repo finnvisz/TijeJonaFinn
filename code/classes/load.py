@@ -1,6 +1,6 @@
 from our_station import Station
 
-class Load_in:
+class RailNL:
     """Class containing all stations and their connections."""
 
     def __init__(self, maprange: str) -> None:

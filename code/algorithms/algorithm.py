@@ -1,13 +1,13 @@
 """Algorithm script finding 7 random railroad routes."""
 
 from typing import Any
-from load import Load_in # type: ignore
+from railnl import RailNL # type: ignore
 import matplotlib.pyplot as plt # type: ignore
 import matplotlib.cm as cm
 import numpy as np
 
 class Algorithm:
-    def __init__(self, load: Load_in) -> None:
+    def __init__(self, load: RailNL) -> None:
         self.load = load
         self.trajects: list[Any] = []
 

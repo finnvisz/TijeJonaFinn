@@ -6,7 +6,7 @@
 # previous = ...
 # previous/data/station.csv
 
-from load import Load_in as Railnl
+from railnl import RailNL as Railnl
 
 
 def test_load_stations():

@@ -1,11 +1,11 @@
 from algorithm import Algorithm
-from load import Load_in
+from railnl import RailNL
 from traject import Traject
 import random
 
 
 class RandomAlgorithm(Algorithm):
-    def __init__(self, load: Load_in) -> None:
+    def __init__(self, load: RailNL) -> None:
         super().__init__(load)
 
     def run(self) -> None:

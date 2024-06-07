@@ -1,11 +1,11 @@
 from manim import *
-from load import Load_in 
+from railnl import RailNL 
 
 class Map(MovingCameraScene):
 
     # Obtain station name object dictionary via Railnl class
     def setup(self):
-        load = Load_in("Holland")
+        load = RailNL("Holland")
         self.station_dictionary = load.stations_dictionary()
         self.dot_dictionary = {}
 
