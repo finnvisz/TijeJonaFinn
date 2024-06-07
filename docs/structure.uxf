@@ -1,1 +1,43 @@
-<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level></diagram>
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>20</x><y>20</y><w>210</w><h>170</h></coordinates><panel_attributes>RailNL (data class)
+--
+&lt;data&gt;
+--
+&lt;methods&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>20</x><y>270</y><w>240</w><h>170</h></coordinates><panel_attributes>Station
+--
+name: String
+long: Int 
+lat: Int
+connections: Dict[Station, afstand: Int]
+--
+&lt;methods&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>120</x><y>180</y><w>90</w><h>110</h></coordinates><panel_attributes>lt=-&gt;&gt;&gt;&gt;
+r1= Has many
+</panel_attributes><additional_attributes>10;10;10;90</additional_attributes></element><element><id>UMLClass</id><coordinates><x>420</x><y>40</y><w>210</w><h>130</h></coordinates><panel_attributes>Algorithms
+--
+&lt;data&gt;
+--
+&lt;methods&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>220</x><y>90</y><w>220</w><h>40</h></coordinates><panel_attributes>lt=-&gt;&gt;
+r1= Gives data to
+</panel_attributes><additional_attributes>10;20;200;20</additional_attributes></element><element><id>Relation</id><coordinates><x>510</x><y>160</y><w>60</w><h>130</h></coordinates><panel_attributes>lt=&lt;.
+Child</panel_attributes><additional_attributes>10;110;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>460</x><y>270</y><w>120</w><h>30</h></coordinates><panel_attributes>RandomAlgorithm</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>770</x><y>30</y><w>210</w><h>130</h></coordinates><panel_attributes>Dienstregeling
+--
+&lt;data&gt;
+--
+&lt;methods&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>620</x><y>90</y><w>170</w><h>40</h></coordinates><panel_attributes>lt=-&gt;&gt;
+r1= Output
+</panel_attributes><additional_attributes>10;20;150;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>760</x><y>240</y><w>210</w><h>90</h></coordinates><panel_attributes>Traject
+--
+&lt;data&gt;
+--
+&lt;methods&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>860</x><y>150</y><w>90</w><h>110</h></coordinates><panel_attributes>lt=-&gt;&gt;&gt;&gt;
+r1= Has many
+</panel_attributes><additional_attributes>10;10;10;90</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1100</x><y>30</y><w>210</w><h>130</h></coordinates><panel_attributes>Visualization
+--
+&lt;data&gt;
+--
+&lt;methods&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>970</x><y>80</y><w>150</w><h>40</h></coordinates><panel_attributes>lt=-&gt;&gt;
+r1= Input
+</panel_attributes><additional_attributes>10;20;130;20</additional_attributes></element><element><id>Relation</id><coordinates><x>1300</x><y>40</y><w>130</w><h>40</h></coordinates><panel_attributes>lt=-&gt;&gt;
+r1= Output
+</panel_attributes><additional_attributes>10;20;110;20</additional_attributes></element><element><id>UMLUseCase</id><coordinates><x>1410</x><y>40</y><w>120</w><h>40</h></coordinates><panel_attributes>Solution.png</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1300</x><y>110</y><w>130</w><h>40</h></coordinates><panel_attributes>lt=-&gt;&gt;
+r1= Output
+</panel_attributes><additional_attributes>10;20;110;20</additional_attributes></element><element><id>UMLUseCase</id><coordinates><x>1410</x><y>110</y><w>120</w><h>40</h></coordinates><panel_attributes>Solution.mp4</panel_attributes><additional_attributes></additional_attributes></element></diagram>

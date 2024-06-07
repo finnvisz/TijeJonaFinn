@@ -4,7 +4,7 @@ class Station:
     def __init__(self, name: str, lat: float, long: float):
         self.name = name    
         self.lat = lat  
-        self.long = long  
+        self.long = long
         self.connections: dict["Station", int] = {}
 
     def __repr__(self):
