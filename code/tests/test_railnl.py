@@ -1,9 +1,9 @@
-from ..classes.railnl import RailNL as Railnl
+from ..classes import railnl
 
 
 def test_load_stations():
     # Create a Railnl object
-    railnl = Railnl()
+    railnl = RailNL()
 
     # Print the stations dictionary directly
     print(railnl.stations)
