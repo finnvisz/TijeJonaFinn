@@ -1,6 +1,6 @@
 from manim import *
 from ..classes.railnl import RailNL 
-from ..classes.station_ import Station
+from ..classes.station_class import Station
 
 class Map(MovingCameraScene):
 
