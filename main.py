@@ -1,8 +1,8 @@
-from .code.classes.railnl import RailNL
-from .code.algorithms.algorithm import Algorithm
-from .code.algorithms.random_algorithm import RandomAlgorithm
-from .code.algorithms.score import Score
-from .code.classes.station_ import Station
+from code.classes.railnl import RailNL
+from code.algorithms.algorithm import Algorithm
+from code.algorithms.random_algorithm import RandomAlgorithm
+from code.algorithms.score import Score
+from code.classes.station_class import Station
 
 
 if __name__ == "__main__":
