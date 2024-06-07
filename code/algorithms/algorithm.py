@@ -1,7 +1,7 @@
 """Algorithm script finding 7 random railroad routes."""
 
 from typing import Any
-from railnl import RailNL # type: ignore
+from ..classes.railnl import RailNL
 import matplotlib.pyplot as plt # type: ignore
 import matplotlib.cm as cm
 import numpy as np

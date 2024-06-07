@@ -1,8 +1,8 @@
-from railnl import RailNL
-from algorithms.algorithm import Algorithm
-from algorithms.random_algorithm import RandomAlgorithm
-from algorithms.score import Score
-from station_ import Station # type: ignore
+from .code.classes.railnl import RailNL
+from .code.algorithms.algorithm import Algorithm
+from .code.algorithms.random_algorithm import RandomAlgorithm
+from .code.algorithms.score import Score
+from .code.classes.station_ import Station
 
 
 if __name__ == "__main__":

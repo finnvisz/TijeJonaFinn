@@ -1,5 +1,5 @@
 from manim import *
-from railnl import RailNL 
+from ..classes.railnl import RailNL 
 
 class Map(MovingCameraScene):
 
