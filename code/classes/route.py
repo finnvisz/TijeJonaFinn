@@ -1,6 +1,6 @@
 from .station_class import Station
 
-class Traject:
+class Route:
     """Object class of train routes between stations."""
 
     def __init__(self) -> None:
