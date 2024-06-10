@@ -13,18 +13,21 @@ class Map(MovingCameraScene):
         self.dot_location_dict: dict[Dot, list] = {}
         self.traject_dots_dict: dict[list[Station, Station, int], list[Dot, Dot]] = {}
 
-        self.station_points = VGroup()
-        self.station_labels = VGroup()
-        self.station_connections = VGroup()
+        self.points = self.create_points()
+        self.labels = self.create_labels()
+        self.connections = self.create_connections()
 
+        self.set_camera()
+        
     # Create points VGroup
     def create_points(self) -> VGroup:
-        
+        self.station_points = VGroup()
+
         # Create dot from station object location 
         for station in self.station_name_dict.values():
             lat, long = station.location()
             position = lat * LEFT + long * UP
-            dot = Dot(point = position, radius = 0.008)
+            dot = Dot(point = position, radius = 0.01)
 
             # Add dots to relevant dictionaries and VGroup
             self.station_dot_dict[station] = dot
@@ -35,6 +38,7 @@ class Map(MovingCameraScene):
 
     # Create label VGroup
     def create_labels(self) -> VGroup:
+        self.station_labels = VGroup()
 
         # Create label from station name
         for name, station in self.station_name_dict.items():
@@ -49,6 +53,7 @@ class Map(MovingCameraScene):
 
     # Create connections VGroup
     def create_connections(self) -> VGroup:
+        self.station_connections = VGroup()
 
         # For each station find associated dot and assosiated connection dot
         for station, dot_s in self.station_dot_dict.items():
@@ -56,7 +61,7 @@ class Map(MovingCameraScene):
                 dot_e = self.station_dot_dict[connecting]
                 s = dot_s.get_center()
                 e = dot_e.get_center()
-                line = Line(start = s, end = e, stroke_width = 0.25)
+                line = Line(start = s, end = e, stroke_width = 0.5)
 
                 # Add connection to dictionary and VGroup
                 self.traject_dots_dict[station, connecting, time] = [dot_s, dot_e]
@@ -64,20 +69,16 @@ class Map(MovingCameraScene):
 
         return self.station_connections
 
+    # Place camera appropriately
+    def set_camera(self):
+        self.camera.frame.move_to(self.points)
+        self.camera.frame.set_height(1.1 * self.points.height)
+
     # Play scene showing labels, points and connections
     def construct(self):
-
-        # Create VGroups
-        points = self.create_points()
-        labels = self.create_labels()
-        connections = self.create_connections()
-
-        # Set camera to instantiated points and labels
-        self.camera.frame.move_to(self.station_points)
-        self.camera.frame.set_height(1.1 * self.station_points.height)
     
         # Fade labels in, transform into points
-        self.play(FadeIn(labels), run_time = 2)
-        self.play(Transform(labels, points), run_time = 2)
-        self.play(FadeIn(connections), run_time = 2)
+        self.play(FadeIn(self.labels), run_time = 2)
+        self.play(Transform(self.labels, self.points), run_time = 2)
+        self.play(FadeIn(self.connections), run_time = 2)
         self.wait(2)
