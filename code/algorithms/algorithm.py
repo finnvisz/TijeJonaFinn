@@ -9,7 +9,7 @@ import numpy as np
 class Algorithm:
     def __init__(self, load: RailNL) -> None:
         self.load = load
-        self.trajects: list[Any] = []
+        self.routes: list[Any] = []
 
     
     def run(self):
@@ -18,13 +18,13 @@ class Algorithm:
 
     def make_picture(self):
         self.run()
-        num_trajects = len(self.trajects)
+        num_trajects = len(self.routes)
         colors = plt.get_cmap('tab10', num_trajects)  # 'tab10' colormap has 10 distinct colors
 
         plt.figure(figsize=(15, 15))
-        for idx, traject in enumerate(self.trajects):
+        for idx, route in enumerate(self.routes):
             color = colors(idx)
-            for connection in traject.connections_used:
+            for connection in route.connections_used:
                 x_values = [self.load.stations[connection[0]].long, self.load.stations[connection[1]].long]
                 y_values = [self.load.stations[connection[0]].lat, self.load.stations[connection[1]].lat]
                 plt.plot(x_values, y_values, marker='o', linestyle='-', color=color)
