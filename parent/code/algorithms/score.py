@@ -1,5 +1,4 @@
-from .algorithm import Algorithm
-from .random_algorithm import RandomAlgorithm
+from parent.code.algorithms.algorithm import Algorithm
 
 class Score:
     def __init__(self, algorithm: "Algorithm") -> None:

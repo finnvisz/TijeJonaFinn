@@ -1,6 +1,6 @@
-from .algorithm import Algorithm
-from ..classes.railnl import RailNL
-from ..classes.route import Route
+from parent.code.algorithms.algorithm import Algorithm
+from parent.code.classes.railnl import RailNL
+from parent.code.classes.route import Route
 
 
 class Finn(Algorithm):

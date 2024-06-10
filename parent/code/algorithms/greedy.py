@@ -1,6 +1,6 @@
-from .algorithm import Algorithm
-from ..classes.railnl import RailNL
-from ..classes.route import Route
+from parent.code.algorithms.algorithm import Algorithm
+from parent.code.classes.railnl import RailNL
+from parent.code.classes.route import Route
 
 # pick station to start from with most connections if not all connections are already used
 # implement greedy algorithm that prioritizes use of all connections
