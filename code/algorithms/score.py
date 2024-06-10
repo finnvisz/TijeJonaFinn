@@ -12,9 +12,9 @@ class Score:
     def calculate(self) -> float:
         for route in self.algorithm.routes:
             self.Min += route.time
-            for con in route.connections_used:
+            for connection in route.connections_used:
                 # Ensure that each connection is a tuple
-                self.total_connections_used.add(tuple(con))
+                self.total_connections_used.add(tuple(connection))
             if route.time != 0:
                 self.T += 1
 
