@@ -15,10 +15,13 @@ class Algorithm:
     def run(self):
         raise NotImplementedError("Subclasses should implement this!")
 
-
+    def number_of_routes(self) -> int:
+        return len(self.routes)
+    
     def make_picture(self):
-        self.run()
-        num_trajects = len(self.routes)
+        if not self.routes:
+            self.run()
+        colors = ['green', 'blue', 'yellow', 'pink', 'purple', 'black', 'violet']
 
         plt.figure(figsize=(20, 20))
         for connection in self.load.connections:
@@ -28,17 +31,19 @@ class Algorithm:
             plt.plot(x_values, y_values, marker='o', linestyle='-', color='red')    
             plt.text(self.load.stations[station1.name].long, self.load.stations[station1.name].lat, station1.name, ha='center')
             plt.text(self.load.stations[station2.name].long, self.load.stations[station2.name].lat, station2.name, ha='center')
-        for route in self.routes:
+        for i, route in enumerate(self.routes):
             for connection in route.connections_used:
                 x_values = [self.load.stations[connection[0]].long, self.load.stations[connection[1]].long]
                 y_values = [self.load.stations[connection[0]].lat, self.load.stations[connection[1]].lat]
-                plt.plot(x_values, y_values, marker='o', linestyle='-', color='green')
+                plt.plot(x_values, y_values, marker='o', linestyle='-', color=colors[0])
         plt.title('Railway Network')
         plt.xlabel('X Coordinate')
         plt.ylabel('Y Coordinate')
         plt.grid(True)
         plt.savefig('railway_network.png')
         plt.close()
+
+    
 
 
 

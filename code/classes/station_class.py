@@ -23,8 +23,8 @@ class Station:
     def connecting_stations(self):
         return self.connections
     
-    def connection_duration(self, station) -> int:
-        return self.connections[station]
+    def connection_duration(self, other: "Station") -> int:
+        return self.connections[other]
     
     def station_name(self):
         return self.name

@@ -56,7 +56,6 @@ class RailNL:
 
                 # add the connections to this class
                 self.connections.append((stat1_o, stat2_o))
-                self.connections.append((stat2_o, stat1_o))
 
     def stations_dictionary(self) -> dict:
         return self.stations
