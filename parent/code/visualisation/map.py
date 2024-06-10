@@ -1,6 +1,6 @@
 from manim import MovingCameraScene, Dot, VGroup, LEFT, UP, Text, Line, FadeIn, Transform
-from ..classes.railnl import RailNL 
-from ..classes.station_class import Station
+from parent.code.classes.railnl import RailNL 
+from parent.code.classes.station_class import Station
 
 class Map(MovingCameraScene):
 

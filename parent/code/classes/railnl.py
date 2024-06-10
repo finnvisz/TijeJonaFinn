@@ -1,4 +1,7 @@
-from .station_class import Station
+from os.path import abspath, join, dirname
+from parent.code.classes.station_class import Station
+
+parent_path = abspath(join(dirname(__file__), '../..'))
 
 class RailNL:
     """Class containing all stations and their connections."""
@@ -7,8 +10,8 @@ class RailNL:
         """Creates Railnl object, loads stations and connections into it."""
         self.stations: dict[str, "Station"] = {}
         self.connections = []
-        self.load_stations(f"data/Stations{maprange}.csv")
-        self.load_connections(f"data/Connecties{maprange}.csv")
+        self.load_stations(f"{parent_path}/data/Stations{maprange}.csv")
+        self.load_connections(f"{parent_path}/data/Connecties{maprange}.csv")
     
     def load_stations(self, filepath: str) -> None:
         """Load stations from data file into self.stations.
