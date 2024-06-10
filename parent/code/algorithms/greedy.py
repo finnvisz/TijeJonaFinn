@@ -1,6 +1,7 @@
 from parent.code.algorithms.algorithm import Algorithm
 from parent.code.classes.railnl import RailNL
 from parent.code.classes.route import Route
+import random
 
 # pick station to start from with most connections if not all connections are already used
 # implement greedy algorithm that prioritizes use of all connections
@@ -9,19 +10,17 @@ from parent.code.classes.route import Route
 class Greedy(Algorithm):
     def __init__(self, load: RailNL) -> None:
         super().__init__(load)
-        self.used_connections = set()
 
     def run(self):
-        for _ in range(7):
+        self.routes = []  # Ensure routes are clear before running
+        while self.number_of_routes() < 7 and len(self.connections_used()) < len(set(map(tuple, self.load.connections))):
             time_used = 0
-            current_station = max(self.load.stations_dictionary().values(), key=lambda station: station.amount_connecting())
+            current_station = random.choice(list(self.load.stations_dictionary().values()))
             route = Route()
+            visited_connections = set()
 
-            # Break when no connections are left in current station
             while current_station.has_connections():
-                for connection in current_station.connecting_stations():
-                    duration = int(current_station.connection_duration(connection))
                 break
-                
-
-            self.routes.append(route)
+                # pick a connection not yet used with shortest duration, if not possible, start a new route
+            break
+            

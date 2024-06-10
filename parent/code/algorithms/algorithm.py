@@ -15,10 +15,15 @@ class Algorithm:
     def number_of_routes(self) -> int:
         return len(self.routes)
     
+    def connections_used(self):
+        connections_used = []
+        for route in self.routes:
+            connections_used.extend(route.connections_used())
+        return set(connections_used)
+    
     def make_picture(self):
         if not self.routes:
             self.run()
-        colors = ['green', 'blue', 'yellow', 'pink', 'purple', 'black', 'violet']
 
         num_routes = len(self.routes)
         num_cols = 2  # Number of columns for subplots
@@ -48,7 +53,7 @@ class Algorithm:
             for connection in route.connections_used:
                 x_values = [self.load.stations[connection[0]].long, self.load.stations[connection[1]].long]
                 y_values = [self.load.stations[connection[0]].lat, self.load.stations[connection[1]].lat]
-                ax.plot(x_values, y_values, marker='o', linestyle='-', color=colors[i % len(colors)])
+                ax.plot(x_values, y_values, marker='o', linestyle='-', color='blue')
             ax.set_title(f'Route {i+1}')  # Set title for each subplot
 
         # Leave last subplots empty if needed

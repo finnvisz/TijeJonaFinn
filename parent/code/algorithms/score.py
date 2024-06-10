@@ -8,6 +8,7 @@ class Score:
         self.total_connections_used = set() # all connections used (one way)
 
     def calculate(self) -> float:
+        K = 0
         for route in self.algorithm.routes:
             self.Min += route.time
             for connection_list in route.connections_used:

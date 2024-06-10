@@ -10,3 +10,9 @@ class Route:
     def add(self, station1: "Station", station2: "Station", duur: int) -> None:
         self.connections_used.append([station1.name, station2.name, duur])
         self.time += int(duur)
+
+    def connections_used(self) -> list:
+        return self.connections_used
+    
+    def time(self) -> int:
+        return self.time
