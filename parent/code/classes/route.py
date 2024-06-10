@@ -1,4 +1,4 @@
-from .station_class import Station
+from parent.code.classes.station_class import Station
 
 class Route:
     """Object class of train routes between stations."""

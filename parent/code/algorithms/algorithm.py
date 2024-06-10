@@ -1,17 +1,14 @@
-"""Algorithm script finding 7 random railroad routes."""
-
 from typing import Any
-from ..classes.railnl import RailNL
-import matplotlib.pyplot as plt # type: ignore
-import matplotlib.cm as cm
-import numpy as np
+from parent.code.classes.railnl import RailNL
+import matplotlib.pyplot as plt 
 
 class Algorithm:
+    """Algorithm script finding 7 random railroad routes."""
+
     def __init__(self, load: RailNL) -> None:
         self.load = load
         self.routes: list[Any] = []
 
-    
     def run(self):
         raise NotImplementedError("Subclasses should implement this!")
 
