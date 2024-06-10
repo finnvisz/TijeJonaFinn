@@ -20,14 +20,14 @@ class Algorithm:
         self.run()
         num_trajects = len(self.routes)
 
-        plt.figure(figsize=(15, 15))
+        plt.figure(figsize=(20, 20))
         for connection in self.load.connections:
             station1, station2 = connection
             x_values = [self.load.stations[station1.name].long, self.load.stations[station2.name].long]
             y_values = [self.load.stations[station1.name].lat, self.load.stations[station2.name].lat]
-            plt.plot(x_values, y_values, marker='o', linestyle='-', color='red')
-            plt.text(self.load.stations[station1.name].long, self.load.stations[station1.name].long, station1.name, ha='center')
-            plt.text(self.load.stations[station2.name].long, self.load.stations[station2.name].long, station2.name, ha='center')
+            plt.plot(x_values, y_values, marker='o', linestyle='-', color='red')    
+            plt.text(self.load.stations[station1.name].long, self.load.stations[station1.name].lat, station1.name, ha='center')
+            plt.text(self.load.stations[station2.name].long, self.load.stations[station2.name].lat, station2.name, ha='center')
         for route in self.routes:
             for connection in route.connections_used:
                 x_values = [self.load.stations[connection[0]].long, self.load.stations[connection[1]].long]
