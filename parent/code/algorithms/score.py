@@ -11,7 +11,7 @@ class Score:
         K = 0
         for route in self.algorithm.routes:
             self.Min += route.time
-            for connection_list in route.connections_used:
+            for connection_list in route.get_connections_used():
                 connection = tuple(connection_list)  # Ensure connection is a tuple
                 reverse_connection = (connection[1], connection[0], connection[2])  # Create the reverse connection tuple
                 if reverse_connection not in self.total_connections_used:

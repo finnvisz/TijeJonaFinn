@@ -15,10 +15,14 @@ class Algorithm:
     def number_of_routes(self) -> int:
         return len(self.routes)
     
-    def connections_used(self):
-        connections_used = []
+    def get_connections_used(self):
+        connections_used = set()
         for route in self.routes:
-            connections_used.extend(route.connections_used())
+                for connection_list in route.get_connections_used():
+                    connection = tuple(connection_list)  # Ensure connection is a tuple
+                    reverse_connection = (connection[1], connection[0], connection[2])  # Create the reverse connection tuple
+                    if reverse_connection not in connections_used:
+                        connections_used.add(connection)
         return set(connections_used)
     
     def make_picture(self):
