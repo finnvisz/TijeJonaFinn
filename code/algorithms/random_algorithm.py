@@ -1,6 +1,6 @@
 from .algorithm import Algorithm
 from ..classes.railnl import RailNL
-from ..classes.traject import Traject
+from ..classes.route import Route
 import random
 
 
@@ -12,7 +12,7 @@ class RandomAlgorithm(Algorithm):
         for _ in range(7):
             time_used = 0
             current_station = random.choice(list(self.load.stations_dictionary().values()))
-            traject = Traject()
+            route = Route()
 
             # Break when no connections are left in current station
             while current_station.has_connections():
@@ -26,13 +26,13 @@ class RandomAlgorithm(Algorithm):
                 # Continue if connection is possible considering time_used
                 if total <= 120:
                     time_used = total
-                    traject.add(current_station, connection, duration)
+                    route.add(current_station, connection, duration)
                     current_station = connection
 
                 # Else consider traject finished
                 else:
                     break
-            self.trajects.append(traject)
+            self.routes.append(route)
 
     
 

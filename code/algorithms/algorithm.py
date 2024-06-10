@@ -9,7 +9,7 @@ import numpy as np
 class Algorithm:
     def __init__(self, load: RailNL) -> None:
         self.load = load
-        self.trajects: list[Any] = []
+        self.routes: list[Any] = []
 
     
     def run(self):
@@ -18,18 +18,21 @@ class Algorithm:
 
     def make_picture(self):
         self.run()
-        num_trajects = len(self.trajects)
-        colors = plt.get_cmap('tab10', num_trajects)  # 'tab10' colormap has 10 distinct colors
+        num_trajects = len(self.routes)
 
-        plt.figure(figsize=(15, 15))
-        for idx, traject in enumerate(self.trajects):
-            color = colors(idx)
-            for connection in traject.connections_used:
+        plt.figure(figsize=(20, 20))
+        for connection in self.load.connections:
+            station1, station2 = connection
+            x_values = [self.load.stations[station1.name].long, self.load.stations[station2.name].long]
+            y_values = [self.load.stations[station1.name].lat, self.load.stations[station2.name].lat]
+            plt.plot(x_values, y_values, marker='o', linestyle='-', color='red')    
+            plt.text(self.load.stations[station1.name].long, self.load.stations[station1.name].lat, station1.name, ha='center')
+            plt.text(self.load.stations[station2.name].long, self.load.stations[station2.name].lat, station2.name, ha='center')
+        for route in self.routes:
+            for connection in route.connections_used:
                 x_values = [self.load.stations[connection[0]].long, self.load.stations[connection[1]].long]
                 y_values = [self.load.stations[connection[0]].lat, self.load.stations[connection[1]].lat]
-                plt.plot(x_values, y_values, marker='o', linestyle='-', color=color)
-                plt.text(self.load.stations[connection[0]].long, self.load.stations[connection[0]].lat, connection[0], ha='center')
-                plt.text(self.load.stations[connection[1]].long, self.load.stations[connection[1]].lat, connection[1], ha='center')
+                plt.plot(x_values, y_values, marker='o', linestyle='-', color='green')
         plt.title('Railway Network')
         plt.xlabel('X Coordinate')
         plt.ylabel('Y Coordinate')
