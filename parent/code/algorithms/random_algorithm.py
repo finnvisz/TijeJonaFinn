@@ -4,7 +4,9 @@ from parent.code.classes.route import Route
 from random import choice
 
 class RandomAlgorithm(Algorithm):
-    """Algorithm script finding 7 random railroad routes."""
+    """Algorithm script finding 7 random routes. Each not exceeding 
+    the 120 minute limit
+    """
 
     def __init__(self, load: RailNL) -> None:
         super().__init__(load)
