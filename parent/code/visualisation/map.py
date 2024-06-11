@@ -11,7 +11,7 @@ class Map(MovingCameraScene):
         self.station_name_dict: dict[str, Station] = load.stations_dictionary()
         self.station_dot_dict: dict[Station, Dot] = {}
         self.dot_location_dict: dict[Dot, list] = {}
-        self.traject_dots_dict: dict[list[Station, Station, int], list[Dot, Dot]] = {}
+        self.traject_line_dict: dict[list[Station, Station, int], Line] = {}
 
         self.points = self.create_points()
         self.labels = self.create_labels()
@@ -64,7 +64,7 @@ class Map(MovingCameraScene):
                 line = Line(start = s, end = e, stroke_width = 0.5)
 
                 # Add connection to dictionary and VGroup
-                self.traject_dots_dict[station, connecting, time] = [dot_s, dot_e]
+                self.traject_line_dict[station, connecting, time] = line
                 self.station_connections.add(line)
 
         return self.station_connections
