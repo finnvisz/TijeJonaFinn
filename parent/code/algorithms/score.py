@@ -9,13 +9,13 @@ class Score:
     def calculate(self) -> float:
         Min = self.algorithm.get_total_minutes()
         tot_connections_available = set(map(tuple, self.algorithm.load.connections)) # all connections available (one way)
-        p = len(self.algorithm.get_connections_used) / (len(tot_connections_available))
+        p = len(self.algorithm.get_total_connections_used()) / (len(tot_connections_available))
         T = self.algorithm.number_of_routes()
 
         print(f"p: {p}")
         print(f"T: {T}")
         print(f"Min: {Min}")
-        
+
         K = p * 10000 - (T * 100 + Min)
         return K
 

@@ -9,7 +9,7 @@ class Algorithm:
         self.load = load
         self.routes: list[Any] = []
         self.total_minutes = 0
-        self.get_total_connections_used = set()
+        self.total_connections_used = set()
 
     def run(self):
         raise NotImplementedError("Subclasses should implement this!")
@@ -17,15 +17,14 @@ class Algorithm:
     def number_of_routes(self) -> int:
         return len(self.routes)
     
-    def get_connections_used(self):
-        connections_used = set()
+    def get_total_connections_used(self):
         for route in self.routes:
                 for connection_list in route.get_connections_used():
                     connection = tuple(connection_list)  # Ensure connection is a tuple
                     reverse_connection = (connection[1], connection[0], connection[2])  # Create the reverse connection tuple
-                    if reverse_connection not in connections_used:
-                        connections_used.add(connection)
-        return set(connections_used)
+                    if reverse_connection not in self.total_connections_used:
+                        self.total_connections_used.add(connection)
+        return set(self.total_connections_used)
     
     def get_total_minutes(self):
         for route in self.routes:
