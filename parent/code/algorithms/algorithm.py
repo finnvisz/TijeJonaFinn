@@ -8,6 +8,8 @@ class Algorithm:
     def __init__(self, load: RailNL) -> None:
         self.load = load
         self.routes: list[Any] = []
+        self.total_minutes = 0
+        self.get_total_connections_used = set()
 
     def run(self):
         raise NotImplementedError("Subclasses should implement this!")
@@ -24,6 +26,11 @@ class Algorithm:
                     if reverse_connection not in connections_used:
                         connections_used.add(connection)
         return set(connections_used)
+    
+    def get_total_minutes(self):
+        for route in self.routes:
+            self.total_minutes += route.time
+        return self.total_minutes
     
     def make_picture(self):
         if not self.routes:
