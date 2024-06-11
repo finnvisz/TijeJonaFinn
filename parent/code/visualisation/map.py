@@ -71,7 +71,8 @@ class Map(MovingCameraScene):
                     line = Line(start = s, end = e, stroke_width = 0.5)
 
                     # Add connection to dictionary and VGroup 
-                    self.route_line_dict[(station, connecting, time)] = line
+                    tuple = (station.station_name(), connecting.station_name(), time)
+                    self.route_line_dict[tuple] = line
                     self.station_connections.add(line)
 
         return self.station_connections
