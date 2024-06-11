@@ -9,7 +9,7 @@ class RailNL:
     def __init__(self, maprange: str) -> None:
         """Creates Railnl object, loads stations and connections into it."""
         self.stations: dict[str, "Station"] = {}
-        self.connections = []
+        self.connections = set()
         self.load_stations(f"{parent_path}/data/Stations{maprange}.csv")
         self.load_connections(f"{parent_path}/data/Connecties{maprange}.csv")
     
@@ -48,17 +48,20 @@ class RailNL:
             while (line := file.readline()) != "":      
                 # Read station names as strings
                 stat1_s, stat2_s, afstand = line.strip().split(',')
+                
+                # Sort station names alphabetically
+                stations_as_string_alfabetical = sorted([stat1_s, stat2_s])
 
                 # Find station object corresponding to station string
-                stat1_o = self.stations[stat1_s] 
-                stat2_o = self.stations[stat2_s]
+                stat1_o = self.stations[stations_as_string_alfabetical[0]] 
+                stat2_o = self.stations[stations_as_string_alfabetical[1]]
 
                 # Use add_connection method on station objects
                 stat1_o.add_connection(stat2_o, afstand)
                 stat2_o.add_connection(stat1_o, afstand)
 
                 # add the connections to this class
-                self.connections.append((stat1_o, stat2_o))
+                self.connections.add((stat1_o, stat2_o))
 
     def stations_dictionary(self) -> dict:
         return self.stations
