@@ -10,7 +10,6 @@ from code.classes.station_class import Station
 if __name__ == "__main__":
     data = RailNL("Holland")
 
-
     # Test Finns routes
     finn = Finn(data)
     finn_score = Score(finn)
