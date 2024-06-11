@@ -1,23 +1,30 @@
-from .algorithm import Algorithm
-from ..classes.railnl import RailNL
-from ..classes.route import Route
-import random
-
+from parent.code.algorithms.algorithm import Algorithm
+from parent.code.classes.railnl import RailNL
+from parent.code.classes.route import Route
+from random import choice
 
 class RandomAlgorithm(Algorithm):
+    """Algorithm script finding 7 random railroad routes."""
+
     def __init__(self, load: RailNL) -> None:
         super().__init__(load)
 
     def run(self) -> None:
+
         for _ in range(7):
             time_used = 0
-            current_station = random.choice(list(self.load.stations_dictionary().values()))
             route = Route()
+
+            # Find a random starting station
+            stations = list(self.load.stations_dictionary().values())
+            current_station = choice(stations)
 
             # Break when no connections are left in current station
             while current_station.has_connections():
-                # Find random connection from current_station
-                connection = random.choice(list(current_station.connecting_stations()))
+
+                # Find random connection from current_station connections
+                connections = list(current_station.connecting_stations())
+                connection = choice(connections)
 
                 # Calculate new total duration of route
                 duration = int(current_station.connection_duration(connection))
@@ -32,7 +39,12 @@ class RandomAlgorithm(Algorithm):
                 # Else consider traject finished
                 else:
                     break
+            
             self.routes.append(route)
 
-    
+data = RailNL("Holland")
+random = RandomAlgorithm(data)
+random.run()
 
+for route in random.output():
+    print(route.connections())

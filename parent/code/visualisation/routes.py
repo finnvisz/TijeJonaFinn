@@ -6,20 +6,26 @@ class Display_Route(Map):
     """Show trainroutes on map."""
 
     def color_route(self, route: list):
-        
+
         for connection in route:
-            print(connection)
-            line = self.traject_line_dict[connection]
+
+            if connection in self.route_line_dict:
+                line = self.route_line_dict[connection]
+            
+            else:
+                tuple = (connection[1], connection[0], connection[2])
+                line = self.route_line_dict[tuple]
+
             line.set_color(manim_colors.RED)
 
     def construct(self):
-        self.add(self.points, self.connections)
-
-        alkmaar = self.station_name_dict["Alkmaar"]
-        hoorn = self.station_name_dict["Hoorn"]
-        traject1 = [alkmaar, hoorn, 24]
-        traject2 = [alkmaar, hoorn, 24]
-        self.color_route([traject1, traject2])
-
-        self.play(Transform(self.connections))
+        self.setup()
+        self.add(self.points, self.connections, self.connection_labels)
+        route = [('Leiden Centraal', 'Schiphol Airport', 15),
+                 ('Schiphol Airport', 'Amsterdam Zuid', 6),
+                 ('Amsterdam Zuid', 'Amsterdam Sloterdijk', 16)]
+        
+        print(self.route_line_dict.keys())
+        self.color_route(route)
+        self.play(Transform(self.connections), run_time = 2)
         self.wait(4)

@@ -3,7 +3,7 @@ from parent.code.classes.railnl import RailNL
 import matplotlib.pyplot as plt 
 
 class Algorithm:
-    """Algorithm script finding 7 random railroad routes."""
+    """Base algorithm script."""
 
     def __init__(self, load: RailNL) -> None:
         self.load = load
@@ -13,6 +13,9 @@ class Algorithm:
 
     def run(self):
         raise NotImplementedError("Subclasses should implement this!")
+    
+    def output(self):
+        return self.routes
 
     def number_of_routes(self) -> int:
         return len(self.routes)
