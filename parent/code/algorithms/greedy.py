@@ -17,12 +17,11 @@ class Greedy(Algorithm):
         super().__init__(load)
 
 
-
-    def run(self):
+    def run(self) -> list:
         # List to store the various routes
         self.routes = []
         
-        # unused_connections starts off with all connections
+        # Unused_connections starts off with all connections
         # Unused connections will be moved to used connections when they are used
         self.used_connections: dict = dict()
         
@@ -160,7 +159,7 @@ class Greedy(Algorithm):
         return results
         
 
-# Run standard greedy and print results
+# # Run standard greedy and print results
 # if __name__ == "__main__":
 #     greedy = Greedy(RailNL("Holland"))
 #     output = greedy.run()

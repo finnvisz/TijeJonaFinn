@@ -9,7 +9,7 @@ class Experiment:
         self.algorithm_class = algorithm_class
         self.data_params = data_params
         self.iterations = iterations
-        self.scores = []
+        self.scores: list[float] = []
 
     def average_score(self) -> float:
         # runt N times, calculates score, and average score over N times
@@ -26,13 +26,16 @@ class Experiment:
 
         average_score = total_score / self.iterations
         return average_score
+    
+    def get_scores(self) -> list:
+        return self.scores
 
 # Example usage
-data_params = "Holland"
-random_experiment = Experiment(RandomAlgorithm, data_params, iterations=100)
-print(f"Random Algorithm Average Score: {random_experiment.average_score()}")
-print(random_experiment.scores)
+# data_params = "Holland"
+# random_experiment = Experiment(RandomAlgorithm, data_params, iterations=100)
+# print(f"Random Algorithm Average Score: {random_experiment.average_score()}")
+# print(random_experiment.scores)
 
-finn_experiment = Experiment(Finn, data_params, iterations=100)
-print(f"Finn Average Score: {finn_experiment.average_score()}")  # should be 8919
-print(finn_experiment.scores)
+# finn_experiment = Experiment(Finn, data_params, iterations=100)
+# print(f"Finn Average Score: {finn_experiment.average_score()}")  # should be 8919
+# print(finn_experiment.scores)
