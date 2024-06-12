@@ -18,14 +18,14 @@ class RandomAlgorithm(Algorithm):
             route = Route()
 
             # Find a random starting station
-            stations = list(self.load.stations_dictionary().values())
+            stations = list(self.load.stations_dict().values())
             current_station = choice(stations)
 
             # Break when no connections are left in current station
             while current_station.has_connections():
 
                 # Find random connection from current_station connections
-                connections = list(current_station.connecting_stations())
+                connections = list(current_station.connections_dict())
                 connection = choice(connections)
 
                 # Calculate new total duration of route
@@ -43,10 +43,3 @@ class RandomAlgorithm(Algorithm):
                     break
             
             self.routes.append(route)
-
-data = RailNL("Holland")
-random = RandomAlgorithm(data)
-random.run()
-
-for route in random.output():
-    print(route.connections())

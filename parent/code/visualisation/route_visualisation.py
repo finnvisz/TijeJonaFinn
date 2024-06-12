@@ -1,5 +1,7 @@
-from manim import MovingCameraScene, ApplyMethod, Line, FadeIn
+from manim import MovingCameraScene, ApplyMethod, Line, manim_colors
 from manim import PURE_RED, PURE_GREEN, PURE_BLUE, YELLOW, PURPLE, ORANGE, PINK
+from parent.code.classes.railnl import RailNL
+from parent.code.algorithms.random_algorithm import RandomAlgorithm
 from base_map import Map
 
 class route_visualisation(MovingCameraScene):
@@ -11,7 +13,7 @@ class route_visualisation(MovingCameraScene):
         self.colors = [PURE_RED, PURE_GREEN, PURE_BLUE, YELLOW, 
                        PURPLE, ORANGE, PINK]
 
-    def color_route(self, route: list):
+    def color_route(self, route: list, color: manim_colors):
 
         # Get station dot conversion dictionaries
         name_station_dict = self.map.give_name_station_dict()
@@ -33,31 +35,34 @@ class route_visualisation(MovingCameraScene):
             tuple = (dot_start, dot_end, time)
             if tuple in connection_line_dict:
                 line = connection_line_dict[tuple]
-                self.set_color(line)
+                self.set_color(line, color)
             
             # Otherwise search reversed connection
             else:
                 tuple = (dot_end, dot_start, time)
                 line = connection_line_dict[tuple]
-                self.set_color(line)
+                self.set_color(line, color)
 
     # Set color depending on if already colored.
-    def set_color(self, line: Line):
+    def set_color(self, line: Line, color: manim_colors):
 
         if not line in self.line_colors_dict:
 
-            # If line not yet colored coloro RED
-            self.play(ApplyMethod(line.set_color, PURE_RED))
-            self.line_colors_dict[line] = [PURE_RED]
+            # If line not yet colored just color
+            self.play(ApplyMethod(line.set_color, color))
+            self.line_colors_dict[line] = [color]
 
         else:
 
-            # Otherwise set line gradient using colors used
-            colors = self.line_colors_dict[line]
-            number = len(colors)
-            colors.append(self.colors[number])
-            self.play(ApplyMethod(line.set_color, colors))
+            # If line already has given color do nothing
+            if color in self.line_colors_dict[line]:
+                pass
 
+            else: 
+                # Otherwise update line gradient
+                colors = self.line_colors_dict[line]
+                colors.append(color)
+                self.play(ApplyMethod(line.set_color, colors))
 
     def construct(self):
         
@@ -73,10 +78,14 @@ class route_visualisation(MovingCameraScene):
         self.add(dots, connections, connection_labels)
         self.wait(2)
 
-        route = [('Leiden Centraal', 'Schiphol Airport', '15'),
-                 ('Schiphol Airport', 'Amsterdam Zuid', '6'),
-                 ('Leiden Centraal', 'Schiphol Airport', '15'),
-                 ('Leiden Centraal', 'Schiphol Airport', '15')]
-        
-        self.color_route(route)
+        data = RailNL("Holland")
+        random = RandomAlgorithm(data)
+        random.run()
+        dienstregeling = random.output()
+
+        for count in range(7):
+            route = dienstregeling[count].connections()
+            print(route)
+            self.color_route(route, self.colors[count])
+
         self.wait(2)

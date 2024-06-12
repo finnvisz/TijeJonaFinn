@@ -57,8 +57,8 @@ class RailNL:
                 stat2_o = self.stations[stations_as_string_alfabetical[1]]
 
                 # Use add_connection method on station objects
-                stat1_o.add_connection(stat2_o, afstand)
-                stat2_o.add_connection(stat1_o, afstand)
+                stat1_o.add_connection(stat2_o, int(afstand))
+                stat2_o.add_connection(stat1_o, int(afstand))
 
                 # add the connections to this class
                 self.connections.add((stat1_o, stat2_o))
