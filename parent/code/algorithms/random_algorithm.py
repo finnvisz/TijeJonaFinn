@@ -10,7 +10,7 @@ class RandomAlgorithm(Algorithm):
     """
 
     def __init__(self, load: RailNL) -> None:
-        super().__init__(load)
+        super().__init__(load) # Inherits everything from ALgorithm class
 
 
     def run(self) -> None:
@@ -33,13 +33,14 @@ class RandomAlgorithm(Algorithm):
                 duration = int(current_station.connection_duration(connection))
                 total = time_used + duration
 
-                # Continue if connection is possible considering time_used
+                # Continue if adding a connection is 
+                # possible considering time_used
                 if total <= 120:
                     time_used = total
                     route.add(current_station, connection, duration)
                     current_station = connection
 
-                # Else consider traject finished
+                # Else, route is finished
                 else:
                     break
             

@@ -31,6 +31,8 @@ class Experiment:
 data_params = "Holland"
 random_experiment = Experiment(RandomAlgorithm, data_params, iterations=100)
 print(f"Random Algorithm Average Score: {random_experiment.average_score()}")
+print(random_experiment.scores)
 
 finn_experiment = Experiment(Finn, data_params, iterations=100)
 print(f"Finn Average Score: {finn_experiment.average_score()}")  # should be 8919
+print(finn_experiment.scores)
