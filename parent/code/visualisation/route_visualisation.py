@@ -85,7 +85,6 @@ class route_visualisation(MovingCameraScene):
 
         for count in range(7):
             route = dienstregeling[count].connections()
-            print(route)
             self.color_route(route, self.colors[count])
 
         self.wait(2)
