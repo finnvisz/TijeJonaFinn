@@ -9,10 +9,13 @@ class Station:
 
     def __repr__(self):
         """Return string representation of Station object."""
-        return f"Station(name={self.name}, lat={self.lat}, long={self.long})"
+        return f"Station({self.name})"
 
     def add_connection(self, other: "Station", afstand: int) -> None:
         self.connections[other] = afstand
+
+    def has_connection(self, connection: "Station") -> bool:
+        return connection in self.connections
 
     def amount_connecting(self) -> int:
         return len(self.connections)
@@ -34,3 +37,18 @@ class Station:
         if len(self.connections) > 0:
             return True
         return False
+    
+    def get_shortest_connection(self):
+        """
+        Return the connected station with the shortest connection.
+        """
+        # Use min function, but it uses values to compare instead of keys
+        return min(self.connections, key=self.connections.get)
+    
+    def get_connection_time(self, station: "Station") -> int:
+        """ Return the time it takes to travel to the given station."""
+        # Check if station has this connection
+        assert self.has_connection(station), f"Station {station.name} is not connected to {self.name}"
+        
+        # Return the time it takes to travel to the given station
+        return self.connections.get(station)

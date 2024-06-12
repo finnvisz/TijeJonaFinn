@@ -1,3 +1,7 @@
+# Library imports
+import random
+
+# Local imports
 from os.path import abspath, join, dirname
 from parent.code.classes.station_class import Station
 
@@ -73,3 +77,7 @@ class RailNL:
         # Find amount of connections using amount_connecting method
         connections = lambda station: self.stations[station].amount_connecting()
         return max(connections(station) for station in stations)
+    
+    def get_random_station(self) -> "Station":
+        """Return a random station from self.stations."""
+        return random.choice(list(self.stations.values()))
