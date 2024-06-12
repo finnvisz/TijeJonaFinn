@@ -95,14 +95,87 @@ class Greedy(Algorithm):
             # Pop this key-value pair from unused and add to the used connections
             self.used_connections[connection_key] = self.unused_connections.pop(connection_key)
 
+    
+    def create_route_from_station(self, station: "Station") -> Route:
+        """
+        Create a single route starting from a given station.
+        """
+        # Create a new route
+        route = Route()
+        # Route starts at the given station
+        current_station = station
 
+        # While time is less than 120 minutes
+        while route.time < 120:
+            # Get connections of current station, sorted by duration
+            # This is a queue of possible connections, with the shortest connection first
+            connections = current_station.get_connections_sorted()
+
+            # Pop used connections from queue (as long as there are any left)
+            while len(connections) > 0 and route.is_connection_used(current_station, connections[0][0]):
+                connections.pop(0)
+            
+            # If adding this connection would exceed the time limit, remove this connection
+            while len(connections) > 0 and route.time + connections[0][1] > 120:
+                connections.pop(0)
+
+            # If there are no unused connections left, end this route
+            if len(connections) == 0:
+                break
+
+            # Shortest unused connection is the next station
+            next_station = connections[0][0]
+
+            # DEBUG
+            # print(f"Current station: {current_station.name}")
+            # print(f"Next station: {next_station.name}")
+
+            # Add the connection to the route
+            route.add(current_station, next_station, current_station.get_connection_time(next_station))
+
+            # Set the next station as the current station
+            current_station = next_station
+        
+        return route
+    
+    
+    def best_starting_station(self):
+        """
+        Create a route from every station and return the amount of connections for each route.
+        """ 
+        # List to store the amount of connections for each route
+        results = []
+
+        # For every station in the dataset
+        for station in self.load.stations.values():
+            # Create a route starting from this station
+            route = self.create_route_from_station(station)
+            
+            # Get the amount of connections for this route
+            amount_of_connections = len(route.connections())
+
+            # Append name, amount of connections and time to results
+            results.append([station.name, amount_of_connections, route.time])
+
+        return results
+        
+
+# Run standard greedy and print results
+# if __name__ == "__main__":
+#     greedy = Greedy(RailNL("Holland"))
+#     output = greedy.run()
+#     for route in output:
+#         for connection in route.connections():
+#             print(connection[0], connection[2], end=" -> ")
+        
+#         print("")
+#         print(f"Total time: {route.time}")
+#         print("")
+
+# Run best starting station and print results
 if __name__ == "__main__":
     greedy = Greedy(RailNL("Holland"))
-    output = greedy.run()
-    for route in output:
-        for connection in route.connections():
-            print(connection[0], connection[2], end=" -> ")
-        
-        print("")
-        print(f"Total time: {route.time}")
-        print("")
+    results = greedy.best_starting_station()
+    for result in results:
+        if result[1] > 12:
+            print(f"Station: {result[0]}, Connections: {result[1]}, Time: {result[2]}")
