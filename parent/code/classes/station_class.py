@@ -38,6 +38,23 @@ class Station:
             return True
         return False
     
+    def get_connections_sorted(self):
+        """
+        Get the connections of this station, sorted by duration 
+        (shortest connection first).
+
+        Pre: self has connections
+        Post: return a list of tuples with the connected stations and their duration
+        """
+        # Put connections in list of tuples
+        connections = list(self.connections.items())
+
+        # Sort list by duration
+        connections.sort(key=lambda x: x[1])
+
+        # Return sorted list
+        return connections
+    
     def get_shortest_connection(self):
         """
         Return the connected station with the shortest connection.

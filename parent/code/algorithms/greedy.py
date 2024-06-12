@@ -45,12 +45,28 @@ class Greedy(Algorithm):
 
             # While time is less than 120 minutes
             while route.time < 120: 
-                # Select the connection with the shortest duration
-                next_station: "Station" = current_station.get_shortest_connection()
+                # Get connections of current station, sorted by duration
+                # This is a queue of possible connections, with the shortest connection first
+                connections = current_station.get_connections_sorted()
+
+                # Pop used connections from queue (as long as there are any left)
+                while len(connections) > 0 and route.is_connection_used(current_station, connections[0][0]):
+                    connections.pop(0)
+                
+                # If adding this connection would exceed the time limit, remove this connection
+                while len(connections) > 0 and route.time + connections[0][1] > 120:
+                    connections.pop(0)
+
+                # If there are no unused connections left, end this route
+                if len(connections) == 0:
+                    break
+
+                # Shortest unused connection is the next station
+                next_station = connections[0][0]
 
                 # DEBUG
-                print(f"Current station: {current_station.name}")
-                print(f"Next station: {next_station.name}")
+                # print(f"Current station: {current_station.name}")
+                # print(f"Next station: {next_station.name}")
 
                 # Add the connection to the route
                 route.add(current_station, next_station, current_station.get_connection_time(next_station))
@@ -83,4 +99,10 @@ class Greedy(Algorithm):
 if __name__ == "__main__":
     greedy = Greedy(RailNL("Holland"))
     output = greedy.run()
-    print(output)
+    for route in output:
+        for connection in route.connections():
+            print(connection[0], connection[2], end=" -> ")
+        
+        print("")
+        print(f"Total time: {route.time}")
+        print("")
