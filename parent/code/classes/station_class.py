@@ -20,7 +20,7 @@ class Station:
     def location(self) -> tuple:
         return (self.lat, self.long)
     
-    def connections_dictionary(self):
+    def connections_dict(self):
         return self.connections
     
     def connection_duration(self, other: "Station") -> int:
