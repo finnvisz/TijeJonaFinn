@@ -5,7 +5,7 @@ class Station:
         self.name = name    
         self.lat = lat  
         self.long = long
-        self.connections: dict["Station", int] = {}
+        self.connections: dict["Station", str] = {}
 
     def __repr__(self):
         """Return string representation of Station object."""

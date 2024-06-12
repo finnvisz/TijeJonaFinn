@@ -1,9 +1,7 @@
-from parent.code.visualisation.map import Map
-from parent.code.classes.route import Route
 from manim import manim_colors, MovingCameraScene, ApplyMethod
-from typing import Type
+from base_map import Map
 
-class Display_Route(Map):
+class route_visualisation(MovingCameraScene):
     """Show trainroutes on map."""
 
     def color_route(self, route: list):
@@ -24,12 +22,22 @@ class Display_Route(Map):
             self.play(ApplyMethod(line.set_color, manim_colors.RED))
 
     def construct(self):
-        self.setup()
-        self.add(self.points, self.connections, self.connection_labels)
+        
+        # Get all objects from base_map
+        map = Map()
+        dots = map.give_dots()
+        connections = map.give_connections()
+        connection_labels = map.give_connection_labels()
+
+        # Move camera to capture network
+        self.camera.frame.move_to(dots)
+        self.camera.frame.set_height(1.1 * dots.get_height())
+
+        self.add(dots, connections, connection_labels)
         self.wait(2)
 
-        route = [('Leiden Centraal', 'Schiphol Airport', '15'),
-                 ('Schiphol Airport', 'Amsterdam Zuid', '6')]
-        self.color_route(route)
+        # route = [('Leiden Centraal', 'Schiphol Airport', '15'),
+        #          ('Schiphol Airport', 'Amsterdam Zuid', '6')]
+        # self.color_route(route)
 
-        self.wait(2)
+        # self.wait(2)
