@@ -117,3 +117,12 @@ class Map():
     
     def give_connection_labels(self) -> VGroup:
         return self.connection_labels
+    
+    def give_station_dot_dict(self) -> dict:
+        return self.station_dot_dict
+    
+    def give_name_station_dict(self) -> dict:
+        return self.name_station_dict
+    
+    def give_connection_line_dict(self) -> dict:
+        return self.connection_line_dict
