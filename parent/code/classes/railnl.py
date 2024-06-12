@@ -63,7 +63,7 @@ class RailNL:
                 # add the connections to this class
                 self.connections.add((stat1_o, stat2_o))
 
-    def stations_dictionary(self) -> dict:
+    def stations_dict(self) -> dict:
         return self.stations
 
     # Find the highest number of station connections

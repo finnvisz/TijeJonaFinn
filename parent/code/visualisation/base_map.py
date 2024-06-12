@@ -1,34 +1,38 @@
-from manim import MovingCameraScene, FadeIn, Transform, camera
-from manim import LEFT, UP, Text, Line, Dot, VGroup
-from typing import Tuple
 from parent.code.classes.railnl import RailNL 
 from parent.code.classes.station_class import Station
+from manim import Camera, Text, Line, Dot, VGroup, LEFT, UP
+from typing import Tuple
+from numpy import ndarray
 
-class Map(MovingCameraScene):
+class Map(Camera):
 
-    # Obtain station name object dictionary via load class
+    # Setup VGroups, dictionaries and camera
     def setup(self) -> None:
-        load: "RailNL" = RailNL("Holland")
 
-        self.station_name_dict: dict[str, Station] = load.stations_dictionary()
-        self.station_dot_dict: dict[Station, Dot] = {}
-        self.dot_location_dict: dict[Dot, list] = {}
-        self.route_line_dict: dict[Tuple[Station, Station, int], Line] = {}
-        self.connection_label_dict: dict[Line, Text] = {}
+        # Get railwaynetwork data 
+        railnl:             "RailNL" = RailNL("Holland") 
+        self.name_station:  dict[str, Station] = railnl.stations_dictionary()
 
-        self.points = self.create_points()
-        self.point_labels = self.create_point_labels()
-        self.connections = self.create_connections()
-        self.connection_labels = self.create_connection_labels()
+        # Create VGroups 
+        self.create_dots()
+        self.create_dot_labels()
+        self.create_dot_connections()
+        self.create_dot_connection_labels()
 
+        # Set camera to capture created network
         self.set_camera()
         
-    # Create points VGroup
-    def create_points(self) -> VGroup:
-        self.station_points = VGroup()
+    def create_dots(self) -> None:
 
-        # Create dot from station object location 
-        for station in self.station_name_dict.values():
+        # VGroup and dictionaries to load into
+        self.station_dots = VGroup()
+        self.station_dot_dict: dict[Station, Dot] = {}
+        self.dot_location_dict: dict[Dot, ndarray] = {}
+
+        # Create dot for each station
+        for station in self.name_station.values():
+
+            # Create dot at station position
             lat, long = station.location()
             position = lat * LEFT + long * UP
             dot = Dot(point = position, radius = 0.0075)
@@ -36,13 +40,13 @@ class Map(MovingCameraScene):
             # Add dots to relevant dictionaries and VGroup
             self.station_dot_dict[station] = dot
             self.dot_location_dict[dot] = position
-            self.station_points.add(dot)
+            self.station_dots.add(dot)
 
-        return self.station_points
+    def create_dot_labels(self) -> None:
 
-    # Create label VGroup
-    def create_point_labels(self) -> VGroup:
+        # VGroup and dictionaries to load into
         self.station_labels = VGroup()
+        self.dot_labels_dict: dict[Dot, Text]
 
         # Create label from station name
         for name, station in self.station_name_dict.items():
@@ -51,13 +55,14 @@ class Map(MovingCameraScene):
             label.scale(0.03)
 
             # Add label to VGroup
+            self.dot_labels_dict[dot] = label
             self.station_labels.add(label)
 
-        return self.station_labels
-
-    # Create connections VGroup
-    def create_connections(self) -> VGroup:
+    def create_dot_connections(self) -> None:
+    
+        # VGroup and dictionaries to load into
         self.station_connections = VGroup()
+        self.connection_line:   dict[Tuple[Station, Station, str], Line] = {}
 
         # For each station find associated dot and assosiated connection dot
         for station, dot_s in self.station_dot_dict.items():
@@ -75,11 +80,11 @@ class Map(MovingCameraScene):
                     self.route_line_dict[tuple] = line
                     self.station_connections.add(line)
 
-        return self.station_connections
+    def create_dot_connection_labels(self) -> VGroup:
 
-    # Create connection time labels
-    def create_connection_labels(self) -> VGroup:
+        # Create VGroup and dictionaries to load into
         self.connection_labels = VGroup()
+        self.connection_label:  dict[Line, Text] = {}
 
         for tuple, line in self.route_line_dict.items():
             time = tuple[2]
@@ -94,19 +99,6 @@ class Map(MovingCameraScene):
 
             self.connection_labels.add(label)
 
-        return self.connection_labels
-
-    # Place camera appropriately
     def set_camera(self):
         self.camera.frame.move_to(self.points)
         self.camera.frame.set_height(1.1 * self.points.height)
-
-    # Play scene showing labels, points and connections
-    def construct(self):
-    
-        # Fade labels in, transform into points
-        self.play(FadeIn(self.point_labels), run_time = 2)
-        self.play(Transform(self.point_labels, self.points), run_time = 2)
-        self.play(FadeIn(self.connections), run_time = 2)
-        self.play(FadeIn(self.connection_labels))
-        self.wait(2)
