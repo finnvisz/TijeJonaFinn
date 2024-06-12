@@ -5,6 +5,7 @@ from code.algorithms.greedy import Greedy
 from code.algorithms.finnsroutes import Finn
 from code.algorithms.score import Score
 from code.classes.station_class import Station
+from code.experiments.experiments import Experiment
 
 
 if __name__ == "__main__":
@@ -21,12 +22,6 @@ if __name__ == "__main__":
     random_score = Score(random_algorithm)
     random_algorithm.make_picture() # after score so a second run doesnt affect the score
     print(f"Random Algorithm Score: {random_score.calculate()}")
-
-    # Test Greedy Algorithm
-    greedy_algorithm = Greedy(data)
-    greedy_score = Score(greedy_algorithm)
-    greedy_algorithm.make_picture()
-    print(f"Greedy Algorithm Score: {greedy_score.calculate()}")
 
     
 

@@ -45,18 +45,3 @@ class RandomAlgorithm(Algorithm):
             
             self.routes.append(route)
 
-# Experiment
-# runt N times, calculates score, and average score
-times = 0
-total_score = 0
-N = 10000
-while times < N:
-    data = RailNL("Holland")
-    random_algorithm = RandomAlgorithm(data)
-    random_score = Score(random_algorithm).calculate()
-    print(f"Score {times}: {random_score}")
-    total_score += random_score
-    times += 1
-
-average_score = total_score / N
-print(f"Random Algorithm Average Score: {average_score}")

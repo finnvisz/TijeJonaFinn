@@ -68,6 +68,7 @@ class Algorithm:
         for route in self.routes:
             self.total_minutes += route.time
         return self.total_minutes
+
     
 
     def make_picture(self):
