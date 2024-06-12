@@ -43,6 +43,7 @@ class RandomAlgorithm(Algorithm):
                 else:
                     break
             
+<<<<<<< HEAD
             self.routes.append(route)
 
 # Experiment
@@ -60,3 +61,6 @@ while times < N:
 
 average_score = total_score / N
 print(f"Random Algorithm Average Score: {average_score}")
+=======
+            self.routes.append(route)
+>>>>>>> 80a0d114f9f94a9652a5e9639c0eeb7898bbc2c5
