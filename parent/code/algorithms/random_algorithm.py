@@ -12,6 +12,7 @@ class RandomAlgorithm(Algorithm):
     def __init__(self, load: RailNL) -> None:
         super().__init__(load)
 
+
     def run(self) -> None:
 
         for _ in range(7):
@@ -19,8 +20,7 @@ class RandomAlgorithm(Algorithm):
             route = Route()
 
             # Find a random starting station
-            stations = list(self.load.stations_dict().values())
-            current_station = choice(stations)
+            current_station = self.load.get_random_station()
 
             # Break when no connections are left in current station
             while current_station.has_connections():

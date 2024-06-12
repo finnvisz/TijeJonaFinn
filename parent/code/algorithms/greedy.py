@@ -67,6 +67,7 @@ class Greedy(Algorithm):
         
         # Move the connection from unused to used connections
         self.unused_connections.remove(connection_sorted)
+        print(f"Connection {connection_sorted} has been used.")
         self.used_connections.add(connection_sorted)
 
 if __name__ == "__main__":
