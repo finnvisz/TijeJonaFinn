@@ -7,9 +7,10 @@ class Algorithm:
     """
 
     def __init__(self, load: RailNL) -> None:
-        self.load = load
+        self.load: RailNL = load
         self.routes: list[Any] = []
-        self.total_minutes = 0
+
+        self.total_minutes: int = 0
         self.total_connections_used: set[tuple[str, str, float]] = set()
 
 
