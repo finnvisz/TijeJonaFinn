@@ -1,31 +1,35 @@
 from parent.code.visualisation.map import Map
 from parent.code.classes.route import Route
-from manim import manim_colors, Transform
+from manim import manim_colors, MovingCameraScene, ApplyMethod
+from typing import Type
 
 class Display_Route(Map):
     """Show trainroutes on map."""
 
     def color_route(self, route: list):
-
         for connection in route:
 
-            if connection in self.route_line_dict:
-                line = self.route_line_dict[connection]
+            station1 = self.station_name_dict[connection[0]]
+            station2 = self.station_name_dict[connection[1]]
+            time = connection[2]
+            tuple = (station1, station2, time)
+
+            if tuple in self.route_line_dict:
+                line = self.route_line_dict[tuple]
             
             else:
-                tuple = (connection[1], connection[0], connection[2])
+                tuple = (station2, station1, time)
                 line = self.route_line_dict[tuple]
 
-            line.set_color(manim_colors.RED)
+            self.play(ApplyMethod(line.set_color, manim_colors.RED))
 
     def construct(self):
         self.setup()
         self.add(self.points, self.connections, self.connection_labels)
-        route = [('Leiden Centraal', 'Schiphol Airport', 15),
-                 ('Schiphol Airport', 'Amsterdam Zuid', 6),
-                 ('Amsterdam Zuid', 'Amsterdam Sloterdijk', 16)]
-        
-        print(self.route_line_dict.keys())
+        self.wait(2)
+
+        route = [('Leiden Centraal', 'Schiphol Airport', '15'),
+                 ('Schiphol Airport', 'Amsterdam Zuid', '6')]
         self.color_route(route)
-        self.play(Transform(self.connections), run_time = 2)
-        self.wait(4)
+
+        self.wait(2)

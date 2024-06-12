@@ -1,4 +1,4 @@
-from manim import MovingCameraScene, FadeIn, Transform
+from manim import MovingCameraScene, FadeIn, Transform, camera
 from manim import LEFT, UP, Text, Line, Dot, VGroup
 from typing import Tuple
 from parent.code.classes.railnl import RailNL 
@@ -71,7 +71,7 @@ class Map(MovingCameraScene):
                     line = Line(start = s, end = e, stroke_width = 0.5)
 
                     # Add connection to dictionary and VGroup 
-                    tuple = (station.station_name(), connecting.station_name(), time)
+                    tuple = (station, connecting, time)
                     self.route_line_dict[tuple] = line
                     self.station_connections.add(line)
 

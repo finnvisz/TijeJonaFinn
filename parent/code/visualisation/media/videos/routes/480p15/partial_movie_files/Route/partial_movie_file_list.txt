@@ -1,2 +1,0 @@
-# This file is used internally by FFMPEG.
-file 'file:/home/tije/Documents/TijeJonaFinn/parent/code/visualisation/media/videos/routes/480p15/partial_movie_files/Route/3877001972_3382299476_223132457.mp4'
