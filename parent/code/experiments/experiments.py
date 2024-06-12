@@ -9,6 +9,7 @@ class Experiment:
         self.algorithm_class = algorithm_class
         self.data_params = data_params
         self.iterations = iterations
+        self.scores = []
 
     def average_score(self) -> float:
         # runt N times, calculates score, and average score over N times
@@ -19,6 +20,7 @@ class Experiment:
             data_instance = RailNL(self.data_params)
             algorithm_instance = self.algorithm_class(data_instance)
             score = Score(algorithm_instance).calculate()
+            self.scores.append(score)
             total_score += score
             times += 1
 
