@@ -22,6 +22,12 @@ if __name__ == "__main__":
     random_algorithm.make_picture() # after score so a second run doesnt affect the score
     print(f"Random Algorithm Score: {random_score.calculate()}")
 
+    # Test Greedy Algorithm
+    greedy_algorithm = Greedy(data)
+    greedy_score = Score(greedy_algorithm)
+    greedy_algorithm.make_picture()
+    print(f"Greedy Algorithm Score: {greedy_score.calculate()}")
+
     
 
 
