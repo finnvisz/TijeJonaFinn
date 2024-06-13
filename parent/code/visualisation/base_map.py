@@ -5,6 +5,7 @@ from typing import Tuple
 from numpy import ndarray
 
 class Map():
+    """A class creating dots, lines and labels from RailNL load."""
 
     # Setup VGroups, dictionaries and camera
     def __init__(self) -> None:
@@ -75,7 +76,7 @@ class Map():
                     # If not construct connection line
                     s = dot_start.get_center()
                     e = dot_end.get_center()
-                    line = Line(start = s, end = e, stroke_width = 0.5)
+                    line = Line(start = s, end = e, stroke_width = 0.75)
 
                     # Add connection to dictionary and VGroup 
                     tuple = (dot_start, dot_end, time)
@@ -94,7 +95,7 @@ class Map():
             # Create time label
             time = tuple[2]
             label = Text(f"{time}")
-            label.scale(0.025)
+            label.scale(0.02)
 
             # Place label perpendicular to line for readability
             label.move_to(line.get_center())

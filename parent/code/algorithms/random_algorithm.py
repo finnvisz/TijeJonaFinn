@@ -12,7 +12,6 @@ class RandomAlgorithm(Algorithm):
     def __init__(self, load: RailNL) -> None:
         super().__init__(load) # Inherits everything from ALgorithm class
 
-
     def run(self) -> None:
 
         for _ in range(7):
