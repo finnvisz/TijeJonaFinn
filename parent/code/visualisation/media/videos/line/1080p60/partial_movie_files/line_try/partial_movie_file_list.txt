@@ -1,0 +1,4 @@
+# This file is used internally by FFMPEG.
+file 'file:/home/tije/Documents/TijeJonaFinn/parent/code/visualisation/media/videos/line/1080p60/partial_movie_files/line_try/3977891868_568587245_223132457.mp4'
+file 'file:/home/tije/Documents/TijeJonaFinn/parent/code/visualisation/media/videos/line/1080p60/partial_movie_files/line_try/2852726489_1607027740_922634055.mp4'
+file 'file:/home/tije/Documents/TijeJonaFinn/parent/code/visualisation/media/videos/line/1080p60/partial_movie_files/line_try/2852726489_784179552_1966919225.mp4'

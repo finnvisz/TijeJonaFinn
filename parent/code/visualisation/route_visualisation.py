@@ -1,9 +1,12 @@
-from manim import MovingCameraScene, ApplyMethod, Line, manim_colors, Dot
+from manim import MovingCameraScene, ApplyMethod, Line, manim_colors
+from manim import Transform, Dot, VGroup
 from manim import PURE_RED, PURE_GREEN, PURE_BLUE
 from manim import YELLOW, PURPLE, ORANGE, PINK
 from parent.code.classes.railnl import RailNL
 from parent.code.algorithms.random_algorithm import RandomAlgorithm
+from parent.code.algorithms.greedy import Greedy
 from base_map import Map
+from numpy.linalg import norm
 
 class route_visualisation(MovingCameraScene):
     """Show trainroutes on map."""
@@ -25,6 +28,9 @@ class route_visualisation(MovingCameraScene):
         self.dot_labels = self.map.give_dot_labels()
         self.connections = self.map.give_connections()
         self.connection_labels = self.map.give_connection_labels()
+        self.name_station_dict = self.map.give_name_station_dict()
+        self.station_dot_dict = self.map.give_station_dot_dict()
+        self.connection_line_dict = self.map.give_connection_line_dict()
 
     # Move camera to capture network
     def setup_camera(self):
@@ -38,28 +44,23 @@ class route_visualisation(MovingCameraScene):
     # Run algorithm here
     def run_algorithm(self):
         data = RailNL("Holland")
-        algorithm = RandomAlgorithm(data) # HERE
+        algorithm = Greedy(data) # HERE
         algorithm.run()
         self.dienstregeling = algorithm.output()
 
     def color_route(self, route: list, color: manim_colors):
-
-        # Get station dot conversion dictionaries
-        name_station_dict = self.map.give_name_station_dict()
-        station_dot_dict = self.map.give_station_dot_dict()
-        connection_line_dict = self.map.give_connection_line_dict()
 
         start_route = 0
         for connection in route:
             time = connection[2]
 
             # Find corresponding station object 
-            station_start = name_station_dict[connection[0]]
-            station_end = name_station_dict[connection[1]]
+            station_start = self.name_station_dict[connection[0]]
+            station_end = self.name_station_dict[connection[1]]
 
             # Find corresponding dot object
-            dot_start = station_dot_dict[station_start]
-            dot_end = station_dot_dict[station_end]
+            dot_start = self.station_dot_dict[station_start]
+            dot_end = self.station_dot_dict[station_end]
 
             if start_route == 0:
                 self.setup_train(dot_start)
@@ -67,14 +68,14 @@ class route_visualisation(MovingCameraScene):
 
             # Check if connection tuple exists
             tuple = (dot_start, dot_end, time)
-            if tuple in connection_line_dict:
-                line = connection_line_dict[tuple]
+            if tuple in self.connection_line_dict:
+                line = self.connection_line_dict[tuple]
             
             # Otherwise search reversed connection
             else:
                 tuple = (dot_end, dot_start, time)
-                line = connection_line_dict[tuple]
-            
+                line = self.connection_line_dict[tuple]
+
             self.set_color(line, color)
             shift = self.train.animate.move_to(dot_end.get_center())
             self.play(shift, run_time = 0.5)
@@ -98,7 +99,31 @@ class route_visualisation(MovingCameraScene):
                 # Otherwise update line gradient
                 colors = self.line_colors_dict[line]
                 colors.append(color)
-                self.play(ApplyMethod(line.set_color, colors), run_time = 0.1)
+                self.set_multiple_colors(line, colors)
+
+    # Set line with multiple colors 
+    def set_multiple_colors(self, line: Line, colors: list):
+
+        # Zit hier een interne manim error dus hard force oplossing
+        amount = len(colors)
+        starting_point = line.start
+        ending_point = line.end
+        length = norm(ending_point - starting_point)
+        direction = (ending_point - starting_point) / length
+        segment_length = length / amount
+        new_line = VGroup()
+
+        # Itereer over aantal kleuren
+        for i in range(amount):
+
+            # Creëer niewe lijn bestaande uit gekleurde segmenten
+            ending_point = starting_point + direction * segment_length
+            segment = Line(start = starting_point, end = ending_point, color = colors[i], stroke_width = 0.75)
+            new_line.add(segment)
+            starting_point = ending_point
+
+        # Transformeer oude lijn naar nieuw gesegmenteerde lijn
+        self.play(Transform(line, new_line), run_time = 0.1)
 
     def construct(self):
 
