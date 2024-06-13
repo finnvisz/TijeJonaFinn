@@ -77,6 +77,10 @@ class Algorithm:
             self.run()
 
         num_routes = len(self.routes)
+        if num_routes == 0:
+            print("No routes to plot.")
+            return
+        
         num_cols = 2  # Number of columns for subplots
         num_rows = (num_routes + num_cols - 1) // num_cols  # Calculate number of rows
 
