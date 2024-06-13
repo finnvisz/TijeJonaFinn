@@ -1,0 +1,9 @@
+RandomAlgorithm:
+Has an average score of around 5800-5900
+much overlap and doesnt use all connections
+Short routes
+
+Greedy:
+Average score of around 6100-6200, so a little bit better
+Longer routes
+Still much overlap, doesnt use all connections
