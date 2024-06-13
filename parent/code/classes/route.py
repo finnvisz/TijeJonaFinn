@@ -5,6 +5,7 @@ class Route:
 
     def __init__(self) -> None:
         self.connections_used: list = []
+        self.stations: list = []
         self.time = 0
 
     def __repr__(self) -> str:
@@ -15,6 +16,10 @@ class Route:
 
     def add(self, station1: "Station", station2: "Station", duur: int) -> None:
         self.connections_used.append([station1.name, station2.name, duur])
+        if self.stations:
+            if self.stations[-1] != station1:
+                self.stations.append(station1)
+        self.stations.append(station2)
         self.time += int(duur)
 
     def remove(self, connection: tuple[str, str, int]) -> None:
@@ -23,6 +28,9 @@ class Route:
             self.time -= int(connection[2])
         else:
             raise ValueError("The specified connection does not exist in the route.")
+        
+    def get_stations(self) -> list:
+        return self.stations
 
     def get_connections_used(self) -> list:
         return self.connections_used
