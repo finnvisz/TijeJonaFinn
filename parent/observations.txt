@@ -1,7 +1,9 @@
 RandomAlgorithm:
-Has an average score of around 5800-5900
+Has an average score of around 5800-5900 (7 routes)
 much overlap and doesnt use all connections
 Goes back and forth a lot
+Creating 7 routes gives the highest average score, and the highest tail, 
+so this is a possible heuristiek
 
 Greedy:
 Average score of around 6100-6200, so a little bit better
