@@ -81,3 +81,6 @@ class RailNL:
     def get_random_station(self) -> "Station":
         """Return a random station from self.stations."""
         return random.choice(list(self.stations.values()))
+    
+    def get_total_connections(self) -> set:
+        return set(map(tuple, self.connections))

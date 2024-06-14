@@ -13,7 +13,7 @@ class Finn(Algorithm):
         for i in range(len(lijst_route1) - 1):
             station1 = self.load.stations[lijst_route1[i]]
             station2 = self.load.stations[lijst_route1[i + 1]]
-            route1.add(station1, station2, station1.connection_duration(station2))
+            route1.add_connection(station1, station2, station1.connection_duration(station2))
         self.routes.append(route1)
 
         route2 = Route()
@@ -21,7 +21,7 @@ class Finn(Algorithm):
         for i in range(len(lijst_route2) - 1):
             station1 = self.load.stations[lijst_route2[i]]
             station2 = self.load.stations[lijst_route2[i + 1]]
-            route2.add(station1, station2, station1.connection_duration(station2))
+            route2.add_connection(station1, station2, station1.connection_duration(station2))
         self.routes.append(route2)
 
         route3 = Route()
@@ -29,7 +29,7 @@ class Finn(Algorithm):
         for i in range(len(lijst_route3) - 1):
             station1 = self.load.stations[lijst_route3[i]]
             station2 = self.load.stations[lijst_route3[i + 1]]
-            route3.add(station1, station2, station1.connection_duration(station2))
+            route3.add_connection(station1, station2, station1.connection_duration(station2))
         self.routes.append(route3)
 
         route4 = Route()
@@ -37,7 +37,7 @@ class Finn(Algorithm):
         for i in range(len(lijst_route4) - 1):
             station1 = self.load.stations[lijst_route4[i]]
             station2 = self.load.stations[lijst_route4[i + 1]]
-            route4.add(station1, station2, station1.connection_duration(station2))
+            route4.add_connection(station1, station2, station1.connection_duration(station2))
         self.routes.append(route4)
 
         route5 = Route()
@@ -45,7 +45,7 @@ class Finn(Algorithm):
         for i in range(len(lijst_route5) - 1):
             station1 = self.load.stations[lijst_route5[i]]
             station2 = self.load.stations[lijst_route5[i + 1]]
-            route5.add(station1, station2, station1.connection_duration(station2))
+            route5.add_connection(station1, station2, station1.connection_duration(station2))
         self.routes.append(route5)
 
         route6 = Route()
@@ -53,7 +53,7 @@ class Finn(Algorithm):
         for i in range(len(lijst_route6) - 1):
             station1 = self.load.stations[lijst_route6[i]]
             station2 = self.load.stations[lijst_route6[i + 1]]
-            route6.add(station1, station2, station1.connection_duration(station2))
+            route6.add_connection(station1, station2, station1.connection_duration(station2))
         self.routes.append(route6)
 
         route7 = Route()
@@ -61,5 +61,5 @@ class Finn(Algorithm):
         for i in range(len(lijst_route7) - 1):
             station1 = self.load.stations[lijst_route7[i]]
             station2 = self.load.stations[lijst_route7[i + 1]]
-            route7.add(station1, station2, station1.connection_duration(station2))
+            route7.add_connection(station1, station2, station1.connection_duration(station2))
         self.routes.append(route7)

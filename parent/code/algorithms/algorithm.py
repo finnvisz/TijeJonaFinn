@@ -9,7 +9,7 @@ class Algorithm:
     def __init__(self, load: RailNL) -> None:
         self.load = load
         self.routes: list[Any] = []
-        self.total_minutes = 0
+        self.total_minutes: int = 0
         self.total_connections_used: set[tuple[str, str, float]] = set()
 
 
@@ -44,18 +44,18 @@ class Algorithm:
         as the connection from A to B.
         """
         for route in self.routes:
-                for connection_list in route.get_connections_used():
+            for connection_list in route.get_connections_used():
 
-                    # Ensure connection is a tuple
-                    connection = tuple(connection_list)  
+                # Ensure connection is a tuple
+                connection = tuple(connection_list)  
 
-                    # Create the reverse connection tuple
-                    reverse_connection = (connection[1], connection[0], connection[2]) 
+                # Create the reverse connection tuple
+                reverse_connection = (connection[1], connection[0], connection[2]) 
 
-                    # check if the connection has already been used, 
-                    # add the connection if not
-                    if reverse_connection not in self.total_connections_used:
-                        self.total_connections_used.add(connection)
+                # check if the connection has already been used, 
+                # add the connection if not
+                if reverse_connection not in self.total_connections_used:
+                    self.total_connections_used.add(connection)
 
         return set(self.total_connections_used)
     

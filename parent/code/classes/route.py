@@ -14,7 +14,7 @@ class Route:
     def connections(self):
         return self.connections_used
 
-    def add(self, station1: "Station", station2: "Station", duur: int) -> None:
+    def add_connection(self, station1: "Station", station2: "Station", duur: int) -> None:
         self.connections_used.append([station1.name, station2.name, duur])
         if self.stations:
             if self.stations[-1] != station1:
@@ -22,7 +22,7 @@ class Route:
         self.stations.append(station2)
         self.time += int(duur)
 
-    def remove(self, connection: tuple[str, str, int]) -> None:
+    def remove_connection(self, connection: tuple[str, str, int]) -> None:
         if connection in self.connections_used:
             self.connections_used.remove(connection)
             self.time -= int(connection[2])

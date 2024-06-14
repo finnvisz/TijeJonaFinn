@@ -5,14 +5,13 @@ class Score:
         self.algorithm = algorithm
         self.algorithm.run()  # Ensure routes are generated
         self.total_connections_used = set() # all connections used (one way)
+    
+    def fraction_used(self) -> float:
+        tot_connections_available = set(map(tuple, self.algorithm.load.connections)) # all connections available (one way)
+        return len(self.algorithm.get_total_connections_used()) / (len(tot_connections_available))
 
     def calculate(self) -> float:
-        Min = self.algorithm.get_total_minutes()
-        tot_connections_available = set(map(tuple, self.algorithm.load.connections)) # all connections available (one way)
-        p = len(self.algorithm.get_total_connections_used()) / (len(tot_connections_available))
-        T = self.algorithm.number_of_routes()
-
-        K = p * 10000 - (T * 100 + Min)
+        K = self.fraction_used() * 10000 - (self.algorithm.number_of_routes() * 100 + self.algorithm.get_total_minutes())
         return K
 
 
