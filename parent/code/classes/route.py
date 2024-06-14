@@ -1,18 +1,16 @@
 from parent.code.classes.station_class import Station
+from typing import Tuple
 
 class Route:
     """Object class of train routes between stations."""
 
     def __init__(self) -> None:
-        self.connections_used: list = []
-        self.stations: list = []
+        self.connections_used: list[Tuple[str, str, int]] = []
+        self.stations: list[Station] = []
         self.time = 0
 
     def __repr__(self) -> str:
         return f"Route({self.connections_used})"
-    
-    def connections(self):
-        return self.connections_used
 
     def add_connection(self, station1: "Station", station2: "Station", duur: int) -> None:
         self.connections_used.append([station1.name, station2.name, duur])

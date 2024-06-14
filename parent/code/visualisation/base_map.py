@@ -1,32 +1,39 @@
 from parent.code.classes.railnl import RailNL 
 from parent.code.classes.station_class import Station
-from manim import Text, Line, Dot, VGroup, LEFT, UP
-from typing import Tuple
-from numpy import ndarray
 
-class Map():
+from manim import Text, Line, Dot, VGroup, LEFT, UP, MovingCameraScene
+from typing import Tuple
+
+class BaseMapScene(MovingCameraScene):
     """A class creating dots, lines and labels from RailNL load."""
 
     # Setup VGroups, dictionaries and camera
-    def __init__(self) -> None:
-        super().__init__()
+    def setup(self) -> None:
 
         # Get railwaynetwork data 
-        railnl: "RailNL" = RailNL("Holland") 
-        self.name_station_dict: dict[str, Station] = railnl.stations_dict()
+        self.data: "RailNL" = RailNL("Holland") 
+        self.name_station_dict: dict[str, Station] = self.data.stations_dict()
 
         # Create VGroups 
         self.create_dots()
         self.create_dot_labels()
         self.create_connections()
         self.create_connection_labels()
+
+        # Set camera to capture network
+        self.setup_camera()
+
+    # Move camera to capture network
+    def setup_camera(self):
+        self.camera.frame.move_to(self.dots)
+        self.camera.frame.set_height(1.1 * self.dots.get_height())
         
     def create_dots(self) -> None:
 
         # VGroup and dictionaries to load into
-        self.station_dots = VGroup()
+        self.dots = VGroup()
         self.station_dot_dict: dict[Station, Dot] = {}
-        self.dot_location_dict: dict[Dot, ndarray] = {}
+        self.dot_location_dict: dict[Dot, list] = {}
 
         # Create dot for each station
         for station in self.name_station_dict.values():
@@ -39,7 +46,7 @@ class Map():
             # Add dots to relevant dictionaries and VGroup
             self.station_dot_dict[station] = dot
             self.dot_location_dict[dot] = position
-            self.station_dots.add(dot)
+            self.dots.add(dot)
 
     def create_dot_labels(self) -> None:
 
@@ -60,7 +67,7 @@ class Map():
     def create_connections(self) -> None:
     
         # VGroup and dictionaries to load into
-        self.dot_connections = VGroup()
+        self.connections = VGroup()
         self.connection_line_dict: dict[Tuple[Dot, Dot], Line] = {}
 
         # For each station find associated dot and assosiated connection dot
@@ -81,7 +88,7 @@ class Map():
                     # Add connection to dictionary and VGroup 
                     tuple = (dot_start, dot_end, time)
                     self.connection_line_dict[tuple] = line
-                    self.dot_connections.add(line)
+                    self.connections.add(line)
 
     def create_connection_labels(self) -> VGroup:
 
@@ -106,24 +113,3 @@ class Map():
             # Add connection to VGroup and dictionary
             self.connection_labels.add(label)
             self.connection_label_dict[tuple] = label
-
-    def give_dots(self) -> VGroup:
-        return self.station_dots
-    
-    def give_dot_labels(self) -> VGroup:
-        return self.dot_labels
-    
-    def give_connections(self) -> VGroup:
-        return self.dot_connections
-    
-    def give_connection_labels(self) -> VGroup:
-        return self.connection_labels
-    
-    def give_station_dot_dict(self) -> dict:
-        return self.station_dot_dict
-    
-    def give_name_station_dict(self) -> dict:
-        return self.name_station_dict
-    
-    def give_connection_line_dict(self) -> dict:
-        return self.connection_line_dict
