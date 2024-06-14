@@ -5,7 +5,7 @@ from random import choice
 from parent.code.algorithms.score import Score
 
 class RandomAlgorithm(Algorithm):
-    """Algorithm script finding 7 random routes. Each not exceeding 
+    """Algorithm script finding N random routes. Each not exceeding 
     the 120 minute limit
     """
 
@@ -13,8 +13,8 @@ class RandomAlgorithm(Algorithm):
         super().__init__(load) # Inherits everything from ALgorithm class
 
     def run(self) -> None:
-
-        for _ in range(7):
+        N = choice([0, 1, 2, 3, 4, 5, 6, 7])
+        for _ in range(N):
             time_used = 0
             route = Route()
 
@@ -36,7 +36,7 @@ class RandomAlgorithm(Algorithm):
                 # possible considering time_used
                 if total <= 120:
                     time_used = total
-                    route.add(current_station, connection, duration)
+                    route.add_connection(current_station, connection, duration)
                     current_station = connection
 
                 # Else, route is finished
