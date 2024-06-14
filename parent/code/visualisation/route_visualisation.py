@@ -1,36 +1,26 @@
-from manim import MovingCameraScene, ApplyMethod, Line, manim_colors
-from manim import Transform, Dot, VGroup
+from manim import ApplyMethod, Line, Transform, Dot, VGroup, manim_colors
 from manim import PURE_RED, PURE_GREEN, PURE_BLUE
 from manim import YELLOW, PURPLE, ORANGE, PINK
-from parent.code.classes.railnl import RailNL
+
 from parent.code.algorithms.random_algorithm import RandomAlgorithm
 from parent.code.algorithms.greedy import Greedy
-from base_map import Map
+
+from base_map import BaseMapScene
 from numpy.linalg import norm
 
-class route_visualisation(MovingCameraScene):
+class route_visualisation(BaseMapScene):
     """Show trainroutes on map."""
 
-    def setup(self):
-        self.setup_map()
-        self.setup_camera()
+    def setup_2(self):
+
+        # Run a specific algorithm
         self.run_algorithm()
 
+        # Create dictionary to save colors used on lines
         self.line_colors_dict: dict[Line, list] = {}
         self.colors = [PURE_RED, PURE_GREEN, 
                        PURE_BLUE, YELLOW, 
                        PURPLE, ORANGE, PINK]
-        
-    # Get all relevant objects from base_map
-    def setup_map(self):
-        self.map = Map()
-        self.dots = self.map.give_dots()
-        self.dot_labels = self.map.give_dot_labels()
-        self.connections = self.map.give_connections()
-        self.connection_labels = self.map.give_connection_labels()
-        self.name_station_dict = self.map.give_name_station_dict()
-        self.station_dot_dict = self.map.give_station_dot_dict()
-        self.connection_line_dict = self.map.give_connection_line_dict()
 
     # Move camera to capture network
     def setup_camera(self):
@@ -43,10 +33,7 @@ class route_visualisation(MovingCameraScene):
 
     # Run algorithm here
     def run_algorithm(self):
-        data = RailNL("Holland")
-        algorithm = Greedy(data) # HERE
-        algorithm.run()
-        self.dienstregeling = algorithm.output()
+        self.output = Greedy(self.data).run() # HERE
 
     def color_route(self, route: list, color: manim_colors):
 
@@ -62,6 +49,7 @@ class route_visualisation(MovingCameraScene):
             dot_start = self.station_dot_dict[station_start]
             dot_end = self.station_dot_dict[station_end]
 
+            # Place train at start of new route
             if start_route == 0:
                 self.setup_train(dot_start)
                 start_route += 1
@@ -71,32 +59,31 @@ class route_visualisation(MovingCameraScene):
             if tuple in self.connection_line_dict:
                 line = self.connection_line_dict[tuple]
             
-            # Otherwise search reversed connection
+            # Otherwise reversed connection must exist
             else:
                 tuple = (dot_end, dot_start, time)
                 line = self.connection_line_dict[tuple]
 
+            # Set color of line, move train
             self.set_color(line, color)
             shift = self.train.animate.move_to(dot_end.get_center())
             self.play(shift, run_time = 0.5)
 
-    # Set color depending on if already colored.
+    # Set color depending on if already colored
     def set_color(self, line: Line, color: manim_colors):
 
+        # If line not yet colored just color
         if not line in self.line_colors_dict:
-
-            # If line not yet colored just color
             self.play(ApplyMethod(line.set_color, color), run_time = 0.1)
             self.line_colors_dict[line] = [color]
 
         else:
-
             # If line already has given color do nothing
             if color in self.line_colors_dict[line]:
                 pass
 
+            # Otherwise update line gradient
             else: 
-                # Otherwise update line gradient
                 colors = self.line_colors_dict[line]
                 colors.append(color)
                 self.set_multiple_colors(line, colors)
@@ -104,21 +91,32 @@ class route_visualisation(MovingCameraScene):
     # Set line with multiple colors 
     def set_multiple_colors(self, line: Line, colors: list):
 
-        # Zit hier een interne manim error dus hard force oplossing
-        amount = len(colors)
+        # Find start and end brutally
         starting_point = line.start
         ending_point = line.end
+
+        # Get direction and length 
         length = norm(ending_point - starting_point)
         direction = (ending_point - starting_point) / length
+
+        # Get length of each segment
+        amount = len(colors)
         segment_length = length / amount
+
+        # Create new line VGroup to replace old
         new_line = VGroup()
 
-        # Itereer over aantal kleuren
+        # Create new line consisting of segments
         for i in range(amount):
 
-            # Creëer niewe lijn bestaande uit gekleurde segmenten
+            # Create ending of segment
             ending_point = starting_point + direction * segment_length
-            segment = Line(start = starting_point, end = ending_point, color = colors[i], stroke_width = 0.75)
+
+            # Create new segment linepiece
+            segment = Line(start = starting_point, end = ending_point, 
+                           color = colors[i], stroke_width = 0.75)
+
+            # Add segment and set ending point as new starting
             new_line.add(segment)
             starting_point = ending_point
 
@@ -127,12 +125,20 @@ class route_visualisation(MovingCameraScene):
 
     def construct(self):
 
+        self.setup_2()
         self.add(self.dots, self.connections, self.connection_labels)
         self.wait(2)
 
-        for count in range(7):
-            route_object = self.dienstregeling[count]
-            route = route_object.connections()
-            self.color_route(route, self.colors[count])
+        # Using seven routes
+        for i in range(7):
+
+            # Iterate over route_objects in output
+            route_object = self.output[i]
+
+            # Get connections within route_object
+            route = route_object.get_connections_used()
+
+            # Color route with ith color
+            self.color_route(route, self.colors[i])
 
         self.wait(2)

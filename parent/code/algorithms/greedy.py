@@ -16,10 +16,9 @@ class Greedy(Algorithm):
     def __init__(self, load: RailNL) -> None:
         super().__init__(load)
 
-
-    def run(self) -> list:
+    def run(self) -> list[Route]:
         # List to store the various routes
-        self.routes = []
+        self.routes: list[Route] = []
         
         # Unused_connections starts off with all connections
         # Unused connections will be moved to used connections when they are used
