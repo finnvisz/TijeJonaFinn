@@ -16,10 +16,11 @@ class Greedy(Algorithm):
     def __init__(self, load: RailNL) -> None:
         super().__init__(load)
 
-    def run(self) -> list[Route]:
+    def run(self, original_starting_station: bool = True) -> list[Route]:
         # List to store the various routes
         self.routes: list[Route] = []
         
+
         # Unused_connections starts off with all connections
         # Unused connections will be moved to used connections when they are used
         self.used_connections: dict = dict()
@@ -33,16 +34,54 @@ class Greedy(Algorithm):
             self.unused_connections[station_names_as_tuple] = connection
 
 
+        # Unused stations starts off with all stations
+        # Unused stations will be moved to used stations when they are used
+        self.unused_stations: list = list(self.load.stations.values()) # internal list of stations
+        self.used_stations: list = list()
+
+        # DEBUG
+        # print(self.unused_stations)
+
         # While there are less than 7 routes and there are still unused connections
         while self.number_of_routes() < 7 and len(self.unused_connections) > 0:
             # Create a new route
             route = Route()
+            # DEBUG
+            # print(f"Route {self.number_of_routes() + 1}")
 
-            # And set a random first station for this route
-            current_station = self.load.get_random_station()
+            # And set a first station for this route:
+            # if flag is set to true, try to pick unused stations
+            if original_starting_station:
+                # Option 1: pick a random unused station
+                if len(self.unused_stations) > 0:
+                    current_station = random.choice(self.unused_stations)
+                
+                # Option 2: pick station with an unused connection
+                else:
+                    random_unused_connection = random.choice(list(self.unused_connections.values()))
+                    random_index = random.choice([0, 1])
+                    
+                    current_station = random_unused_connection[random_index]
+
+            # if flag set to false, pick random from all stations
+            else:
+                current_station = self.load.get_random_station()
+
 
             # While time is less than 120 minutes
             while route.time < 120: 
+                # DEBUG
+                # print(f"Current station: {current_station.name}")
+                
+                # First: move this station to used stations
+                # (if already moved do nothing)
+                try:
+                    index = self.unused_stations.index(current_station)
+                    self.used_stations.append(self.unused_stations.pop(index))
+                except ValueError:
+                    pass
+                
+                
                 # Get connections of current station, sorted by duration
                 # This is a queue of possible connections, with the shortest connection first
                 connections = current_station.get_connections_sorted()
@@ -67,7 +106,7 @@ class Greedy(Algorithm):
                 # print(f"Next station: {next_station.name}")
 
                 # Add the connection to the route
-                route.add(current_station, next_station, current_station.get_connection_time(next_station))
+                route.add_connection(current_station, next_station, current_station.get_connection_time(next_station))
 
                 # Move the connection to used connections
                 self.set_as_used(current_station, next_station)
@@ -158,22 +197,26 @@ class Greedy(Algorithm):
         return results
         
 
-# # Run standard greedy and print results
-# if __name__ == "__main__":
-#     greedy = Greedy(RailNL("Holland"))
-#     output = greedy.run()
-#     for route in output:
-#         for connection in route.connections():
-#             print(connection[0], connection[2], end=" -> ")
-        
-#         print("")
-#         print(f"Total time: {route.time}")
-#         print("")
-
-# Run best starting station and print results
+# Run standard greedy and print results
 if __name__ == "__main__":
     greedy = Greedy(RailNL("Holland"))
-    results = greedy.best_starting_station()
-    for result in results:
-        if result[1] > 12:
-            print(f"Station: {result[0]}, Connections: {result[1]}, Time: {result[2]}")
+    output = greedy.run()
+    
+    for route in output:
+        for connection in route.get_connections_used():
+            print(connection[0], connection[2], end=" -> ")
+        
+        print("")
+        print(f"Total time: {route.time}")
+        print("")
+
+    print(f"Unused stations: {len(greedy.unused_stations)}")
+    print(f"Unused connections: {len(greedy.unused_connections)}")
+
+# # Run best starting station and print results
+# if __name__ == "__main__":
+#     greedy = Greedy(RailNL("Holland"))
+#     results = greedy.best_starting_station()
+#     for result in results:
+#         if result[1] > 12:
+#             print(f"Station: {result[0]}, Connections: {result[1]}, Time: {result[2]}")

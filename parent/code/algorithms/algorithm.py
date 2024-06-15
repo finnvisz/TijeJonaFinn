@@ -8,13 +8,8 @@ class Algorithm:
 
     def __init__(self, load: RailNL) -> None:
         self.load = load
-<<<<<<< HEAD
-        self.routes: list[Any] = []
-        self.total_minutes: int = 0
-=======
         self.routes: list[Route] = []
-        self.total_minutes = 0
->>>>>>> efe21c4c1ba3efa5c8d8cdc8f03feb7a0402f2fd
+        self.total_minutes: int = 0
         self.total_connections_used: set[tuple[str, str, float]] = set()
 
 
