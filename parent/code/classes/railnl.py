@@ -78,6 +78,14 @@ class RailNL:
         connections = lambda station: self.stations[station].amount_connecting()
         return max(connections(station) for station in stations)
     
+    # Find the lowest number of station connections
+    def min_connections(self) -> int:
+        stations = self.stations.keys()
+
+        # Find amount of connections using amount_connecting method
+        connections = lambda station: self.stations[station].amount_connecting()
+        return min(connections(station) for station in stations)
+    
     def get_random_station(self) -> "Station":
         """Return a random station from self.stations."""
         return random.choice(list(self.stations.values()))
