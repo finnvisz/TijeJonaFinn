@@ -8,7 +8,7 @@ from code.algorithms.algorithm import Algorithm
 from code.algorithms.random_algorithm import RandomAlgorithm
 from code.algorithms.hillclimber import Hillclimber
 from code.algorithms.score import Score
-from code.experiments.experiments import Experiment
+from parent.code.experiments.experiment import Experiment
 
 if __name__ == "__main__":
     data = RailNL("Holland")

@@ -1,9 +1,9 @@
 from parent.code.algorithms.algorithm import Algorithm
 
 class Score:
-    def __init__(self, algorithm: "Algorithm") -> None:
+    def __init__(self, algorithm: "Algorithm", **algorithm_kwargs) -> None:
         self.algorithm = algorithm
-        self.algorithm.run()  # Ensure routes are generated
+        self.algorithm.run(**algorithm_kwargs)  # Ensure routes are generated
         self.total_connections_used = set() # all connections used (one way)
     
     def fraction_used(self) -> float:
