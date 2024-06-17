@@ -29,13 +29,15 @@ class Experiment:
     def run_experiment(self, iterations: int = 100, **algorithm_kwargs) -> float:
         """
         Runs algorithm N times (default 100), and returns the scores in a numpy array.
-
-        Post: returns a numpy array with N scores.
+        
+        - Pre: Experiment instance has been initialized with existing algorithm and map.
+        Necessary keyword arguments for the algorithm's run method have been provided
+        to this method (if any).
+        - Post: returns a numpy array with N scores.
         """
         # Scores are saved in numpy array, way faster than list!
         # Space in memory is reserved and filled with zeros
         self.scores: "nparray[float]" = np.zeros(iterations)
-        
         
         for i in range(iterations):
             # Ensure each run starts with a fresh state.
@@ -47,10 +49,18 @@ class Experiment:
             # Add score to array at correct positions
             self.scores[i] = score
 
-        assert np.count_nonzero(self.scores) == iterations, "Not all scores have been filled in."
+        assert np.count_nonzero(self.scores) == iterations, "Not all scores have been filled in, bug in run_experiment."
         return self.scores
     
+    def write_scores_to_csv(self, filename: str) -> None:
+        """
+        Write scores to a CSV file. 
 
+        - Pre: scores have been calculated (i.e. run_experiment has been called).
+        `filename` is a string without extension.
+        - Post: scores are written to `filename`.csv in the results subdirectory.
+        """
+        np.savetxt(f"{self.export_directory}/{filename}.csv", self.scores, delimiter = ",")
         
 
 # Example usage
@@ -59,7 +69,7 @@ if __name__ == "__main__":
     results = random_experiment.run_experiment(iterations = 10, starting_stations="prefer_unused")
     # print(results)
     print(f"Random Algorithm Average Score: {np.mean(results)}")
-    np.savetxt(f"{random_experiment.export_directory}/randomv2_scores.csv", results, delimiter = ",")
+    random_experiment.write_scores_to_csv("randomv2_scores")
 
     # finn_experiment = Experiment(Finn, map, iterations=100)
     # print(f"Finn Average Score: {finn_experiment.average_score()}")  # should be 8919
