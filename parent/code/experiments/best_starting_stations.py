@@ -48,15 +48,16 @@ if __name__ == "__main__":
 
 
     # Run algorithm with different starting stations:
+    iterations = 12
     # With least connections
-    results_least_connections = randomv2_experiment.run_experiment(iterations=1000, starting_stations="custom_list_with_replacement", 
+    results_least_connections = randomv2_experiment.run_experiment(iterations=iterations, starting_stations="custom_list_with_replacement", 
                                                 starting_station_list = stations_with_least_connections)
-    randomv2_experiment.write_scores_to_csv("randomv2_least_connections.csv")
+    randomv2_experiment.write_scores_to_csv("randomv2_least_connections")
 
     # With most connections
-    results_most_connections = randomv2_experiment.run_experiment(iterations=1000, starting_stations="custom_list_with_replacement", 
+    results_most_connections = randomv2_experiment.run_experiment(iterations=iterations, starting_stations="custom_list_with_replacement", 
                                                 starting_station_list = stations_with_most_connections)
-    randomv2_experiment.write_scores_to_csv("randomv2_most_connections.csv")
+    randomv2_experiment.write_scores_to_csv("randomv2_most_connections")
 
 
     # Calculate average scores
