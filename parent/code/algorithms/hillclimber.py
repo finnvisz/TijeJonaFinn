@@ -1,6 +1,5 @@
 import random
 import copy
-
 from parent.code.algorithms.algorithm import Algorithm
 from parent.code.algorithms.random_algorithm import RandomAlgorithm
 from parent.code.algorithms.score import Score
@@ -12,108 +11,109 @@ class Hillclimber(Algorithm):
         super().__init__(load)
         self.load = load
         self.algorithm = algorithm
-        self.algorithm.run()
-        self.routes = copy.deepcopy(self.algorithm.routes)
-        self.score = Score(self.algorithm).calculate()
-        self.total_minutes = self.get_total_minutes()
-        self.total_connections_used = self.get_total_connections_used()
+        self.routes = algorithm.routes
 
-    def new_connections_used(self, routes):
-        new_connections_used = set()
+        # Debug: Print initial routes and their details
+        print(f"Initial routes: {self.routes}")
+
+        self.best_score = self.calculate_new_score(self.routes)
+
+        # Debug: Print initial score calculation
+        print(f"Initial score: {self.best_score}")
+
+    def new_connections_used(self, routes) -> set:
+        new_connections = set()
         for route in routes:
             for connection_list in route.get_connections_used():
+                connection = tuple(connection_list)
+                reverse_connection = (connection[1], connection[0], connection[2])
+                if reverse_connection not in new_connections:
+                    new_connections.add(connection)
+        return set(new_connections)
 
-                # Ensure connection is a tuple
-                connection = tuple(connection_list)  
-
-                # Create the reverse connection tuple
-                reverse_connection = (connection[1], connection[0], connection[2]) 
-
-                # check if the connection has already been used, 
-                # add the connection if not
-                if reverse_connection not in new_connections_used:
-                    new_connections_used.add(connection)
-        return new_connections_used
-    
     def new_total_minutes(self, routes) -> int:
-        return sum(route.time for route in routes)
+        total_minutes = 0
+        for route in routes:
+            total_minutes += route.time
+        return total_minutes
+    
+    def generate_random_route(self) -> "Route":
+        time_used = 0
+        route = Route()
+        current_station = self.load.get_random_station()
+        while current_station.has_connections():
+            connections = list(current_station.connections_dict())
+            connection = random.choice(connections)
+            duration = int(current_station.connection_duration(connection))
+            total = time_used + duration
+            if total < 120:
+                time_used = total
+                route.add_connection(current_station, connection, duration)
+            else:
+                break
+        return route
+        
+    def add_random_route(self, routes):
+        new_routes = copy.deepcopy(routes)
+        new_route = self.generate_random_route() 
+        new_routes.append(new_route)
+        return new_routes
 
+    def remove_random_route(self, routes):
+        if len(routes) > 1:
+            new_routes = copy.deepcopy(routes)
+            new_routes.pop(random.randint(0, len(new_routes) - 1))
+            return new_routes
+        return routes
 
     def calculate_new_score(self, routes) -> float:
         p = len(self.new_connections_used(routes)) / len(self.load.get_total_connections())
         T = len(routes)
         return p * 10000 - (T * 100 + self.new_total_minutes(routes))
 
-    def add_random_route(self, routes):
-        new_routes = copy.deepcopy(routes)
-        current_station = self.load.get_random_station()
-        route = Route()
-        time_used = 0
+    def run(self) -> None:
+        iterations = 10000
+        start_score = self.best_score
+        print(f"{iterations} iteraties")
+        print(f"Start score: {round(start_score, 1)}")
 
-        while current_station.has_connections():
-            # Debugging: print the current station and its connections
-            print(f"Current station: {current_station.name}")
-            print(f"Connections: {current_station.connections_dict()}")
-
-            # Choose a random connection
-            connection, duration = random.choice(list(current_station.connections_dict().items()))
-
-            # # Debugging: print the chosen connection and duration
-            # print(f"Chosen connection: {connection}, duration: {duration}")
-
-            if time_used + duration <= 120:
-                route.add_connection(current_station, connection, duration)
-                current_station = connection  # Assuming connection is the next station
-                time_used += duration
-            else:
-                break
-
-        if route.connections:
-            new_routes.append(route)
-        return new_routes
-
-
-    def run(self, iterations: int = 10) -> None:
-        
-        print(f"Initial score: {self.score}")
-
-        for iteration in range(iterations):
-            print(f"Iteration: {iteration + 1}")
-            if not self.routes:
-                print("No routes to change!")
-                return
-
+        for i in range(iterations):
             new_routes = copy.deepcopy(self.routes)
-            route_to_remove = random.choice(new_routes)
-            new_routes.remove(route_to_remove)
 
+            # if random.random() > 0.5 and len(self.routes) < 7:
+            #     new_routes = self.add_random_route(new_routes)
+            # else:
+            #     new_routes = self.remove_random_route(new_routes)
+
+            new_routes = self.remove_random_route(new_routes)
+            new_routes = self.add_random_route(new_routes)
+                
             new_score = self.calculate_new_score(new_routes)
-
-            if new_score > self.score:
-                print(f"New score: {new_score}")
+            
+            if new_score > self.best_score:
                 self.routes = new_routes
-                self.score = new_score
-                self.total_minutes = sum(route.time for route in new_routes)
-                self.total_connections_used = self.new_connections_used(new_routes)
-            else:
-                new_routes = self.add_random_route(new_routes)
-                new_score = self.calculate_new_score(new_routes)
+                self.best_score = new_score
+                print(f"Iteratie {i}, New score: {round(new_score, 1)}")
 
-                if new_score > self.score:
-                    print(f"New score: {new_score}")
-                    self.routes = new_routes
-                    self.score = new_score
-                    self.total_minutes = sum(route.time for route in new_routes)
-                    self.total_connections_used = self.new_connections_used(new_routes)
-                else:
-                    print(f"No change made, current score: {self.score}")
+        print(f"Start score: {start_score}, End score: {self.best_score}")
 
 if __name__ == "__main__":
     data = RailNL("Holland")
 
     # Test Hillclimber algorithm with RandomAlgorithm as starting state
-    hillclimber_alg = Hillclimber(data, RandomAlgorithm(data))
+    random_alg = RandomAlgorithm(data)
+    random_alg.run()
+    hillclimber_alg = Hillclimber(data, random_alg)
     hillclimber_alg.run()
-    hillclimber_alg.make_picture()
+    hillclimber_alg.make_picture() 
 
-# This algorithm is trash :)
+    # for i, route in enumerate(hillclimber_alg.routes):
+    #     print(f"Route {i} (Time: {route.time} minutes):")
+    #     for connection in route.connections_used:
+    #         print(f"  {connection[0]} -> {connection[1]} ({connection[2]} minutes)")
+    #     print()
+
+    for i, route in enumerate(hillclimber_alg.routes):
+        print(f"route {i+1},", end = " ")
+        print(route.stations) 
+
