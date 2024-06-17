@@ -80,11 +80,6 @@ class Hillclimber(Algorithm):
         for i in range(iterations):
             new_routes = copy.deepcopy(self.routes)
 
-            # if random.random() > 0.5 and len(self.routes) < 7:
-            #     new_routes = self.add_random_route(new_routes)
-            # else:
-            #     new_routes = self.remove_random_route(new_routes)
-
             new_routes = self.remove_random_route(new_routes)
             new_routes = self.add_random_route(new_routes)
                 
