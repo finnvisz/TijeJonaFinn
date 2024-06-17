@@ -5,7 +5,7 @@ from parent.code.classes.railnl import RailNL
 from parent.code.algorithms.score import Score
 
 class Experiment:
-    def __init__(self, algorithm_class: "Algorithm", data_params: str, iterations: int = 100) -> None:
+    def __init__(self, algorithm_class: "Algorithm", data_params: str = "Holland", iterations: int = 100) -> None:
         self.algorithm_class = algorithm_class
         self.data_params = data_params
         self.iterations = iterations
