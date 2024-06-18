@@ -20,20 +20,30 @@ if __name__ == "__main__":
     print(random_algorithm.output())
     print(f"Random Algorithm Score: {random_score.calculate()}")
 
-    # # Perform experiment with RandomAlgorithm and collect scores
-    # random_experiment = Experiment(RandomAlgorithm, "Holland")
-    # random_experiment.average_score()
-    # scores = random_experiment.get_scores()
+    # Perform experiment with RandomAlgorithm and collect scores
+    random_experiment = Experiment(RandomAlgorithm, "Holland")
+    random_experiment.average_score()
+    scores = random_experiment.get_scores()
 
-    # # Plotting the frequency distribution of scores
-    # plt.figure(figsize=(10, 6))
-    # plt.hist(scores, bins=50, edgecolor='black', alpha=0.7)
-    # plt.title('Frequency Distribution of Scores RandomAlgorithm N routes (0-7)')
-    # plt.xlabel('Score')
-    # plt.ylabel('Frequency')
-    # plt.grid(True)
-    # plt.tight_layout()
-    # plt.savefig("freq.png")
+    # Plotting the frequency distribution of scores
+    plt.figure(figsize=(10, 6))
+    plt.hist(scores, bins=50, edgecolor='black', alpha=0.7)
+    plt.title('Frequency Distribution of Scores RandomAlgorithm N routes (0-7)')
+    plt.xlabel('Score')
+    plt.ylabel('Frequency')
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig("freq.png")
+
+    # Plotting frequency distributions of connections used
+    plt.figure(figsize=(10, 6))
+    plt.hist(connections, bins=50, edgecolor='black', alpha=0.7)
+    plt.title('Frequency Distribution of connections Random Algorithm')
+    plt.xlabel('Connection')
+    plt.ylabel('Frequency')
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig("freq2.png")
 
 
     # # Test Greedy Algorithm
