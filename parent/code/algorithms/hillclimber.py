@@ -5,6 +5,7 @@ from parent.code.algorithms.random_algorithm import RandomAlgorithm
 from parent.code.algorithms.score import Score
 from parent.code.classes.railnl import RailNL
 from parent.code.classes.route import Route
+import matplotlib.pyplot as plt
 
 class Hillclimber(Algorithm):
     def __init__(self, load: RailNL, algorithm: Algorithm) -> None:
@@ -12,6 +13,7 @@ class Hillclimber(Algorithm):
         self.load = load
         self.algorithm = algorithm
         self.routes = algorithm.routes
+        self.scores = []
 
         # Debug: Print initial routes and their details
         print(f"Initial routes: {self.routes}")
@@ -72,7 +74,7 @@ class Hillclimber(Algorithm):
         return p * 10000 - (T * 100 + self.new_total_minutes(routes))
 
     def run(self) -> None:
-        iterations = 10000
+        iterations = 10000 # modify to liking
         start_score = self.best_score
         print(f"{iterations} iteraties")
         print(f"Start score: {round(start_score, 1)}")
@@ -88,7 +90,10 @@ class Hillclimber(Algorithm):
             if new_score > self.best_score:
                 self.routes = new_routes
                 self.best_score = new_score
+                self.scores.append(new_score)
                 print(f"Iteratie {i}, New score: {round(new_score, 1)}")
+            else:
+                self.scores.append(self.best_score)
 
         print(f"Start score: {start_score}, End score: {self.best_score}")
 
@@ -103,12 +108,15 @@ if __name__ == "__main__":
     hillclimber_alg.make_picture() 
 
     # for i, route in enumerate(hillclimber_alg.routes):
-    #     print(f"Route {i} (Time: {route.time} minutes):")
-    #     for connection in route.connections_used:
-    #         print(f"  {connection[0]} -> {connection[1]} ({connection[2]} minutes)")
-    #     print()
+    #     print(f"route {i+1} (Time: {route.time} minutes):,")
+    #     print(route.stations) 
 
-    for i, route in enumerate(hillclimber_alg.routes):
-        print(f"route {i+1},", end = " ")
-        print(route.stations) 
+    # Plot iteration vs. score
+    plt.plot(hillclimber_alg.scores)
+    plt.xlabel('Iteration')
+    plt.ylabel('Score')
+    plt.title('Hillclimber Algorithm: Iteration vs. Score')
+    plt.savefig("score_vs_iteration.png")
+
+    
 
