@@ -47,7 +47,7 @@ class Experiment:
         """
         # Scores are saved in numpy array, way faster than list!
         # Space in memory is reserved and filled with zeros
-        self.scores: "nparray[float]" = np.zeros(iterations)
+        self.scores: "nparray[float]" = np.full(iterations, np.nan)
         
         for i in range(iterations):
             # Ensure each run starts with a fresh state.
@@ -59,6 +59,7 @@ class Experiment:
             # Add score to array at correct positions
             self.scores[i] = score
 
+<<<<<<< HEAD
             # Count each connection used
             used_connections = algorithm_instance.get_total_connections_used()
             for connection in used_connections:
@@ -82,6 +83,9 @@ class Experiment:
                 print("Warning: get_stations_used() returned None.")
 
         assert np.count_nonzero(self.scores) == iterations, "Not all scores have been filled in, bug in run_experiment."
+=======
+        assert any(np.isnan(self.scores)), "Not all scores have been filled in, bug in run_experiment."
+>>>>>>> db92ca17aa064f6bca0c3924910cd452a81b2ceb
         return self.scores
     
     def average_score(self) -> float:

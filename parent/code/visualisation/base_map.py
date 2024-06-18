@@ -4,7 +4,7 @@ from parent.code.classes.station_class import Station
 from manim import Text, Line, Dot, VGroup, LEFT, UP, MovingCameraScene
 from typing import Tuple
 
-class BaseMapScene(MovingCameraScene):
+class BaseScene(MovingCameraScene):
     """A class creating dots, lines and labels from RailNL load."""
 
     # Setup VGroups, dictionaries and camera

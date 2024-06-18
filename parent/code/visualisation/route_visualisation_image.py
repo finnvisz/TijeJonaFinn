@@ -1,5 +1,4 @@
-from manim import ApplyMethod, Line, Transform, Dot, VGroup
-from manim import manim_colors, smooth
+from manim import Line, Dot, VGroup, manim_colors, Text, UP, LEFT
 
 from manim import PURE_RED, PURE_GREEN, PURE_BLUE
 from manim import YELLOW, PURPLE, ORANGE, PINK
@@ -10,7 +9,7 @@ from parent.code.algorithms.greedy import Greedy
 from base_map import BaseScene
 from numpy.linalg import norm
 
-class route_visualisation(BaseScene):
+class route_visualisation_image(BaseScene):
     """Show trainroutes on map."""
 
     def setup_2(self) -> None:
@@ -28,10 +27,6 @@ class route_visualisation(BaseScene):
     def setup_camera(self) -> None:
         self.camera.frame.move_to(self.dots)
         self.camera.frame.set_height(1.1 * self.dots.get_height())
-
-    # Make train to ride tracks
-    def setup_train(self, dot_start: Dot) -> None:
-        self.train = Dot(point = dot_start.get_center(), radius = 0.0075)
 
     # Run algorithm here
     def run_algorithm(self) -> None:
@@ -66,17 +61,11 @@ class route_visualisation(BaseScene):
     # Main method calling upon other methods to color route and move train
     def color_route(self, route: list, color: manim_colors):
 
-        start_route = 0
         for connection in route:
             time = connection[2]
 
             # Find station dot correspondence 
             dot_start, dot_end = self.correspondence(connection[0], connection[1])
-
-            # Place train at start of new route
-            if start_route == 0:
-                self.setup_train(dot_start)
-                start_route += 1
 
             # Find connection
             line = self.find_connection(dot_start, dot_end, time)
@@ -84,16 +73,12 @@ class route_visualisation(BaseScene):
             # Set color of line
             self.set_color(line, color)
 
-            # Move train
-            shift = self.train.animate.move_to(dot_end.get_center())
-            self.play(shift, run_time = 0.4, rate_func = smooth)
-
     # Set color depending on if already colored
     def set_color(self, line: Line, color: manim_colors):
 
         # If line not yet colored just color
         if not line in self.line_colors_dict:
-            self.play(ApplyMethod(line.set_color, color), run_time = 0.1)
+            line.set_color(color = color)
             self.line_colors_dict[line] = [color]
 
         else:
@@ -136,13 +121,33 @@ class route_visualisation(BaseScene):
             starting_point = ending_point
 
         # Transformeer oude lijn naar nieuw gesegmenteerde lijn
-        self.play(Transform(line, new_line), run_time = 0.1)
+        self.add(new_line)
+
+    def place(self, label: VGroup) -> None:
+        pass
 
     def construct(self):
 
         self.setup_2()
         self.add(self.dots, self.connections, self.connection_labels)
-        self.wait(2)
+        label = Text("Greedy Algorithm")
+        score = Text("Score = ")
+
+        position = self.camera.frame.get_center()
+        height = self.camera.frame.get_height()
+        width = self.camera.frame.get_width()
+
+        label.move_to(position)
+        score.move_to(position)
+
+        label.scale(0.05)
+        score.scale(0.05)
+
+        label.shift(LEFT * width * 0.25 - UP * height * 0.25)
+        score.shift(LEFT * width * 0.25 - UP * height * 0.3)
+
+        self.add(label)
+        self.add(score)
 
         # Using seven routes
         for i in range(7):
@@ -155,5 +160,3 @@ class route_visualisation(BaseScene):
 
             # Color route with ith color
             self.color_route(route, self.colors[i])
-
-        self.wait(2)
