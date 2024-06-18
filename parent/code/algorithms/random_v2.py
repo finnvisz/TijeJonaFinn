@@ -19,7 +19,8 @@ class Randomv2(Algorithm):
         
     def run(self, original_connections_only: bool = False, starting_stations: str = "fully_random", starting_station_list: None | list["Station"] = None) -> list[Route]:
         """
-        
+        Random algorithm with various options for starting stations per route.
+
         args:
         - original_connections_only: (NOTE: leave on False, creates solutions with very short connections)
         When True, each route uses only unused connections.

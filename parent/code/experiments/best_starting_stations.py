@@ -1,46 +1,65 @@
-# Imports
+# External imports
+import numpy as np
+
+# Local imports
 from parent.code.classes.railnl import RailNL
 from parent.code.algorithms.random_v2 import Randomv2
+from parent.code.experiments.experiment import Experiment
 
+def get_station_subgroups() -> tuple[list["Station"], list["Station"]]:
+    """
+    Returns two lists of stations: one with the stations with 
+    the most connections and one with the stations with the least connections.
+    """
+    # Initialize RailNL to get station data
+    railnl = RailNL("Holland")
 
-# Initialize algorithm
-randomv2 = Randomv2(RailNL("Holland"))
+    # Create collection with various subgroups of stations:
+    Stations = railnl.stations_dict()
 
+    # 1. Stations with most connections
+    stations_with_most_connections = []
 
-# Create collection with various subgroups of stations:
-Stations = randomv2.load.stations_dict()
+    max_connections = railnl.max_connections()
 
-# 1. Stations with most connections
-stations_with_most_connections = []
+    for station in Stations.values():
+        if station.amount_connecting() == max_connections:
+            stations_with_most_connections.append(station)
 
-max_connections = randomv2.load.max_connections()
+    # 2. Stations with least connections
+    stations_with_least_connections = []
 
-for station in Stations.values():
-    if station.amount_connecting() == max_connections:
-        stations_with_most_connections.append(station)
+    min_connections = railnl.min_connections()
 
-# 2. Stations with least connections
-stations_with_least_connections = []
+    for station in Stations.values():
+        if station.amount_connecting() == min_connections:
+            stations_with_least_connections.append(station)
 
-min_connections = randomv2.load.min_connections()
-
-for station in Stations.values():
-    if station.amount_connecting() == min_connections:
-        stations_with_least_connections.append(station)
+    # Return the lists of both subgroups
+    return stations_with_most_connections, stations_with_least_connections
     
 
-# Run algorithm with different starting stations
-output = randomv2.run(starting_stations="custom_list_with_replacement", starting_station_list = stations_with_least_connections)
+if __name__ == "__main__":
+    # Get station subgroups
+    stations_with_most_connections, stations_with_least_connections = get_station_subgroups()
+
+    # Initialize experiment
+    randomv2_experiment = Experiment(Randomv2, "Holland")
 
 
-# Print results + extra info
-for route in output:
-    for connection in route.get_connections_used():
-        print(connection[0], " - ", connection[1], connection[2], end=" -> ")
-    
-    print("")
-    print(f"Total time: {route.time}")
-    print("")
+    # Run algorithm with different starting stations:
+    iterations = 12
+    # With least connections
+    results_least_connections = randomv2_experiment.run_experiment(iterations=iterations, starting_stations="custom_list_with_replacement", 
+                                                starting_station_list = stations_with_least_connections)
+    randomv2_experiment.write_scores_to_csv("randomv2_least_connections")
 
-print(f"Unused stations: {len(randomv2.unused_stations)}")
-print(f"Unused connections: {len(randomv2.unused_connections)}")
+    # With most connections
+    results_most_connections = randomv2_experiment.run_experiment(iterations=iterations, starting_stations="custom_list_with_replacement", 
+                                                starting_station_list = stations_with_most_connections)
+    randomv2_experiment.write_scores_to_csv("randomv2_most_connections")
+
+
+    # Calculate average scores
+    print(f"Average score for stations with least connections: {np.mean(results_least_connections)}")
+    print(f"Average score for stations with most connections: {np.mean(results_most_connections)}")
