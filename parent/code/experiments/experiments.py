@@ -37,7 +37,7 @@ class Experiment:
         """
         # Scores are saved in numpy array, way faster than list!
         # Space in memory is reserved and filled with zeros
-        self.scores: "nparray[float]" = np.zeros(iterations)
+        self.scores: "nparray[float]" = np.full(iterations, np.nan)
         
         for i in range(iterations):
             # Ensure each run starts with a fresh state.
@@ -49,7 +49,7 @@ class Experiment:
             # Add score to array at correct positions
             self.scores[i] = score
 
-        assert np.count_nonzero(self.scores) == iterations, "Not all scores have been filled in, bug in run_experiment."
+        assert any(np.isnan(self.scores)), "Not all scores have been filled in, bug in run_experiment."
         return self.scores
     
     def average_score(self) -> float:
