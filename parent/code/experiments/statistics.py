@@ -1,7 +1,10 @@
 # External imports
 import numpy as np
 import scipy.stats as stats
+import plotnine
+import pandas as pd
 
+plot_dir = "parent/code/experiments/plots/"
 
 def read_scores_from_csv(filename: str) -> "nparray[float]":
     """
@@ -40,10 +43,40 @@ def calculate_p_value(sample1: "nparray[float]", sample2: "nparray[float]", retu
     else:
         raise ValueError("Invalid return_type argument, choose 'p_value_only', 'object' or 'significant'.")
 
+def plot_scores(sample1: "nparray[float]", sample2: "nparray[float]") -> None:
+    """
+    Plot the scores of two samples in a histogram.
+
+    - Pre: sample1 and sample2 are independent samples, given as numpy arrays of floats.
+    - Post: histogram is plotted.
+    """
+    # Create dataframe with scores
+    df = pd.DataFrame({
+        "sample1": sample1,
+        "sample2": sample2
+    })
+
+    # Plot the histogram
+    plot = (
+        plotnine.ggplot(df) +
+        plotnine.aes(x="sample1") +
+        plotnine.geom_histogram(bins=20, fill="blue", alpha=0.7) +
+        plotnine.aes(x="sample2") +
+        plotnine.geom_histogram(bins=20, fill="red", alpha=0.7) +
+        plotnine.ggtitle("Frequency Distribution of Scores") +
+        plotnine.xlab("Score") +
+        plotnine.ylab("Frequency") +
+        plotnine.theme_minimal()
+    )
+
+    # Show the plot
+    plot.show()
+    # plot.save(filename = "test.pdf", path=plot_dir)
+
 
 if __name__ == "__main__":
     # Example usage
     randomv2_least_connections = read_scores_from_csv("randomv2_least_connections")
     randomv2_most_connections = read_scores_from_csv("randomv2_most_connections")
 
-    print(calculate_p_value(randomv2_least_connections, randomv2_most_connections, return_type="p_value_only"))
+    plot_scores(randomv2_least_connections, randomv2_most_connections)

@@ -38,7 +38,6 @@ def get_station_subgroups() -> tuple[list["Station"], list["Station"]]:
     # Return the lists of both subgroups
     return stations_with_most_connections, stations_with_least_connections
     
-
 if __name__ == "__main__":
     # Get station subgroups
     stations_with_most_connections, stations_with_least_connections = get_station_subgroups()
@@ -48,11 +47,12 @@ if __name__ == "__main__":
 
 
     # Run algorithm with different starting stations:
-    iterations = 12
+    iterations = 100000
+
     # With least connections
     results_least_connections = randomv2_experiment.run_experiment(iterations=iterations, starting_stations="custom_list_with_replacement", 
                                                 starting_station_list = stations_with_least_connections)
-    randomv2_experiment.write_scores_to_csv("randomv2_least_connections")
+    randomv2_experiment.write_scores_to_csv("randomv2_least_connections")   
 
     # With most connections
     results_most_connections = randomv2_experiment.run_experiment(iterations=iterations, starting_stations="custom_list_with_replacement", 
