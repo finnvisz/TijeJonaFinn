@@ -13,7 +13,7 @@ class RandomAlgorithm(Algorithm):
         super().__init__(load) # Inherits everything from ALgorithm class
 
     def run(self) -> None:
-        # N = choice([0, 1, 2, 3, 4, 5, 6, 7])
+        # N = choice([1, 2, 3, 4, 5, 6, 7])
         N = 7 # manipulate
         for _ in range(N):
             time_used = 0
