@@ -8,7 +8,7 @@ from code.algorithms.algorithm import Algorithm
 from code.algorithms.random_algorithm import RandomAlgorithm
 from code.algorithms.hillclimber import Hillclimber
 from code.algorithms.score import Score
-from parent.code.experiments.experiment import Experiment
+from parent.code.experiments.experiments import Experiment
 
 if __name__ == "__main__":
     data = RailNL("Holland") # manipulate
@@ -22,8 +22,10 @@ if __name__ == "__main__":
 
     # Perform experiment with RandomAlgorithm and collect scores
     random_experiment = Experiment(RandomAlgorithm, "Holland")
-    random_experiment.average_score()
-    scores = random_experiment.get_scores()
+    scores = random_experiment.run_experiment()
+    average = random_experiment.average_score()
+    print(f"average score: {average}")
+
 
     # Plotting the frequency distribution of scores
     plt.figure(figsize=(10, 6))

@@ -52,6 +52,13 @@ class Experiment:
         assert np.count_nonzero(self.scores) == iterations, "Not all scores have been filled in, bug in run_experiment."
         return self.scores
     
+    def average_score(self) -> float:
+        total = 0
+        for score in self.scores:
+            total += score
+        return total / len(self.scores)
+
+    
     def write_scores_to_csv(self, filename: str) -> None:
         """
         Write scores to a CSV file. 
