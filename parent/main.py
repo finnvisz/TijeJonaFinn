@@ -11,29 +11,29 @@ from code.algorithms.score import Score
 from parent.code.experiments.experiment import Experiment
 
 if __name__ == "__main__":
-    data = RailNL("Holland")
+    data = RailNL("Holland") # manipulate
 
-    # # Test Random Algorithm
-    # random_algorithm = RandomAlgorithm(data)
-    # random_score = Score(random_algorithm)
-    # random_algorithm.make_picture()
-    # print(random_algorithm.output())
-    # print(f"Random Algorithm Score: {random_score.calculate()}")
+    # Test Random Algorithm
+    random_algorithm = RandomAlgorithm(data)
+    random_score = Score(random_algorithm)
+    random_algorithm.make_picture()
+    print(random_algorithm.output())
+    print(f"Random Algorithm Score: {random_score.calculate()}")
 
-    # Perform experiment with RandomAlgorithm and collect scores
-    random_experiment = Experiment(RandomAlgorithm, "Holland", iterations=10000)
-    random_experiment.average_score()
-    scores = random_experiment.get_scores()
+    # # Perform experiment with RandomAlgorithm and collect scores
+    # random_experiment = Experiment(RandomAlgorithm, "Holland")
+    # random_experiment.average_score()
+    # scores = random_experiment.get_scores()
 
-    # Plotting the frequency distribution of scores
-    plt.figure(figsize=(10, 6))
-    plt.hist(scores, bins=20, edgecolor='black', alpha=0.7)
-    plt.title('Frequency Distribution of Scores RandomAlgorithm N routes (0-7)')
-    plt.xlabel('Score')
-    plt.ylabel('Frequency')
-    plt.grid(True)
-    plt.tight_layout()
-    plt.savefig("freq.png")
+    # # Plotting the frequency distribution of scores
+    # plt.figure(figsize=(10, 6))
+    # plt.hist(scores, bins=50, edgecolor='black', alpha=0.7)
+    # plt.title('Frequency Distribution of Scores RandomAlgorithm N routes (0-7)')
+    # plt.xlabel('Score')
+    # plt.ylabel('Frequency')
+    # plt.grid(True)
+    # plt.tight_layout()
+    # plt.savefig("freq.png")
 
 
     # # Test Greedy Algorithm

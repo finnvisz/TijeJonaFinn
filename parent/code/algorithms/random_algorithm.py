@@ -14,7 +14,7 @@ class RandomAlgorithm(Algorithm):
 
     def run(self) -> None:
         # N = choice([0, 1, 2, 3, 4, 5, 6, 7])
-        N = 7
+        N = 7 # manipulate
         for _ in range(N):
             time_used = 0
             route = Route()
@@ -35,7 +35,7 @@ class RandomAlgorithm(Algorithm):
 
                 # Continue if adding a connection is 
                 # possible considering time_used
-                if total <= 120:
+                if total <= 120: #manipulate
                     time_used = total
                     route.add_connection(current_station, connection, duration)
                     current_station = connection

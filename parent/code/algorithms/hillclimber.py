@@ -14,14 +14,7 @@ class Hillclimber(Algorithm):
         self.algorithm = algorithm
         self.routes = algorithm.routes
         self.scores = []
-
-        # Debug: Print initial routes and their details
-        print(f"Initial routes: {self.routes}")
-
         self.best_score = self.calculate_new_score(self.routes)
-
-        # Debug: Print initial score calculation
-        print(f"Initial score: {self.best_score}")
 
     def new_connections_used(self, routes) -> set:
         new_connections = set()
@@ -107,9 +100,10 @@ if __name__ == "__main__":
     hillclimber_alg.run()
     hillclimber_alg.make_picture() 
 
-    # for i, route in enumerate(hillclimber_alg.routes):
-    #     print(f"route {i+1} (Time: {route.time} minutes):,")
-    #     print(route.stations) 
+    # Show routes
+    for i, route in enumerate(hillclimber_alg.routes):
+        print(f"route {i+1} (Time: {route.time} minutes):,")
+        print(route.stations) 
 
     # Plot iteration vs. score
     plt.plot(hillclimber_alg.scores)
