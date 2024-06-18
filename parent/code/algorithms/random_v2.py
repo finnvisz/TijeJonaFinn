@@ -41,9 +41,9 @@ class Randomv2(Algorithm):
         if starting_stations == "custom_list_without_replacement":
  
             # Make a copy of the list to avoid changing the original list
-            starting_station_list = copy.deepcopy(starting_station_list)
+            starting_station_list_copy = copy.deepcopy(starting_station_list)
             
-            random.shuffle(starting_station_list)
+            random.shuffle(starting_station_list_copy)
 
 
         # List to store the various routes
@@ -109,11 +109,11 @@ class Randomv2(Algorithm):
             # pop from randomized version of custom list
             elif starting_stations == "custom_list_without_replacement":
                 # If list is empty, refill it
-                if len(starting_station_list) == 0:
-                    starting_station_list = copy.deepcopy(self.used_stations)
-                    random.shuffle(starting_station_list)
+                if len(starting_station_list_copy) == 0:
+                    starting_station_list_copy = copy.deepcopy(self.used_stations)
+                    random.shuffle(starting_station_list_copy)
 
-                current_station = starting_station_list.pop()
+                current_station = starting_station_list_copy.pop()
 
 
             # While time is less than 120 minutes
