@@ -11,6 +11,7 @@ class Algorithm:
         self.routes: list[Route] = []
         self.total_minutes: int = 0
         self.total_connections_used: set[tuple[str, str, float]] = set()
+        self.stations_used = set()
 
 
     def run(self) -> None:
@@ -59,6 +60,11 @@ class Algorithm:
 
         return set(self.total_connections_used)
     
+    def get_stations_used(self) -> set:
+        for route in self.routes:
+            for station in route.get_stations():
+                self.stations_used.add(station)
+        return self.stations_used
 
     def get_total_minutes(self) -> int:
         """Calculates the total number of minutes used by all the 

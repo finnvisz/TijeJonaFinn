@@ -16,13 +16,13 @@ if __name__ == "__main__":
     # Test Random Algorithm
     random_algorithm = RandomAlgorithm(data)
     random_score = Score(random_algorithm)
-    random_algorithm.make_picture()
+    #random_algorithm.make_picture()
     print(random_algorithm.output())
     print(f"Random Algorithm Score: {random_score.calculate()}")
 
     # Perform experiment with RandomAlgorithm and collect scores
     random_experiment = Experiment(RandomAlgorithm, "Holland")
-    scores = random_experiment.run_experiment()
+    scores = random_experiment.run_experiment(100000)
     average = random_experiment.average_score()
     print(f"average score: {average}")
 
@@ -30,7 +30,7 @@ if __name__ == "__main__":
     # Plotting the frequency distribution of scores
     plt.figure(figsize=(10, 6))
     plt.hist(scores, bins=50, edgecolor='black', alpha=0.7)
-    plt.title('Frequency Distribution of Scores RandomAlgorithm N routes (0-7)')
+    plt.title('Frequency Distribution of Scores RandomAlgorithm 7 routes')
     plt.xlabel('Score')
     plt.ylabel('Frequency')
     plt.grid(True)
@@ -38,15 +38,32 @@ if __name__ == "__main__":
     plt.savefig("freq.png")
 
     # Plotting frequency distributions of connections used
-    plt.figure(figsize=(10, 6))
-    plt.hist(connections, bins=50, edgecolor='black', alpha=0.7)
-    plt.title('Frequency Distribution of connections Random Algorithm')
+    total_connections = RailNL("Holland").get_total_connections()
+    connection_labels = [f"{c[0].name} - {c[1].name}" for c in total_connections]
+    
+    plt.figure(figsize=(10, 10))
+    plt.bar(range(len(total_connections)), random_experiment.count_connections_used, tick_label=connection_labels)
+    plt.xticks(rotation=90)
+    plt.title('Frequency Distribution of Connections Used in Random Algorithm')
     plt.xlabel('Connection')
     plt.ylabel('Frequency')
     plt.grid(True)
     plt.tight_layout()
     plt.savefig("freq2.png")
 
+    # Plotting frequency distribution of stations used
+    total_stations = list(RailNL("Holland").stations_dict().values())
+    station_labels = [station.name for station in total_stations]
+
+    plt.figure(figsize=(10, 6))
+    plt.bar(range(len(total_stations)), random_experiment.count_stations_used, tick_label=station_labels)
+    plt.xticks(rotation=90)
+    plt.title('Frequency Distribution of Stations Used in Random Algorithm')
+    plt.xlabel('Station')
+    plt.ylabel('Frequency')
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig("freq3.png")
 
     # # Test Greedy Algorithm
     # greedy_alg = Greedy(data)

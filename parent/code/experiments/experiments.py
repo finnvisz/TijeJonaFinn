@@ -2,9 +2,8 @@
 import numpy as np
 
 # Local imports
-from parent.code.algorithms.random_algorithm import RandomAlgorithm
-from parent.code.algorithms.finnsroutes import Finn
 from parent.code.algorithms.algorithm import Algorithm
+from parent.code.classes.station_class import Station
 from parent.code.classes.railnl import RailNL
 from parent.code.algorithms.score import Score
 from parent.code.algorithms.random_v2 import Randomv2
@@ -21,7 +20,18 @@ class Experiment:
         """
         self.algorithm_class: "Algorithm" = algorithm_class
         self.map: str = map
+
+        # Get the total stations and connections and create an index mapping
+        total_connections = list(RailNL(self.map).get_total_connections())
+        self.connection_indices = {tuple(sorted((conn[0].name, conn[1].name))): idx for idx, conn in enumerate(total_connections)}
+        self.count_connections_used = np.zeros(len(total_connections))
+        self.connection_labels = [f"{conn[0].name} - {conn[1].name}" for conn in total_connections]
+
+        self.total_stations = list(RailNL(self.map).stations_dict().keys())
+        self.station_indices = {station: idx for idx, station in enumerate(self.total_stations)}
+        self.count_stations_used = np.zeros(len(self.total_stations))
         
+
         # Set default export directory (for export of results to CSV etc.)
         self.export_directory: str = "parent/code/experiments/results"
 
@@ -49,15 +59,34 @@ class Experiment:
             # Add score to array at correct positions
             self.scores[i] = score
 
-        assert any(np.isnan(self.scores)), "Not all scores have been filled in, bug in run_experiment."
+            # Count each connection used
+            used_connections = algorithm_instance.get_total_connections_used()
+            for connection in used_connections:
+                # Normalize the connection tuple to match the total connections format
+                normalized_connection = tuple(sorted(connection[:2]))
+                if normalized_connection in self.connection_indices:
+                    self.count_connections_used[self.connection_indices[normalized_connection]] += 1
+                else:
+                    print(f"Warning: Connection {normalized_connection} not found in connection_indices.")
+
+            # Count each station used
+            used_stations = algorithm_instance.get_stations_used()
+            
+            if used_stations is not None:
+                for station in used_stations:
+                    if station.name in self.station_indices:
+                        self.count_stations_used[self.station_indices[station.name]] += 1
+                    else:
+                        print(f"Warning: Station {station.name} not found in station_indices.")
+            else:
+                print("Warning: get_stations_used() returned None.")
+
+        assert not any(np.isnan(self.scores)), "Not all scores have been filled in, bug in run_experiment."
+        
         return self.scores
     
     def average_score(self) -> float:
-        total = 0
-        for score in self.scores:
-            total += score
-        return total / len(self.scores)
-
+        return np.mean(self.scores)
     
     def write_scores_to_csv(self, filename: str) -> None:
         """
