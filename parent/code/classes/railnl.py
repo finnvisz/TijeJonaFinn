@@ -1,7 +1,4 @@
-# Library imports
-import random
-
-# Local imports
+from random import choice
 from os.path import abspath, join, dirname
 from parent.code.classes.station_class import Station
 
@@ -28,11 +25,14 @@ class RailNL:
         """
         # Open file
         with open(filepath) as file:
+
             # and read lines until EOF
             while (line := file.readline()) != "":
+
                 # Create station object from extracted triple
                 name, lat, long = line.strip().split(',')
                 station = Station(name, float(lat), float(long))
+
                 # And add to internal dictionary
                 self.stations[name] = station
 
@@ -48,8 +48,10 @@ class RailNL:
         """
         # Open file
         with open(filepath) as file:
+
             # and read lines until EOF
             while (line := file.readline()) != "":      
+                
                 # Read station names as strings
                 stat1_s, stat2_s, afstand = line.strip().split(',')
                 
@@ -88,7 +90,7 @@ class RailNL:
     
     def get_random_station(self) -> "Station":
         """Return a random station from self.stations."""
-        return random.choice(list(self.stations.values()))
+        return choice(list(self.stations.values()))
     
     def get_total_connections(self) -> set:
         return set(map(tuple, self.connections))

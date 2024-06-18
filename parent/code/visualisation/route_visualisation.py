@@ -35,7 +35,9 @@ class route_visualisation(BaseScene):
 
     # Run algorithm here
     def run_algorithm(self) -> None:
-        self.output = Greedy(self.data).run() # HERE
+        algorithm = RandomAlgorithm(self.data)
+        algorithm.run()
+        self.output = algorithm.output()
 
     # Find dots associated to station name
     def correspondence(self, name_start: str, name_end: str) -> tuple:
