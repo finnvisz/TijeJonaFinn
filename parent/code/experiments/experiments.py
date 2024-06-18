@@ -81,7 +81,7 @@ class Experiment:
             else:
                 print("Warning: get_stations_used() returned None.")
 
-        assert any(np.isnan(self.scores)), "Not all scores have been filled in, bug in run_experiment."
+        assert not any(np.isnan(self.scores)), "Not all scores have been filled in, bug in run_experiment."
         
         return self.scores
     
