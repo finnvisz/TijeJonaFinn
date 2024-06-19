@@ -1,8 +1,8 @@
 # External imports
 import numpy as np
 import scipy.stats as stats
-import plotnine
-import pandas as pd
+# import plotnine
+# import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import csv
@@ -12,7 +12,6 @@ from parent.code.algorithms.random_algorithm import RandomAlgorithm
 from parent.code.experiments.experiments import Experiment
 from parent.code.classes.route import Route
 from parent.code.classes.railnl import RailNL
-from parent.code.algorithms.random_v2 import Randomv2
 from parent.code.algorithms.score import routes_score
 
 plot_dir = "parent/code/experiments/plots/"
@@ -118,7 +117,7 @@ def routes_to_csv(routes: list[Route], filename: str):
 
 if __name__ == "__main__":
     railnl = RailNL("Holland")
-    algorithm = Randomv2(railnl)
+    algorithm = RandomAlgorithm(railnl, [20], 120)
     algorithm.run()
     routes = algorithm.output()
     routes_to_csv(routes, "output")
@@ -136,28 +135,4 @@ if __name__ == "__main__":
 
     # plot_scores(randomv2_least_connections, randomv2_most_connections)
 
-# if __name__ == "__main__":
-#     list_to_choose1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-#     list_to_choose2 = [20]
-#     list_to_choose3 = [1, 2, 3, 4, 5, 6, 7]
-#     plot_frequency_of_scores(
-#         "Frequency Distribution of Scores RandomAlgorithm 20 routes Nationaal", 
-#         "Nationaal", 
-#         1000, 
-#         RandomAlgorithm, 
-#         list_to_choose2
-#     )
-#     plot_frequency_of_scores(
-#         "Frequency Distribution of Scores RandomAlgorithm 1-20 routes Nationaal", 
-#         "Nationaal", 
-#         1000, 
-#         RandomAlgorithm, 
-#         list_to_choose1
-#     )
-#     plot_frequency_of_scores(
-#         "Frequency Distribution of Scores RandomAlgorithm 1-7 routes Holland", 
-#         "Nationaal", 
-#         1000, 
-#         RandomAlgorithm, 
-#         list_to_choose3
-#     )
+

@@ -36,9 +36,8 @@ def routes_score(routes: list[Route], map: str):
             if reverse not in connections_used:
                 connections_used.add(tuple(connection))
 
-            # Add connection duration to total time
-            total_minutes += connection[2]
-
+        # Add route duration to total time
+        total_minutes += route.time
     total_connections_used = len(connections_used)
     fraction = total_connections_used / total_connections
     number_of_routes = len(routes)
