@@ -1,11 +1,12 @@
 # External imports
 import numpy as np
 import scipy.stats as stats
-# import plotnine
-# import pandas as pd
+import plotnine as p9
+import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import csv
+from datetime import datetime
 
 # Internal imports
 from parent.code.algorithms.random_algorithm import RandomAlgorithm
@@ -14,17 +15,20 @@ from parent.code.classes.route import Route
 from parent.code.classes.railnl import RailNL
 from parent.code.algorithms.score import routes_score
 
-plot_dir = "parent/code/experiments/plots/"
+
+# Default directory for plots, can be changed if needed
+plot_dir = "parent/code/experiments/plots"
+
 
 def read_scores_from_csv(filename: str) -> "nparray[float]":
     """
     Read scores from a CSV file and return them as a numpy array.
 
-    - Pre: CSV file with scores exists in the results directory.
+    - Pre: CSV file with scores exists in the experiments directory (or path to subdirectory).
     - Post: returns a numpy array with scores.
     """
     # Read scores from CSV file
-    scores = np.loadtxt(f"parent/code/experiments/results/{filename}.csv", delimiter=",")
+    scores = np.loadtxt(f"parent/code/experiments/{filename}.csv", delimiter=",")
     return scores
 
 def calculate_p_value(sample1: "nparray[float]", sample2: "nparray[float]", return_type: str = "p_value_only") -> float:
@@ -53,37 +57,74 @@ def calculate_p_value(sample1: "nparray[float]", sample2: "nparray[float]", retu
     else:
         raise ValueError("Invalid return_type argument, choose 'p_value_only', 'object' or 'significant'.")
 
-def plot_scores(sample1: "nparray[float]", sample2: "nparray[float]") -> None:
+def plot_scores_fancy(sample1: "nparray[float]", sample2: "nparray[float]" = None, 
+                      title: str = "fancy_plot", save_to_pdf: bool = False, preview: bool = True,
+                      binwidth: int = 400) -> None:
     """
     Plot the scores of two samples in a histogram.
 
     - Pre: sample1 and sample2 are independent samples, given as numpy arrays of floats.
     - Post: histogram is plotted.
     """
-    # Create dataframe with scores
-    df = pd.DataFrame({
-        "sample1": sample1,
-        "sample2": sample2
-    })
+    # If name left on default, add current time
+    if title == "fancy_plot":
+        now = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        title += f"_{current_time}"
 
-    # Plot the histogram
-    plot = (
-        plotnine.ggplot(df) +
-        plotnine.aes(x="sample1") +
-        plotnine.geom_histogram(bins=20, fill="blue", alpha=0.7) +
-        plotnine.aes(x="sample2") +
-        plotnine.geom_histogram(bins=20, fill="red", alpha=0.7) +
-        plotnine.ggtitle("Frequency Distribution of Scores") +
-        plotnine.xlab("Score") +
-        plotnine.ylab("Frequency") +
-        plotnine.theme_minimal()
-    )
+    # If sample2 is not provided, create plot for single sample
+    if sample2 is None:
+        
+        # Create dataframe with scores
+        df = pd.DataFrame({
+            "sample1": sample1,
+            # "sample2": sample2
+        })
 
-    # Show the plot
-    plot.show()
-    # plot.save(filename = "test.pdf", path=plot_dir)
+        # Histogram for single sample
+        plot = (
+            p9.ggplot(df) +
+            p9.aes(x = "sample1") +
+            p9.geom_histogram(binwidth = binwidth, alpha = .85, position = "identity", fill = "lightblue", color = "darkgrey") +
+            p9.xlim(0,10000) + 
+            p9.labs(title = f"Histogram: {title}", x = "Score", 
+                    y = "Aantal waarnemingen", fill = "Sample", colour = "Sample") + 
+            # p9.scale_fill_manual(values = ("lightgreen", "lightsalmon")) +
+            p9.theme_minimal()
+        )
+    
+    # Else create plot for 2 samples
+    else:
+        # Create dataframe with scores
+        df = pd.DataFrame({
+            "sample1": sample1,
+            "sample2": sample2
+        })
 
-def plot_frequency_of_scores(filename: str, scores: list[float]):
+        # Histogram for 2 samples
+        plot = (
+            p9.ggplot(df) +
+            p9.aes(x = "sample1") +
+            p9.geom_histogram(alpha = .85, position = "identity", fill = "lightblue", color = "darkgrey") +
+            p9.xlim(0,10000) + 
+            p9.labs(title = f"Histogram: {title}", x = "Score", 
+                    y = "Aantal waarnemingen", fill = "Sample", colour = "Sample") + 
+            # p9.scale_fill_manual(values = ("lightgreen", "lightsalmon")) +
+            p9.theme_minimal()
+        )
+
+
+    # Show preview of plot if specified
+    if preview:
+        # Show the plot
+        plot.show()
+
+    # Save to pdf if specified
+    if save_to_pdf:
+        plot.save(filename = f"{title}.pdf", path=plot_dir)
+
+
+def plot_scores(filename: str, scores: list[float]):
     # Plotting the frequency distribution of scores
     plt.figure(figsize=(10, 6))
     plt.hist(scores, bins=50, edgecolor='black', alpha=0.7)
@@ -122,12 +163,12 @@ if __name__ == "__main__":
     routes = algorithm.output()
     routes_to_csv(routes, "output")
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
 
-#     # Example usage
-#     randomv2_least_connections = read_scores_from_csv("randomv2_least_connections")
-#     randomv2_most_connections = read_scores_from_csv("randomv2_most_connections")
+    # Example usage
+    randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000")
 
+    plot_scores_fancy(randomv2_least_connections)
 # if __name__ == "__main__":
 #     # Example usage
     # randomv2_least_connections = read_scores_from_csv("randomv2_least_connections")
