@@ -6,12 +6,13 @@ from parent.code.algorithms.score import Score
 
 class RandomAlgorithm(Algorithm):
     """Algorithm script finding N random routes. Each not exceeding 
-    the 120 minute limit
+    the minutes limit
     """
 
-    def __init__(self, load: RailNL, list_to_choose: list[int]) -> None:
+    def __init__(self, load: RailNL, list_to_choose: list[int], minutes: int) -> None:
         super().__init__(load) # Inherits everything from ALgorithm class
         self.list_to_choose = list_to_choose
+        self.minutes = minutes
 
     def run(self) -> None:
         N = choice(self.list_to_choose)
@@ -36,7 +37,7 @@ class RandomAlgorithm(Algorithm):
 
                 # Continue if adding a connection is 
                 # possible considering time_used
-                if total <= 180: # manipulate
+                if total <= self.minutes: 
                     time_used = total
                     route.add_connection(current_station, connection, duration)
                     current_station = connection

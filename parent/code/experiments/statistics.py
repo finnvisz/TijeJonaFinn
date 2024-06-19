@@ -84,11 +84,7 @@ def plot_scores(sample1: "nparray[float]", sample2: "nparray[float]") -> None:
     plot.show()
     # plot.save(filename = "test.pdf", path=plot_dir)
 
-def plot_frequency_of_scores(filename: str, map: str, iteraties: int, algorithm_class: type, list_to_choose: list[int]):
-    # Perform experiment with Algorithm and collect scores
-    experiment = Experiment(algorithm_class, map, list_to_choose=list_to_choose)
-    scores = experiment.run_experiment(iteraties)
-
+def plot_frequency_of_scores(filename: str, scores: list[float]):
     # Plotting the frequency distribution of scores
     plt.figure(figsize=(10, 6))
     plt.hist(scores, bins=50, edgecolor='black', alpha=0.7)
@@ -105,9 +101,9 @@ def routes_to_csv(routes: list[Route], filename: str):
     """
     Translate algorithm output to required csv file.
     
-    - Pre: list of route objects and filename to write to.
-    - Post: csv-file of given format located in route_csv map. 
-    """
+#     - Pre: list of route objects and filename to write to.
+#     - Post: csv-file of given format located in route_csv map. 
+#     """
 
     with open(f"route_csv/{filename}.csv", 'w') as file:
         writer = csv.writer(file)

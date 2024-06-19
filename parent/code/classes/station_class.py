@@ -38,8 +38,23 @@ class Station:
             return True
         return False
     
+    def get_connections(self):
+        """
+        Get the connections of this station, sorted as they were read from the CSV file.
+
+        Pre: self has connections
+        Post: return a list of tuples with the connected stations and their duration
+        """
+        # Put connections in list of tuples
+        connections = list(self.connections.items())
+
+        # Return list
+        return connections
+    
     def get_connections_sorted(self):
         """
+        NOTE: Legacy function. Only used by old greedy.py.
+        
         Get the connections of this station, sorted by duration 
         (shortest connection first).
 
@@ -49,10 +64,10 @@ class Station:
         # Put connections in list of tuples
         connections = list(self.connections.items())
 
-        # Sort list by duration
+        # Sort connections by duration
         connections.sort(key=lambda x: x[1])
 
-        # Return sorted list
+        # Return list
         return connections
     
     def get_shortest_connection(self):

@@ -12,30 +12,43 @@ from parent.code.classes.station_class import Station
 # implement randomv2 algorithm that prioritizes use of all connections
 # pick a connection not yet used with shortest length, if not possible, start a new route
 
-class Randomv2(Algorithm):
+class Random_Greedy(Algorithm):
     def __init__(self, load: RailNL) -> None:
         super().__init__(load)
 
         
-    def run(self, original_connections_only: bool = False, starting_stations: str = "fully_random", starting_station_list: None | list["Station"] = None) -> list[Route]:
+    def run(self, original_connections_only: bool = False, starting_stations: str = "fully_random", starting_station_list: None | list["Station"] = None,
+            next_connection_choice: str = "random", final_number_of_routes: int = 7, chance_of_early_route_end: bool = False) -> list[Route]:
         """
         Random algorithm with various options for starting stations per route.
 
         args:
-        - original_connections_only: (NOTE: leave on False, creates solutions with very short connections)
+        - original_connections_only: (NOTE: leave on False when `next_connection_choice = "random", creates solutions with very short connections)
         When True, each route uses only unused connections.
         i.e.: within a route, no connection is used more than once. When False,
         connections are fully random and can be used multiple times within a route.
+        
         - starting_stations: Specify how to pick the starting station for each route.
         Options: "fully_random", "prefer_unused", "custom_list_with_replacement", "custom_list_without_replacement". 
         NOTE: When picking without replacement from a custom list, options will be reused when length of list is < 7.
-        - starting_station_list: list of stations to pick from. Only used when starting_stations is set to "custom_list_with_replacement" or "custom_list_without_replacement"
-        """
         
-        # Check for correct input
+        - starting_station_list: list of stations to pick from. Only used when starting_stations is set to "custom_list_with_replacement" or "custom_list_without_replacement"
+        
+        - next_connection_choice: Specify how to pick the next connection in the route. Options: "random" (default), or "shortest" for a greedy approach to connections.
+        
+        - final_number_of_routes: Number of routes to generate. Default is 7.
+        
+        - chance_of_early_route_end: If set to True, routes can end before 120 minutes. Default is False.
+        """
+        # Check for correct input:
+        # With greedy approach, original connections only is required for correct functioning
+        if next_connection_choice == "shortest" and original_connections_only == False:
+            raise ValueError("You are about to run an algorithm greedy on connections. Set original_connections_only to True. If not your algorithm will get stuck going back and forth between two stations.")
+        
         if starting_stations == "custom_list_with_replacement" or starting_stations == "custom_list_without_replacement":
             assert starting_station_list is not None, "Starting station list must be provided when starting_stations is set to 'custom_list_with_replacement' or 'custom_list_without_replacement'."
         
+
         # If starting_station_list is provided and we draw without replacement,
         # randomize it's order
         if starting_stations == "custom_list_without_replacement":
@@ -72,9 +85,9 @@ class Randomv2(Algorithm):
         # print(self.unused_stations)
 
 
-        # While there are less than 7 routes and there are still unused connections
+        # While there are less than <final_number_of_routes> routes and there are still unused connections
         # i.e. for each route
-        while self.number_of_routes() < 7 and len(self.unused_connections) > 0:
+        while self.number_of_routes() < final_number_of_routes and len(self.unused_connections) > 0:
             # Create a new route
             route = Route()
             # DEBUG
@@ -132,10 +145,26 @@ class Randomv2(Algorithm):
                 
                 # Get connections of current station, sorted by duration
                 # This is a queue of possible connections, with the shortest connection first
-                connections = current_station.get_connections_sorted()
+                connections = current_station.get_connections()
 
-                # Randomize the order of the connections (to add the randomness to the algorithm)
-                random.shuffle(connections)
+                # If chance_of_early_route_end is set to True, add a chance to end the route early
+                # This is done by adding a connection to the current station with a duration of 0
+                # which when found will end the route. 
+                # connections must only contain tuples with station and duration, otherwise bugs.
+                if chance_of_early_route_end:
+                    connections.append(tuple([current_station, 0]))
+
+                # Randomize the order of the connections (to add random choice next connection)
+                # Only if the next_connection_choice is set to "random"
+                if next_connection_choice == "random":
+                    random.shuffle(connections)
+                # If set to "shortest", sort by duration
+                elif next_connection_choice == "shortest":
+                    # Sort list by duration
+                    connections.sort(key=lambda x: x[1])
+                else:
+                    raise ValueError("next_connection_choice must be set to 'random' or 'shortest'.")
+
 
                 # If arg. original_connections_only set to True
                 if original_connections_only:
@@ -150,6 +179,15 @@ class Randomv2(Algorithm):
                 # If there are no unused connections left, end this route
                 if len(connections) == 0:
                     break
+
+
+                # For chance_of_early_route_end, check if connection with duration of 0 is next
+                # This means the route will end here
+                if chance_of_early_route_end:
+                    # If the connection has a duration of 0, end the route
+                    if connections[0][1] == 0:
+                        break
+
 
                 # First connection in queue is the next station
                 next_station = connections[0][0]
@@ -192,11 +230,11 @@ class Randomv2(Algorithm):
 if __name__ == "__main__":
     
     # Run algorithm with desired settings
-    randomv2 = Randomv2(RailNL("Holland"))
+    randomv2 = Random_Greedy(RailNL("Holland"))
     
-    custom_starting_stations = [randomv2.load.stations["Rotterdam Centraal"], randomv2.load.stations["Amsterdam Centraal"]]
+    # custom_starting_stations = [randomv2.load.stations["Rotterdam Centraal"], randomv2.load.stations["Amsterdam Centraal"]]
     
-    output = randomv2.run(starting_stations="custom_list_with_replacement", starting_station_list = custom_starting_stations)
+    output = randomv2.run(chance_of_early_route_end=True)
     
 
     # Print results + extra info
