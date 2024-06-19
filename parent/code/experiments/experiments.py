@@ -6,7 +6,7 @@ from parent.code.algorithms.algorithm import Algorithm
 from parent.code.classes.station_class import Station
 from parent.code.classes.railnl import RailNL
 from parent.code.algorithms.score import Score
-from parent.code.algorithms.random_v2 import Randomv2
+from parent.code.algorithms.random_greedy import Random_Greedy
 
 class Experiment:
     def __init__(self, algorithm_class: "Algorithm", map: str = "Holland", **algorithm_kwargs) -> None:
@@ -102,7 +102,7 @@ class Experiment:
 
 # Example usage
 if __name__ == "__main__":
-    random_experiment = Experiment(algorithm_class = Randomv2)
+    random_experiment = Experiment(algorithm_class = Random_Greedy)
     results = random_experiment.run_experiment(iterations = 10, starting_stations="prefer_unused")
     # print(results)
     print(f"Random Algorithm Average Score: {np.mean(results)}")

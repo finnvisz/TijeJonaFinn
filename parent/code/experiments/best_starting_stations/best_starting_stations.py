@@ -3,7 +3,7 @@ import numpy as np
 
 # Local imports
 from parent.code.classes.railnl import RailNL
-from parent.code.algorithms.random_v2 import Randomv2
+from parent.code.algorithms.random_greedy import Random_Greedy
 from parent.code.experiments.experiments import Experiment
 
 def get_station_subgroups() -> tuple[list["Station"], list["Station"]]:
@@ -85,7 +85,7 @@ if __name__ == "__main__":
     stations_with_most_connections, stations_with_least_connections, stations_with_2_connections, stations_with_3_connections = get_station_subgroups()
 
     # Initialize experiment
-    randomv2_experiment = Experiment(Randomv2, "Holland")
+    randomv2_experiment = Experiment(Random_Greedy, "Holland")
 
 
     # Run algorithm with different starting stations:
