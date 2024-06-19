@@ -42,6 +42,8 @@ def routes_score(routes: list[Route], map: str):
     fraction = total_connections_used / total_connections
     number_of_routes = len(routes)
 
+    print(f"p: {fraction}, Min:{total_minutes}, T:{number_of_routes}")
+
     score = fraction * 10000 - (number_of_routes * 100 + total_minutes) 
 
     return score 

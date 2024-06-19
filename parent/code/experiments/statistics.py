@@ -109,7 +109,7 @@ def routes_to_csv(routes: list[Route], filename: str):
 
         writer.writerow(["train", "stations"])
 
-        for i in range(1, len(routes)):
+        for i in range(1, len(routes) + 1):
             writer.writerow([f"train_{i}", routes[i - 1].stations_list()])
 
         score = routes_score(routes, "Holland")
@@ -117,7 +117,7 @@ def routes_to_csv(routes: list[Route], filename: str):
 
 if __name__ == "__main__":
     railnl = RailNL("Holland")
-    algorithm = RandomAlgorithm(railnl, [20], 120)
+    algorithm = RandomAlgorithm(railnl, [7], 120)
     algorithm.run()
     routes = algorithm.output()
     routes_to_csv(routes, "output")
