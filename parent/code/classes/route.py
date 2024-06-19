@@ -15,10 +15,10 @@ class Route:
 
     def add_connection(self, station1: "Station", station2: "Station", duur: int) -> None:
         self.connections_used.append([station1.name, station2.name, duur])
-        if self.stations:
-            if self.stations[-1] != station1:
-                self.stations.append(station1)
-        self.stations.append(station2)
+        if station1 not in self.stations:
+            self.stations.append(station1)
+        if station2 not in self.stations:
+            self.stations.append(station2)
         self.time += int(duur)
 
     def remove_connection(self, connection: tuple[str, str, int]) -> None:
