@@ -1,8 +1,8 @@
 # External imports
 import numpy as np
 import scipy.stats as stats
-import plotnine as p9
-import pandas as pd
+# import plotnine as p9
+# import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import csv
@@ -10,6 +10,7 @@ from datetime import datetime
 
 # Internal imports
 from parent.code.algorithms.random_algorithm import RandomAlgorithm
+from parent.code.algorithms.finnsroutes import Finn
 from parent.code.experiments.experiments import Experiment
 from parent.code.classes.route import Route
 from parent.code.classes.railnl import RailNL
@@ -28,7 +29,7 @@ def read_scores_from_csv(filename: str) -> "nparray[float]":
     - Post: returns a numpy array with scores.
     """
     # Read scores from CSV file
-    scores = np.loadtxt(f"parent/code/experiments/{filename}.csv", delimiter=",")
+    scores = np.loadtxt(f"parent/code/experiments/{filename}", delimiter=",")
     return scores
 
 def calculate_p_value(sample1: "nparray[float]", sample2: "nparray[float]", return_type: str = "p_value_only") -> float:
@@ -150,25 +151,30 @@ def routes_to_csv(routes: list[Route], filename: str):
 
         writer.writerow(["train", "stations"])
 
-        for i in range(1, len(routes) + 1):
-            writer.writerow([f"train_{i}", routes[i - 1].stations_list()])
+        for i in range(len(routes)):
+            writer.writerow([f"train_{i+1}", routes[i].stations_list()])
 
         score = routes_score(routes, "Holland")
         writer.writerow(["score", f"{score}"])
 
-# if __name__ == "__main__":
-#     railnl = RailNL("Holland")
-#     algorithm = RandomAlgorithm(railnl, [7], 120)
-#     algorithm.run()
-#     routes = algorithm.output()
-#     routes_to_csv(routes, "output")
-
 if __name__ == "__main__":
+    railnl = RailNL("Holland")
+    algorithm = Finn(railnl)
+    algorithm.run()
+    routes = algorithm.output()
+    routes_to_csv(routes, "output")
 
+# if __name__ == "__main__":
+
+<<<<<<< HEAD
+#     # Example usage
+#     randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000")
+=======
     # Example usage
-    randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000")
+    randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
+>>>>>>> a52b82a (read_scores_from_csv: filename moet nu worden ingevoerd mét extensie)
 
-    plot_scores_fancy(randomv2_least_connections)
+#     plot_scores_fancy(randomv2_least_connections)
 # if __name__ == "__main__":
 #     # Example usage
     # randomv2_least_connections = read_scores_from_csv("randomv2_least_connections")

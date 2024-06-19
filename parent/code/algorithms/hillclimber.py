@@ -37,6 +37,8 @@ class Hillclimber(Algorithm):
         route = Route()
         current_station = self.load.get_random_station()
         while current_station.has_connections():
+            if random.random() < 0.05:
+                break
             connections = list(current_station.connections_dict())
             connection = random.choice(connections)
             duration = int(current_station.connection_duration(connection))
@@ -66,13 +68,13 @@ class Hillclimber(Algorithm):
         T = len(routes)
         return p * 10000 - (T * 100 + self.new_total_minutes(routes))
 
-    def run(self) -> None:
-        iterations = 10000 # modify to liking
+    def run(self, iterations) -> None:
+        self.iterations = iterations # modify to liking
         start_score = self.best_score
-        print(f"{iterations} iteraties")
+        print(f"{self.iterations} iteraties")
         print(f"Start score: {round(start_score, 1)}")
 
-        for i in range(iterations):
+        for i in range(self.iterations):
             new_routes = copy.deepcopy(self.routes)
 
             new_routes = self.remove_random_route(new_routes)
@@ -91,14 +93,14 @@ class Hillclimber(Algorithm):
         print(f"Start score: {start_score}, End score: {self.best_score}")
 
 if __name__ == "__main__":
-    data = RailNL("Holland")
+    data = RailNL("Nationaal")
 
     # Test Hillclimber algorithm with RandomAlgorithm as starting state
-    random_alg = RandomAlgorithm(data)
+    random_alg = RandomAlgorithm(data, [20], 180)
     random_alg.run()
     hillclimber_alg = Hillclimber(data, random_alg)
-    hillclimber_alg.run()
-    hillclimber_alg.make_picture() 
+    hillclimber_alg.run(100)
+    # hillclimber_alg.make_picture() 
 
     # Show routes
     for i, route in enumerate(hillclimber_alg.routes):
@@ -109,8 +111,8 @@ if __name__ == "__main__":
     plt.plot(hillclimber_alg.scores)
     plt.xlabel('Iteration')
     plt.ylabel('Score')
-    plt.title('Hillclimber Algorithm: Iteration vs. Score')
-    plt.savefig("score_vs_iteration.png")
+    plt.title('Hillclimber Algorithm Nationaal: Iteration vs. Score')
+    plt.savefig("parent/code/experiments/plots/hillclimber_score_vs_iteration_nationaal.png")
 
     
 
