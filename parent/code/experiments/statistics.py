@@ -29,7 +29,7 @@ def read_scores_from_csv(filename: str) -> "nparray[float]":
     - Post: returns a numpy array with scores.
     """
     # Read scores from CSV file
-    scores = np.loadtxt(f"parent/code/experiments/{filename}.csv", delimiter=",")
+    scores = np.loadtxt(f"parent/code/experiments/{filename}", delimiter=",")
     return scores
 
 def calculate_p_value(sample1: "nparray[float]", sample2: "nparray[float]", return_type: str = "p_value_only") -> float:
@@ -166,8 +166,13 @@ if __name__ == "__main__":
 
 # if __name__ == "__main__":
 
+<<<<<<< HEAD
 #     # Example usage
 #     randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000")
+=======
+    # Example usage
+    randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
+>>>>>>> a52b82a (read_scores_from_csv: filename moet nu worden ingevoerd mét extensie)
 
 #     plot_scores_fancy(randomv2_least_connections)
 # if __name__ == "__main__":
