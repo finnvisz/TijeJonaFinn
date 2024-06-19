@@ -27,7 +27,8 @@ class Randomv2(Algorithm):
         i.e.: within a route, no connection is used more than once. When False,
         connections are fully random and can be used multiple times within a route.
         - starting_stations: Specify how to pick the starting station for each route.
-        Options: "fully_random", "prefer_unused", "custom_list_with_replacement", "custom_list_without_replacement"
+        Options: "fully_random", "prefer_unused", "custom_list_with_replacement", "custom_list_without_replacement". 
+        NOTE: When picking without replacement from a custom list, options will be reused when length of list is < 7.
         - starting_station_list: list of stations to pick from. Only used when starting_stations is set to "custom_list_with_replacement" or "custom_list_without_replacement"
         """
         
@@ -40,9 +41,9 @@ class Randomv2(Algorithm):
         if starting_stations == "custom_list_without_replacement":
  
             # Make a copy of the list to avoid changing the original list
-            starting_station_list = copy.deepcopy(starting_station_list)
+            starting_station_list_copy = copy.deepcopy(starting_station_list)
             
-            random.shuffle(starting_station_list)
+            random.shuffle(starting_station_list_copy)
 
 
         # List to store the various routes
@@ -107,7 +108,12 @@ class Randomv2(Algorithm):
             # If flag set to "custom_list_without_replacement", 
             # pop from randomized version of custom list
             elif starting_stations == "custom_list_without_replacement":
-                current_station = starting_station_list.pop()
+                # If list is empty, refill it
+                if len(starting_station_list_copy) == 0:
+                    starting_station_list_copy = copy.deepcopy(self.used_stations)
+                    random.shuffle(starting_station_list_copy)
+
+                current_station = starting_station_list_copy.pop()
 
 
             # While time is less than 120 minutes

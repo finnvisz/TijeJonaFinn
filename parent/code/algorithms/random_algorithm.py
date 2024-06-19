@@ -45,5 +45,3 @@ class RandomAlgorithm(Algorithm):
                     break
             
             self.routes.append(route)
-            
-

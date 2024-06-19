@@ -32,9 +32,6 @@ class Experiment:
         self.count_stations_used = np.zeros(len(self.total_stations))
         
 
-        # Set default export directory (for export of results to CSV etc.)
-        self.export_directory: str = "parent/code/experiments/results"
-
 
     def run_experiment(self, iterations: int = 100, **algorithm_kwargs) -> float:
         """
@@ -81,7 +78,12 @@ class Experiment:
             else:
                 print("Warning: get_stations_used() returned None.")
 
+<<<<<<< HEAD
         assert np.count_nonzero(self.scores) == iterations, "Not all scores have been filled in, bug in run_experiment."
+=======
+        assert not any(np.isnan(self.scores)), "Not all scores have been filled in, bug in run_experiment."
+        
+>>>>>>> 44382bef3017ea1382e2f5da06dfcddc178c07c1
         return self.scores
     
     def average_score(self) -> float:
@@ -89,13 +91,16 @@ class Experiment:
     
     def write_scores_to_csv(self, filename: str) -> None:
         """
-        Write scores to a CSV file. 
+        Write scores to a CSV file. Default export directory is `parent/code/experiments/`.
 
         - Pre: scores have been calculated (i.e. run_experiment has been called).
         `filename` is a string without extension.
         - Post: scores are written to `filename`.csv in the results subdirectory.
         """
-        np.savetxt(f"{self.export_directory}/{filename}.csv", self.scores, delimiter = ",")
+        # Set default export directory
+        export_directory: str = "parent/code/experiments"
+
+        np.savetxt(f"{export_directory}/{filename}.csv", self.scores, delimiter = ",")
         
 
 # Example usage
