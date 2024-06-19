@@ -13,13 +13,14 @@ class Route:
     def __repr__(self) -> str:
         return f"Route({self.connections_used})"
 
-    def add_connection(self, station1: "Station", station2: "Station", duur: int) -> None:
-        self.connections_used.append([station1.name, station2.name, duur])
-        if station1 not in self.stations:
+    def add_connection(self, station1: "Station", station2: "Station", duration: int) -> None:
+        self.connections_used.append((station1.name, station2.name, duration))
+        # Add station1 only if it's the first station or not already in the list
+        if not self.stations or self.stations[-1] != station1:
             self.stations.append(station1)
-        if station2 not in self.stations:
-            self.stations.append(station2)
-        self.time += int(duur)
+        # Add station2 to ensure it's appended after station1
+        self.stations.append(station2)
+        self.time += duration
 
     def remove_connection(self, connection: tuple[str, str, int]) -> None:
         if connection in self.connections_used:
