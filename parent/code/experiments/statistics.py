@@ -100,9 +100,9 @@ def routes_to_csv(routes: list[Route], filename: str):
     """
     Translate algorithm output to required csv file.
     
-#     - Pre: list of route objects and filename to write to.
-#     - Post: csv-file of given format located in route_csv map. 
-#     """
+    - Pre: list of route objects and filename to write to.
+    - Post: csv-file of given format located in route_csv map. 
+    """
 
     with open(f"route_csv/{filename}.csv", 'w') as file:
         writer = csv.writer(file)
@@ -134,5 +134,3 @@ if __name__ == "__main__":
     # randomv2_most_connections = read_scores_from_csv("randomv2_most_connections")
 
     # plot_scores(randomv2_least_connections, randomv2_most_connections)
-
-

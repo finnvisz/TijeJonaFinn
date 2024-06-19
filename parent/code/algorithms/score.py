@@ -47,4 +47,3 @@ def routes_score(routes: list[Route], map: str):
     score = fraction * 10000 - (number_of_routes * 100 + total_minutes) 
 
     return score 
-
