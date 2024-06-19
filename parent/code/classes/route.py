@@ -46,12 +46,16 @@ class Route:
                 return True
         return False
     
-    # Return ordered list of connections used in route
-    def connections_list(self) -> str:
-        lijst = []
+    # Return ordered list of stations used in route
+    def stations_list(self) -> str:
+        station_names = []
 
         # Vraag van elk station de naam op
         for station in self.stations:
-            lijst.append(station.station_name())
+            station_names.append(station.station_name())
 
-        return f"{lijst}"
+        station_names = f"{station_names}"
+
+        string = station_names.replace("'", "")
+
+        return string

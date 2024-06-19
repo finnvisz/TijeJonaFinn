@@ -1,14 +1,19 @@
 # External imports
 import numpy as np
 import scipy.stats as stats
-# import plotnine
-# import pandas as pd
+import plotnine
+import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import csv
 
 # Internal imports
 from parent.code.algorithms.random_algorithm import RandomAlgorithm
 from parent.code.experiments.experiments import Experiment
+from parent.code.classes.route import Route
+from parent.code.classes.railnl import RailNL
+from parent.code.algorithms.random_v2 import Randomv2
+from parent.code.algorithms.score import routes_score
 
 plot_dir = "parent/code/experiments/plots/"
 
@@ -96,7 +101,7 @@ def plot_frequency_of_scores(filename: str, map: str, iteraties: int, algorithm_
     
     plt.savefig(f"plots/{filename}.png")
 
-def routes_to_csv(output: list[Route], filename: str):
+def routes_to_csv(routes: list[Route], filename: str):
     """
     Translate algorithm output to required csv file.
     
@@ -104,24 +109,29 @@ def routes_to_csv(output: list[Route], filename: str):
     - Post: csv-file of given format located in route_csv map. 
     """
 
-    header = ["train", "stations"]
-    connections = []
-    
-    for i in range(6):
-        connections[0] = [f"train_{i}", output[i].connections_list()]
-
     with open(f"route_csv/{filename}.csv", 'w') as file:
         writer = csv.writer(file)
 
-        writer.writerow("train,stations")
+        writer.writerow(["train", "stations"])
+
+        for i in range(1, len(routes)):
+            writer.writerow([f"train_{i}", routes[i - 1].stations_list()])
+
+        score = routes_score(routes, "Holland")
+        writer.writerow(["score", f"{score}"])
+
+if __name__ == "__main__":
+    railnl = RailNL("Holland")
+    algorithm = Randomv2(railnl)
+    algorithm.run()
+    routes = algorithm.output()
+    routes_to_csv(routes, "output")
 
 # if __name__ == "__main__":
 
 #     # Example usage
 #     randomv2_least_connections = read_scores_from_csv("randomv2_least_connections")
 #     randomv2_most_connections = read_scores_from_csv("randomv2_most_connections")
-
-
 
 # if __name__ == "__main__":
 #     # Example usage
@@ -130,28 +140,28 @@ def routes_to_csv(output: list[Route], filename: str):
 
     # plot_scores(randomv2_least_connections, randomv2_most_connections)
 
-if __name__ == "__main__":
-    list_to_choose1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-    list_to_choose2 = [20]
-    list_to_choose3 = [1, 2, 3, 4, 5, 6, 7]
-    plot_frequency_of_scores(
-        "Frequency Distribution of Scores RandomAlgorithm 20 routes Nationaal", 
-        "Nationaal", 
-        1000, 
-        RandomAlgorithm, 
-        list_to_choose2
-    )
-    plot_frequency_of_scores(
-        "Frequency Distribution of Scores RandomAlgorithm 1-20 routes Nationaal", 
-        "Nationaal", 
-        1000, 
-        RandomAlgorithm, 
-        list_to_choose1
-    )
-    plot_frequency_of_scores(
-        "Frequency Distribution of Scores RandomAlgorithm 1-7 routes Holland", 
-        "Nationaal", 
-        1000, 
-        RandomAlgorithm, 
-        list_to_choose3
-    )
+# if __name__ == "__main__":
+#     list_to_choose1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+#     list_to_choose2 = [20]
+#     list_to_choose3 = [1, 2, 3, 4, 5, 6, 7]
+#     plot_frequency_of_scores(
+#         "Frequency Distribution of Scores RandomAlgorithm 20 routes Nationaal", 
+#         "Nationaal", 
+#         1000, 
+#         RandomAlgorithm, 
+#         list_to_choose2
+#     )
+#     plot_frequency_of_scores(
+#         "Frequency Distribution of Scores RandomAlgorithm 1-20 routes Nationaal", 
+#         "Nationaal", 
+#         1000, 
+#         RandomAlgorithm, 
+#         list_to_choose1
+#     )
+#     plot_frequency_of_scores(
+#         "Frequency Distribution of Scores RandomAlgorithm 1-7 routes Holland", 
+#         "Nationaal", 
+#         1000, 
+#         RandomAlgorithm, 
+#         list_to_choose3
+#     )
