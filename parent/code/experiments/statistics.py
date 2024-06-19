@@ -1,8 +1,8 @@
 # External imports
 import numpy as np
 import scipy.stats as stats
-# import plotnine as p9
-# import pandas as pd
+import plotnine as p9
+import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import csv
@@ -58,13 +58,14 @@ def calculate_p_value(sample1: "nparray[float]", sample2: "nparray[float]", retu
     else:
         raise ValueError("Invalid return_type argument, choose 'p_value_only', 'object' or 'significant'.")
 
+
 def plot_scores_fancy(sample1: "nparray[float]", sample2: "nparray[float]" = None, 
                       title: str = "fancy_plot", save_to_pdf: bool = False, preview: bool = True,
                       binwidth: int = 400) -> None:
     """
-    Plot the scores of two samples in a histogram.
+    Plot the scores of one or two samples in a histogram.
 
-    - Pre: sample1 and sample2 are independent samples, given as numpy arrays of floats.
+    - Pre: sample1 (and sample2) is and independent sample, given as a numpy arrays of floats.
     - Post: histogram is plotted.
     """
     # If name left on default, add current time
@@ -98,19 +99,22 @@ def plot_scores_fancy(sample1: "nparray[float]", sample2: "nparray[float]" = Non
     else:
         # Create dataframe with scores
         df = pd.DataFrame({
-            "sample1": sample1,
-            "sample2": sample2
+            "Sample 1": sample1,
+            "Sample 2": sample2
         })
+
+        df = df.melt(value_vars=['Sample 1','Sample 2'], var_name='Group', value_name='Score')
+
 
         # Histogram for 2 samples
         plot = (
             p9.ggplot(df) +
-            p9.aes(x = "sample1") +
-            p9.geom_histogram(alpha = .85, position = "identity", fill = "lightblue", color = "darkgrey") +
+            p9.aes(x = "Score", fill = "Group", colour = "Group") +
+            p9.geom_histogram(binwidth = binwidth, alpha = .85, position = "identity", color = "darkgrey") +
+
             p9.xlim(0,10000) + 
-            p9.labs(title = f"Histogram: {title}", x = "Score", 
-                    y = "Aantal waarnemingen", fill = "Sample", colour = "Sample") + 
-            # p9.scale_fill_manual(values = ("lightgreen", "lightsalmon")) +
+            p9.labs(title = f"Histogram: {title}", y = "Aantal waarnemingen") + 
+            p9.scale_fill_manual(values = ("lightgreen", "lightsalmon")) +
             p9.theme_minimal()
         )
 
@@ -157,24 +161,22 @@ def routes_to_csv(routes: list[Route], filename: str):
         score = routes_score(routes, "Holland")
         writer.writerow(["score", f"{score}"])
 
-if __name__ == "__main__":
-    railnl = RailNL("Holland")
-    algorithm = Finn(railnl)
-    algorithm.run()
-    routes = algorithm.output()
-    routes_to_csv(routes, "output")
-
 # if __name__ == "__main__":
+#     railnl = RailNL("Holland")
+#     algorithm = Finn(railnl)
+#     algorithm.run()
+#     routes = algorithm.output()
+#     routes_to_csv(routes, "output")
 
-<<<<<<< HEAD
-#     # Example usage
-#     randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000")
-=======
+if __name__ == "__main__":
+
     # Example usage
     randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
->>>>>>> a52b82a (read_scores_from_csv: filename moet nu worden ingevoerd mét extensie)
+    randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
 
-#     plot_scores_fancy(randomv2_least_connections)
+    plot_scores_fancy(randomv2_least_connections, randomv2_most_connections)
+
+
 # if __name__ == "__main__":
 #     # Example usage
     # randomv2_least_connections = read_scores_from_csv("randomv2_least_connections")
