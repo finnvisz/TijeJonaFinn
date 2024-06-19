@@ -15,28 +15,10 @@ if __name__ == "__main__":
     data = RailNL("Nationaal") # manipulate
 
     # Test Random Algorithm
-    random_algorithm = RandomAlgorithm(data)
+    random_algorithm = RandomAlgorithm(data, [20], 180)
     random_score = Score(random_algorithm)
-    #random_algorithm.make_picture()
-    print(random_algorithm.output())
+    random_algorithm.make_picture()
     print(f"Random Algorithm Score: {random_score.calculate()}")
-
-    # Perform experiment with RandomAlgorithm and collect scores
-    random_experiment = Experiment(RandomAlgorithm, "Holland")
-    scores = random_experiment.run_experiment(10000)
-    average = random_experiment.average_score()
-    print(f"average score: {average}")
-
-    # Plotting the frequency distribution of scores
-    plt.figure(figsize=(10, 6))
-    plt.hist(scores, bins=50, edgecolor='black', alpha=0.7)
-    plt.title('Frequency Distribution of Scores RandomAlgorithm 1-20 routes Nationaal')
-    plt.xlabel('Score')
-    plt.xlim(0, 10000)
-    plt.ylabel('Frequency')
-    plt.grid(True)
-    plt.tight_layout()
-    plt.savefig("freq.png")
 
     # # Plotting frequency distributions of connections used
     # total_connections = RailNL("Holland").get_total_connections()

@@ -125,10 +125,10 @@ def plot_frequency_of_scores(filename: str, map: str, iteraties: int, minutes: i
     # plot_scores(randomv2_least_connections, randomv2_most_connections)
 
 if __name__ == "__main__":
-    list_to_choose1 = [20]
+    list_to_choose1 = [12]
     plot_frequency_of_scores(
-        "Scores, 20 routes, Nationaal", 
-        "Holland", 
+        "Scores, 12 routes, Nationaal", 
+        "Nationaal", 
         10000, 
         180,
         RandomAlgorithm, 
