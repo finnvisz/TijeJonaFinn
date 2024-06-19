@@ -79,11 +79,7 @@ def plot_scores(sample1: "nparray[float]", sample2: "nparray[float]") -> None:
     plot.show()
     # plot.save(filename = "test.pdf", path=plot_dir)
 
-def plot_frequency_of_scores(filename: str, map: str, iteraties: int, minutes: int, algorithm_class: type, list_to_choose: list[int]):
-    # Perform experiment with Algorithm and collect scores
-    experiment = Experiment(algorithm_class, map, list_to_choose=list_to_choose, minutes=minutes)
-    scores = experiment.run_experiment(iteraties)
-
+def plot_frequency_of_scores(filename: str, scores: list[float]):
     # Plotting the frequency distribution of scores
     plt.figure(figsize=(10, 6))
     plt.hist(scores, bins=50, edgecolor='black', alpha=0.7)
@@ -125,12 +121,4 @@ def plot_frequency_of_scores(filename: str, map: str, iteraties: int, minutes: i
     # plot_scores(randomv2_least_connections, randomv2_most_connections)
 
 if __name__ == "__main__":
-    list_to_choose1 = [12]
-    plot_frequency_of_scores(
-        "Scores, 12 routes, Nationaal", 
-        "Nationaal", 
-        10000, 
-        180,
-        RandomAlgorithm, 
-        list_to_choose1
-    )
+    
