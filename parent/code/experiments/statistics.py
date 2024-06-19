@@ -18,6 +18,7 @@ from parent.code.algorithms.score import routes_score
 
 
 # Default directory for plots, can be changed if needed
+# Don't delete! Used in plot_scores_fancy function
 plot_dir = "parent/code/experiments/plots"
 
 
@@ -60,73 +61,184 @@ def calculate_p_value(sample1: "nparray[float]", sample2: "nparray[float]", retu
 
 
 def plot_scores_fancy(sample1: "nparray[float]", sample2: "nparray[float]" = None, 
-                      title: str = "fancy_plot", save_to_pdf: bool = False, preview: bool = True,
-                      binwidth: int = 400) -> None:
+                      sample3: "nparray[float]" = None, sample4: "nparray[float]" = None, 
+                      
+                      save_to_pdf: bool = False, preview: bool = True, # save settings
+                      filename: str | None = None,
+                      
+                      title: str | None = None, binwidth: int = 400, # plot settings
+                      alpha: float | None = None) -> None:
     """
-    Plot the scores of one or two samples in a histogram.
+    Plot the scores of 1 to 4 samples in a histogram.
 
-    - Pre: sample1 (and sample2) is and independent sample, given as a numpy arrays of floats.
-    - Post: histogram is plotted.
+    - Pre: Each sample is given as a numpy arrays of floats.
+    - Post: histogram is plotted (default: only preview, save to pdf also possible).
+
+    args:
+
+    Save settings:
+    - `save_to_pdf`: save plot to pdf file in directory `plot_dir` (which is defined right after
+    the imports of this script).
+    - `preview`: show preview of plot.
+    - `filename`: (optional) custom filename for the plot. 
+    When not provided, user-provided `title` is used or else a default name with timestamp.
+    
+    Plot settings:
+    - `title`: (optional) title of the plot, also used as filename if saved to pdf.
+    When not provided, a default name with timestamp is used.
+    - `binwidth`: width of the bins in the histogram (default is 400, seems a sweet spot).
+    - `alpha`: (optional) set custom transparency of the bars in the histogram
     """
-    # If name left on default, add current time
-    if title == "fancy_plot":
-        now = datetime.now()
-        current_time = now.strftime("%H:%M:%S")
-        title += f"_{current_time}"
+    # Settings for plot
+    color_palette = ("lightblue", "lightgrey", "lightsalmon", "lightgreen")
+    p9.options.figure_size = (9, 5) # overwritten for single sample
 
+    
+    # Complex decision tree to determine filename and title
+    # See docs for more info
+    if filename is not None:
+        if title is None:
+            now = datetime.now()
+            current_time = now.strftime("%H:%M:%S")
+            
+            title = f"Histogram: fancy_plot_{current_time}"
+    
+    else:
+        if title is not None:
+            filename = title
+        else:
+            now = datetime.now()
+            current_time = now.strftime("%H:%M:%S")
+            
+            filename = f"fancy_plot_{current_time}"
+            title = f"Histogram: {filename}"
+
+    # Add .pdf extension if not present
+    if not filename.endswith(".pdf"):
+        filename += ".pdf"
+    
+        
     # If sample2 is not provided, create plot for single sample
     if sample2 is None:
         
+        # Smaller width for single sample (because no legend)
+        p9.options.figure_size = (8, 5)
+
         # Create dataframe with scores
         df = pd.DataFrame({
             "sample1": sample1,
-            # "sample2": sample2
         })
+
+        # Default alpha value
+        if alpha is None:
+            alpha = 0.85
 
         # Histogram for single sample
         plot = (
             p9.ggplot(df) +
             p9.aes(x = "sample1") +
-            p9.geom_histogram(binwidth = binwidth, alpha = .85, position = "identity", fill = "lightblue", color = "darkgrey") +
+            p9.geom_histogram(binwidth = binwidth, alpha = alpha, position = "identity", fill = color_palette[0], color = "darkgrey") +
             p9.xlim(0,10000) + 
-            p9.labs(title = f"Histogram: {title}", x = "Score", 
-                    y = "Aantal waarnemingen", fill = "Sample", colour = "Sample") + 
-            # p9.scale_fill_manual(values = ("lightgreen", "lightsalmon")) +
+            p9.labs(title = title, x = "Score", 
+                    y = "Aantal waarnemingen") + 
             p9.theme_minimal()
         )
     
+
     # Else create plot for 2 samples
-    else:
+    elif sample3 is None:
+        
         # Create dataframe with scores
         df = pd.DataFrame({
             "Sample 1": sample1,
             "Sample 2": sample2
         })
 
-        df = df.melt(value_vars=['Sample 1','Sample 2'], var_name='Group', value_name='Score')
+        df = df.melt(value_vars=['Sample 1','Sample 2'], var_name='Groep', value_name='Score')
 
+        # Default alpha value
+        if alpha is None:
+            alpha = 0.7
 
         # Histogram for 2 samples
         plot = (
             p9.ggplot(df) +
-            p9.aes(x = "Score", fill = "Group", colour = "Group") +
-            p9.geom_histogram(binwidth = binwidth, alpha = .85, position = "identity", color = "darkgrey") +
-
+            p9.aes(x = "Score", fill = "Groep", colour = "Groep") +
+            p9.geom_histogram(binwidth = binwidth, alpha = alpha, position = "identity", color = "darkgrey") +
             p9.xlim(0,10000) + 
-            p9.labs(title = f"Histogram: {title}", y = "Aantal waarnemingen") + 
-            p9.scale_fill_manual(values = ("lightgreen", "lightsalmon")) +
+            p9.labs(title = title, y = "Aantal waarnemingen") + 
+            p9.scale_fill_manual(values = color_palette[:2]) +
             p9.theme_minimal()
         )
 
 
+    # Else create plot for 3 samples
+    elif sample4 is None:
+        # Create dataframe with scores
+        df = pd.DataFrame({
+            "Sample 1": sample1,
+            "Sample 2": sample2,
+            "Sample 3": sample3
+        })
+
+        df = df.melt(value_vars=['Sample 1','Sample 2', 'Sample 3'], var_name='Groep', value_name='Score')
+
+        # Default alpha value
+        if alpha is None:
+            alpha = 0.7
+
+        # Histogram for 3 samples
+        plot = (
+            p9.ggplot(df) +
+            p9.aes(x = "Score", fill = "Groep", colour = "Groep") +
+            p9.geom_histogram(binwidth = binwidth, alpha = alpha, position = "identity", color = "darkgrey") +
+
+            p9.xlim(0,10000) + 
+            p9.labs(title = title, y = "Aantal waarnemingen") + 
+            p9.scale_fill_manual(values = color_palette[:3]) +
+            p9.theme_minimal()
+        )
+
+    
+    # Else create plot for 4 samples
+    else:
+        # Create dataframe with scores
+        df = pd.DataFrame({
+            "Sample 1": sample1,
+            "Sample 2": sample2,
+            "Sample 3": sample3,
+            "Sample 4": sample4
+        })
+
+        df = df.melt(value_vars=['Sample 1','Sample 2', 'Sample 3', 'Sample 4'], var_name='Groep', value_name='Score')
+
+        # Default alpha value
+        if alpha is None:
+            alpha = 0.7
+
+        # Histogram for 4 samples
+        plot = (
+            p9.ggplot(df) +
+            p9.aes(x = "Score", fill = "Groep", colour = "Groep") +
+            p9.geom_histogram(binwidth = binwidth, alpha = alpha, position = "identity", color = "darkgrey") +
+
+            p9.xlim(0,10000) + 
+            p9.labs(title = title, y = "Aantal waarnemingen") + 
+            p9.scale_fill_manual(values = color_palette) +
+            p9.theme_minimal() 
+            # + p9.theme(figure_size=(16, 8))
+        )
+
+
+    # Save to pdf if specified
+    if save_to_pdf:
+        plot.save(filename = filename, path=plot_dir)
+    
     # Show preview of plot if specified
     if preview:
         # Show the plot
         plot.show()
 
-    # Save to pdf if specified
-    if save_to_pdf:
-        plot.save(filename = f"{title}.pdf", path=plot_dir)
 
 
 def plot_scores(filename: str, scores: list[float]):
@@ -182,9 +294,11 @@ if __name__ == "__main__":
 
     # Example usage
     randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
+    randomv2_2_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_2_connections_100000.csv")
+    randomv2_3_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_3_connections_100000.csv")
     randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
 
-    plot_scores_fancy(randomv2_least_connections, randomv2_most_connections)
+    plot_scores_fancy(randomv2_least_connections, randomv2_2_connections, randomv2_3_connections, randomv2_most_connections, title="Bewijs dat 4 datasets werkt")
 
 
 # if __name__ == "__main__":
