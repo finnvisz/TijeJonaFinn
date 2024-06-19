@@ -1,24 +1,14 @@
 # External imports
 import numpy as np
 import scipy.stats as stats
-<<<<<<< HEAD
 # import plotnine
 # import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-from parent.code.classes.railnl import RailNL
-from parent.code.algorithms.algorithm import Algorithm
+# Internal imports
 from parent.code.algorithms.random_algorithm import RandomAlgorithm
-from parent.code.algorithms.score import Score
 from parent.code.experiments.experiments import Experiment
-=======
-import plotnine
-import pandas as pd
-import csv
-
-from parent.code.classes.route import Route
->>>>>>> 68050132949ebca1c0c459ac7b33c2aeeb209300
 
 plot_dir = "parent/code/experiments/plots/"
 
@@ -89,7 +79,6 @@ def plot_scores(sample1: "nparray[float]", sample2: "nparray[float]") -> None:
     plot.show()
     # plot.save(filename = "test.pdf", path=plot_dir)
 
-<<<<<<< HEAD
 def plot_frequency_of_scores(filename: str, map: str, iteraties: int, algorithm_class: type, list_to_choose: list[int]):
     # Perform experiment with Algorithm and collect scores
     experiment = Experiment(algorithm_class, map, list_to_choose=list_to_choose)
@@ -106,6 +95,34 @@ def plot_frequency_of_scores(filename: str, map: str, iteraties: int, algorithm_
     plt.tight_layout()
     
     plt.savefig(f"plots/{filename}.png")
+
+def routes_to_csv(output: list[Route], filename: str):
+    """
+    Translate algorithm output to required csv file.
+    
+    - Pre: list of route objects and filename to write to.
+    - Post: csv-file of given format located in route_csv map. 
+    """
+
+    with open(f'route_csv/{filename}.csv', 'w') as file:
+        writer = csv.writer(file)
+
+        writer.writerow("train,stations")
+
+# if __name__ == "__main__":
+
+#     # Example usage
+#     randomv2_least_connections = read_scores_from_csv("randomv2_least_connections")
+#     randomv2_most_connections = read_scores_from_csv("randomv2_most_connections")
+
+
+
+# if __name__ == "__main__":
+#     # Example usage
+    # randomv2_least_connections = read_scores_from_csv("randomv2_least_connections")
+    # randomv2_most_connections = read_scores_from_csv("randomv2_most_connections")
+
+    # plot_scores(randomv2_least_connections, randomv2_most_connections)
 
 if __name__ == "__main__":
     list_to_choose1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
@@ -132,32 +149,3 @@ if __name__ == "__main__":
         RandomAlgorithm, 
         list_to_choose3
     )
-=======
-def routes_to_csv(output: list[Route], filename: str):
-    """
-    Translate algorithm output to required csv file.
-    
-    - Pre: list of route objects and filename to write to.
-    - Post: csv-file of given format located in route_csv map. 
-    """
-
-    with open(f'route_csv/{filename}.csv', 'w') as file:
-        writer = csv.writer(file)
-
-        writer.writerow("train,stations")
-
-if __name__ == "__main__":
-
-    # Example usage
-    randomv2_least_connections = read_scores_from_csv("randomv2_least_connections")
-    randomv2_most_connections = read_scores_from_csv("randomv2_most_connections")
->>>>>>> 68050132949ebca1c0c459ac7b33c2aeeb209300
-
-
-
-# if __name__ == "__main__":
-#     # Example usage
-    # randomv2_least_connections = read_scores_from_csv("randomv2_least_connections")
-    # randomv2_most_connections = read_scores_from_csv("randomv2_most_connections")
-
-    # plot_scores(randomv2_least_connections, randomv2_most_connections)
