@@ -120,5 +120,3 @@ def plot_frequency_of_scores(filename: str, scores: list[float]):
 
     # plot_scores(randomv2_least_connections, randomv2_most_connections)
 
-if __name__ == "__main__":
-    
