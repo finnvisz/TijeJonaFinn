@@ -1,11 +1,12 @@
 # External imports
 import numpy as np
 import scipy.stats as stats
-import plotnine
 import pandas as pd
+import plotnine
 import csv
 
 from parent.code.classes.route import Route
+from parent.code.classes.railnl import RailNL 
 
 plot_dir = "parent/code/experiments/plots/"
 
@@ -84,15 +85,25 @@ def routes_to_csv(output: list[Route], filename: str):
     - Post: csv-file of given format located in route_csv map. 
     """
 
-    with open(f'route_csv/{filename}.csv', 'w') as file:
+    header = ["train", "stations"]
+    connections = []
+    
+    for i in range(6):
+        connections[0] = [f"train_{i}", output[i].connections_list()]
+
+    with open(f"route_csv/{filename}.csv", 'w') as file:
         writer = csv.writer(file)
 
-        writer.writerow("train,stations")
+        writer.writerow(header)
+        writer.writerow(connections)
 
 if __name__ == "__main__":
 
-    # Example usage
-    randomv2_least_connections = read_scores_from_csv("randomv2_least_connections")
-    randomv2_most_connections = read_scores_from_csv("randomv2_most_connections")
+    railnl = RailNL("Holland")
+    routes_to_csv([None], "example")
 
-    plot_scores(randomv2_least_connections, randomv2_most_connections)
+    # # Example usage
+    # randomv2_least_connections = read_scores_from_csv("randomv2_least_connections")
+    # randomv2_most_connections = read_scores_from_csv("randomv2_most_connections")
+
+    # plot_scores(randomv2_least_connections, randomv2_most_connections)

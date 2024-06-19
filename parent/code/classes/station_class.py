@@ -29,7 +29,7 @@ class Station:
     def connection_duration(self, other: "Station") -> int:
         return self.connections[other]
     
-    def station_name(self):
+    def station_name(self) -> str:
         return self.name
     
     # Check if station has connections

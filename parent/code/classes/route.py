@@ -45,3 +45,13 @@ class Route:
             if station1.name in connection and station2.name in connection:
                 return True
         return False
+    
+    # Return ordered list of connections used in route
+    def connections_list(self) -> str:
+        lijst = []
+
+        # Vraag van elk station de naam op
+        for station in self.stations:
+            lijst.append(station.station_name())
+
+        return f"{lijst}"
