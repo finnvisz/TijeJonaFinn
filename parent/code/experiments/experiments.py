@@ -9,7 +9,7 @@ from parent.code.algorithms.score import Score
 from parent.code.algorithms.random_v2 import Randomv2
 
 class Experiment:
-    def __init__(self, algorithm_class: "Algorithm", map: str = "Holland") -> None:
+    def __init__(self, algorithm_class: "Algorithm", map: str = "Holland", **algorithm_kwargs) -> None:
         """
         Initialize experiment object with given algorithm and map.
         
@@ -20,6 +20,7 @@ class Experiment:
         """
         self.algorithm_class: "Algorithm" = algorithm_class
         self.map: str = map
+        self.algorithm_kwargs = algorithm_kwargs
 
         # Get the total stations and connections and create an index mapping
         total_connections = list(RailNL(self.map).get_total_connections())
@@ -50,7 +51,7 @@ class Experiment:
             # Ensure each run starts with a fresh state.
             data_instance = RailNL(self.map)
             # Initialize algorithm
-            algorithm_instance = self.algorithm_class(data_instance)
+            algorithm_instance = self.algorithm_class(data_instance, **self.algorithm_kwargs)
             # Run and calculate score
             score = Score(algorithm_instance, **algorithm_kwargs).calculate()
             # Add score to array at correct positions
@@ -78,12 +79,8 @@ class Experiment:
             else:
                 print("Warning: get_stations_used() returned None.")
 
-<<<<<<< HEAD
-        assert np.count_nonzero(self.scores) == iterations, "Not all scores have been filled in, bug in run_experiment."
-=======
         assert not any(np.isnan(self.scores)), "Not all scores have been filled in, bug in run_experiment."
         
->>>>>>> 44382bef3017ea1382e2f5da06dfcddc178c07c1
         return self.scores
     
     def average_score(self) -> float:
