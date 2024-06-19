@@ -3,6 +3,9 @@ import numpy as np
 import scipy.stats as stats
 import plotnine
 import pandas as pd
+import csv
+
+from parent.code.classes.route import Route
 
 plot_dir = "parent/code/experiments/plots/"
 
@@ -73,8 +76,21 @@ def plot_scores(sample1: "nparray[float]", sample2: "nparray[float]") -> None:
     plot.show()
     # plot.save(filename = "test.pdf", path=plot_dir)
 
+def routes_to_csv(output: list[Route], filename: str):
+    """
+    Translate algorithm output to required csv file.
+    
+    - Pre: list of route objects and filename to write to.
+    - Post: csv-file of given format located in route_csv map. 
+    """
+
+    with open(f'route_csv/{filename}.csv', 'w') as file:
+        writer = csv.writer(file)
+
+        writer.writerow("train,stations")
 
 if __name__ == "__main__":
+
     # Example usage
     randomv2_least_connections = read_scores_from_csv("randomv2_least_connections")
     randomv2_most_connections = read_scores_from_csv("randomv2_most_connections")
