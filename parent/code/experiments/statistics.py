@@ -156,12 +156,12 @@ def routes_to_csv(routes: list[Route], filename: str):
         score = routes_score(routes, "Holland")
         writer.writerow(["score", f"{score}"])
 
-if __name__ == "__main__":
-    railnl = RailNL("Holland")
-    algorithm = RandomAlgorithm(railnl, [7], 120)
-    algorithm.run()
-    routes = algorithm.output()
-    routes_to_csv(routes, "output")
+# if __name__ == "__main__":
+#     railnl = RailNL("Holland")
+#     algorithm = RandomAlgorithm(railnl, [7], 120)
+#     algorithm.run()
+#     routes = algorithm.output()
+#     routes_to_csv(routes, "output")
 
 if __name__ == "__main__":
 
