@@ -14,7 +14,7 @@ class RandomAlgorithm(Algorithm):
 
     def run(self) -> None:
         # N = choice([1, 2, 3, 4, 5, 6, 7])
-        N = 7 # manipulate
+        N = 1 # manipulate
         for _ in range(N):
             time_used = 0
             route = Route()
