@@ -79,9 +79,9 @@ def plot_scores(sample1: "nparray[float]", sample2: "nparray[float]") -> None:
     plot.show()
     # plot.save(filename = "test.pdf", path=plot_dir)
 
-def plot_frequency_of_scores(filename: str, map: str, iteraties: int, algorithm_class: type, list_to_choose: list[int]):
+def plot_frequency_of_scores(filename: str, map: str, iteraties: int, minutes: int, algorithm_class: type, list_to_choose: list[int]):
     # Perform experiment with Algorithm and collect scores
-    experiment = Experiment(algorithm_class, map, list_to_choose=list_to_choose)
+    experiment = Experiment(algorithm_class, map, list_to_choose=list_to_choose, minutes=minutes)
     scores = experiment.run_experiment(iteraties)
 
     # Plotting the frequency distribution of scores
@@ -96,18 +96,18 @@ def plot_frequency_of_scores(filename: str, map: str, iteraties: int, algorithm_
     
     plt.savefig(f"plots/{filename}.png")
 
-def routes_to_csv(output: list[Route], filename: str):
-    """
-    Translate algorithm output to required csv file.
+# def routes_to_csv(output: list[Route], filename: str):
+#     """
+#     Translate algorithm output to required csv file.
     
-    - Pre: list of route objects and filename to write to.
-    - Post: csv-file of given format located in route_csv map. 
-    """
+#     - Pre: list of route objects and filename to write to.
+#     - Post: csv-file of given format located in route_csv map. 
+#     """
 
-    with open(f'route_csv/{filename}.csv', 'w') as file:
-        writer = csv.writer(file)
+#     with open(f'route_csv/{filename}.csv', 'w') as file:
+#         writer = csv.writer(file)
 
-        writer.writerow("train,stations")
+#         writer.writerow("train,stations")
 
 # if __name__ == "__main__":
 
@@ -125,27 +125,12 @@ def routes_to_csv(output: list[Route], filename: str):
     # plot_scores(randomv2_least_connections, randomv2_most_connections)
 
 if __name__ == "__main__":
-    list_to_choose1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-    list_to_choose2 = [20]
-    list_to_choose3 = [1, 2, 3, 4, 5, 6, 7]
+    list_to_choose1 = [20]
     plot_frequency_of_scores(
-        "Frequency Distribution of Scores RandomAlgorithm 20 routes Nationaal", 
-        "Nationaal", 
-        1000, 
-        RandomAlgorithm, 
-        list_to_choose2
-    )
-    plot_frequency_of_scores(
-        "Frequency Distribution of Scores RandomAlgorithm 1-20 routes Nationaal", 
-        "Nationaal", 
-        1000, 
+        "Scores, 20 routes, Nationaal", 
+        "Holland", 
+        10000, 
+        180,
         RandomAlgorithm, 
         list_to_choose1
-    )
-    plot_frequency_of_scores(
-        "Frequency Distribution of Scores RandomAlgorithm 1-7 routes Holland", 
-        "Nationaal", 
-        1000, 
-        RandomAlgorithm, 
-        list_to_choose3
     )
