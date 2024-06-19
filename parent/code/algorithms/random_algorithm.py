@@ -9,12 +9,13 @@ class RandomAlgorithm(Algorithm):
     the 120 minute limit
     """
 
-    def __init__(self, load: RailNL) -> None:
+    def __init__(self, load: RailNL, list_to_choose: list[int]) -> None:
         super().__init__(load) # Inherits everything from ALgorithm class
+        self.list_to_choose = list_to_choose
 
     def run(self) -> None:
-        # N = choice([1, 2, 3, 4, 5, 6, 7])
-        N = 1 # manipulate
+        N = choice(self.list_to_choose)
+
         for _ in range(N):
             time_used = 0
             route = Route()
@@ -35,7 +36,7 @@ class RandomAlgorithm(Algorithm):
 
                 # Continue if adding a connection is 
                 # possible considering time_used
-                if total <= 120: #manipulate
+                if total <= 180: # manipulate
                     time_used = total
                     route.add_connection(current_station, connection, duration)
                     current_station = connection

@@ -1,8 +1,16 @@
 # External imports
 import numpy as np
 import scipy.stats as stats
-import plotnine
-import pandas as pd
+# import plotnine
+# import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+from parent.code.classes.railnl import RailNL
+from parent.code.algorithms.algorithm import Algorithm
+from parent.code.algorithms.random_algorithm import RandomAlgorithm
+from parent.code.algorithms.score import Score
+from parent.code.experiments.experiments import Experiment
 
 plot_dir = "parent/code/experiments/plots/"
 
@@ -73,10 +81,54 @@ def plot_scores(sample1: "nparray[float]", sample2: "nparray[float]") -> None:
     plot.show()
     # plot.save(filename = "test.pdf", path=plot_dir)
 
+def plot_frequency_of_scores(filename: str, map: str, iteraties: int, algorithm_class: type, list_to_choose: list[int]):
+    # Perform experiment with Algorithm and collect scores
+    experiment = Experiment(algorithm_class, map, list_to_choose=list_to_choose)
+    scores = experiment.run_experiment(iteraties)
+
+    # Plotting the frequency distribution of scores
+    plt.figure(figsize=(10, 6))
+    plt.hist(scores, bins=50, edgecolor='black', alpha=0.7)
+    plt.title(f"{filename}")
+    plt.xlabel('Score')
+    plt.xlim(0, 10000)
+    plt.ylabel('Frequency')
+    plt.grid(True)
+    plt.tight_layout()
+    
+    plt.savefig(f"plots/{filename}.png")
 
 if __name__ == "__main__":
-    # Example usage
-    randomv2_least_connections = read_scores_from_csv("randomv2_least_connections")
-    randomv2_most_connections = read_scores_from_csv("randomv2_most_connections")
+    list_to_choose1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    list_to_choose2 = [20]
+    list_to_choose3 = [1, 2, 3, 4, 5, 6, 7]
+    plot_frequency_of_scores(
+        "Frequency Distribution of Scores RandomAlgorithm 20 routes Nationaal", 
+        "Nationaal", 
+        1000, 
+        RandomAlgorithm, 
+        list_to_choose2
+    )
+    plot_frequency_of_scores(
+        "Frequency Distribution of Scores RandomAlgorithm 1-20 routes Nationaal", 
+        "Nationaal", 
+        1000, 
+        RandomAlgorithm, 
+        list_to_choose1
+    )
+    plot_frequency_of_scores(
+        "Frequency Distribution of Scores RandomAlgorithm 1-7 routes Holland", 
+        "Nationaal", 
+        1000, 
+        RandomAlgorithm, 
+        list_to_choose3
+    )
 
-    plot_scores(randomv2_least_connections, randomv2_most_connections)
+
+
+# if __name__ == "__main__":
+#     # Example usage
+    # randomv2_least_connections = read_scores_from_csv("randomv2_least_connections")
+    # randomv2_most_connections = read_scores_from_csv("randomv2_most_connections")
+
+    # plot_scores(randomv2_least_connections, randomv2_most_connections)
