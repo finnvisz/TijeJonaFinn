@@ -159,7 +159,7 @@ def routes_to_csv(routes: list[Route], filename: str):
 
 if __name__ == "__main__":
     railnl = RailNL("Holland")
-    algorithm = Finn(railnl)
+    algorithm = RandomAlgorithm(railnl, [7], 120)
     algorithm.run()
     routes = algorithm.output()
     routes_to_csv(routes, "output")
