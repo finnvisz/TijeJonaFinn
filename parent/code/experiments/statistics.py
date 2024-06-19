@@ -9,6 +9,7 @@ import csv
 
 # Internal imports
 from parent.code.algorithms.random_algorithm import RandomAlgorithm
+from parent.code.algorithms.finnsroutes import Finn
 from parent.code.experiments.experiments import Experiment
 from parent.code.classes.route import Route
 from parent.code.classes.railnl import RailNL
@@ -117,7 +118,7 @@ def routes_to_csv(routes: list[Route], filename: str):
 
 if __name__ == "__main__":
     railnl = RailNL("Holland")
-    algorithm = RandomAlgorithm(railnl, [20], 120)
+    algorithm = Finn(railnl)
     algorithm.run()
     routes = algorithm.output()
     routes_to_csv(routes, "output")
