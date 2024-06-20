@@ -95,7 +95,7 @@ def plot_scores_fancy(sample1: "np.array[float]", sample2: "np.array[float]" = N
     Value between 0 and 1. Default is 0.85 for single sample and 0.7 for multiple samples.
     """
     # Settings for plot
-    color_palette = ("lightblue", "yellow", "lightsalmon", "lightgreen")
+    color_palette = ("lightblue", "lightgrey", "lightsalmon", "lightgreen")
     p9.options.figure_size = (9, 5) # overwritten for single sample
 
     
@@ -145,7 +145,7 @@ def plot_scores_fancy(sample1: "np.array[float]", sample2: "np.array[float]" = N
             p9.ggplot(df) +
             p9.aes(x = "sample1") +
             p9.geom_histogram(binwidth = binwidth, alpha = alpha, position = "identity", fill = color_palette[0], color = "darkgrey") +
-            p9.xlim(7500,10000) + 
+            p9.xlim(0,10000) + 
             # p9.labs(title = title, x = "Score", y = "Aantal waarnemingen") + 
             p9.theme_minimal()
         )
@@ -170,7 +170,7 @@ def plot_scores_fancy(sample1: "np.array[float]", sample2: "np.array[float]" = N
             p9.ggplot(df) +
             p9.aes(x = "Score", fill = "Groep", colour = "Groep") +
             p9.geom_histogram(binwidth = binwidth, alpha = alpha, position = "identity", color = "darkgrey") +
-            p9.xlim(7500,10000) + 
+            p9.xlim(0,10000) + 
             # p9.labs(title = title, y = "Aantal waarnemingen") + 
             p9.scale_fill_manual(values = color_palette[:2]) +
             p9.theme_minimal()
@@ -197,7 +197,7 @@ def plot_scores_fancy(sample1: "np.array[float]", sample2: "np.array[float]" = N
             p9.aes(x = "Score", fill = "Groep", colour = "Groep") +
             p9.geom_histogram(binwidth = binwidth, alpha = alpha, position = "identity", color = "darkgrey") +
 
-            p9.xlim(7500,10000) + 
+            p9.xlim(0,10000) + 
             p9.scale_fill_manual(values = color_palette[:3]) +
             p9.theme_minimal()
         )
@@ -224,7 +224,7 @@ def plot_scores_fancy(sample1: "np.array[float]", sample2: "np.array[float]" = N
             p9.aes(x = "Score", fill = "Groep", colour = "Groep") +
             p9.geom_histogram(binwidth = binwidth, alpha = alpha, position = "identity", color = "darkgrey") +
 
-            p9.xlim(7500,10000) + 
+            p9.xlim(0,10000) + 
             # p9.labs(title = title, y = "Aantal waarnemingen") + 
             p9.scale_fill_manual(values = color_palette) +
             p9.theme_minimal() 
@@ -276,29 +276,30 @@ def routes_to_csv(routes: list[Route], filename: str):
         score = routes_score(routes, "Holland")
         writer.writerow(["score", f"{score}"])
 
+#example/test usage
 if __name__ == "__main__":
-    map = "Holland"
+    map = "Nationaal"
     data = RailNL(map)
     scores1 = []
-    for _ in range(1000):
+    for _ in range(10):
         algorithm = Random_Greedy(data)
-        algorithm.run()
+        algorithm.run(final_number_of_routes=20)
         hillclimber_alg = Hillclimber(data, algorithm, map)
         hillclimber_alg.run(1000)
         routes = hillclimber_alg.output()
         routes_to_csv(routes, "output")
         scores1.append(routes_score(routes, map))
     scores2 = []
-    for _ in range(1000):
+    for _ in range(10):
         algorithm = Random_Greedy(data)
-        algorithm.run(starting_stations="prefer_unused")
+        algorithm.run(final_number_of_routes=20, starting_stations="prefer_unused")
         hillclimber_alg = Hillclimber(data, algorithm, map)
         hillclimber_alg.run(1000)
         routes = hillclimber_alg.output()
         routes_to_csv(routes, "output")
         scores2.append(routes_score(routes, map))
 
-    plot_scores_fancy(scores1, scores2, title="1000 iteraties 1000 keer", save_to_pdf=True, preview=True, binwidth=10)
+    plot_scores_fancy(scores1, scores2, title="Nationaal 1000 iteraties 10 keer", save_to_pdf=True, preview=True, binwidth=50)
 
 # if __name__ == "__main__":
 #     railnl = RailNL("Holland")

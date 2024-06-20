@@ -113,6 +113,12 @@ class Hillclimber(Algorithm):
                 self.routes = new_routes
                 self.best_score = new_score
                 self.scores.append(new_score)
+
+                # if there is an empty route, remove it
+                for route in self.routes:
+                    if route.get_connections_used() == []:
+                        self.routes.pop(self.routes.index(route))
+
             else:
                 # use the old routes next iteration
                 self.scores.append(self.best_score)
@@ -122,14 +128,13 @@ class Hillclimber(Algorithm):
 
 # Example/test usage
 if __name__ == "__main__":
-    data = RailNL("Holland")
+    data = RailNL("Nationaal")
 
     # Test Hillclimber algorithm with RandomAlgorithm as starting state
     random_alg = Random_Greedy(data)
     random_alg.run(starting_stations="prefer_unused")
     hillclimber_alg = Hillclimber(data, random_alg, "Holland")
     hillclimber_alg.run(1000)
-    # hillclimber_alg.make_picture() 
 
     # Show routes
     for i, route in enumerate(hillclimber_alg.routes):
@@ -142,6 +147,3 @@ if __name__ == "__main__":
     plt.ylabel('Score')
     plt.title('Start: Random prefer unused, Hillclimber Algorithm Holland')
     plt.savefig("/home/finnvisz/TijeJonaFinn/parent/code/experiments/plots/random_prefer_unused_hollans_score_vs_iteration.png")
-
-    
-
