@@ -60,22 +60,28 @@ def read_scores_from_csv(filename: str) -> "np.ndarray[float]":
 
 def append_scores_to_csv(scores: "np.ndarray", filename: str) -> None:
     """
-    Append a numpy array of scores to an existing CSV file.
+    Append a numpy array of scores to an existing CSV file. If `filename`
+    does not yet exist, it will be created.
     Default directory is `parent/code/experiments/results`.
 
     - Pre: `scores` contains numpy array of scores,
-    argument 2 `filename` is a string (extension is allowed but optional).
+    `filename.csv` exists (extension is allowed but optional).
     - Post: a new column with scores is appended to `filename.csv`
     in the results subdirectory.
-
     """
     # Add .csv extension if not present
     if not filename.endswith(".csv"):
         filename += ".csv"
 
-    # Read the existing CSV file into a DataFrame 
-    df = pd.read_csv(f"{experiments_root_dir}/results/{filename}", 
-                     header=None) 
+    # Try to open existing CSV file, if not found run write_scores_to_csv
+    try:
+        # Read the existing CSV file into a DataFrame 
+        df = pd.read_csv(f"{experiments_root_dir}/results/{filename}", 
+                         header=None) 
+    except FileNotFoundError:
+        # If file not found, run write_scores_to_csv
+        write_scores_to_csv(scores, filename)
+        return
 
     # Add the new column 
     df['new_column'] = scores
@@ -464,4 +470,4 @@ if __name__ == "__main__":
     #                   legend_labels=("Random", "Greedy"))
 
     # write_scores_to_csv(Experiment(Random_Greedy).run_experiment(10), "test")
-    append_scores_to_csv(Experiment(Random_Greedy).run_experiment(10), "test2")
+    append_scores_to_csv(Experiment(Random_Greedy).run_experiment(10), "test")
