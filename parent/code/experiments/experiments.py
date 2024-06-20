@@ -44,7 +44,7 @@ class Experiment:
         """
         # Scores are saved in numpy array, way faster than list!
         # Space in memory is reserved and filled with zeros
-        self.scores: "np.array[float]" = np.zeros(iterations)
+        self.scores: "np.ndarray[float]" = np.zeros(iterations)
         
         for i in range(iterations):
 

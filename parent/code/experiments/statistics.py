@@ -22,7 +22,7 @@ from parent.code.algorithms.random_greedy import Random_Greedy
 experiments_root_dir = "parent/code/experiments"
 
 
-def write_scores_to_csv(scores: "nparray", filename: str) -> None:
+def write_scores_to_csv(scores: "np.ndarray", filename: str) -> None:
         """
         Write single numpy array of scores to a CSV file. 
         Default export directory is `parent/code/experiments/results`.
@@ -36,10 +36,11 @@ def write_scores_to_csv(scores: "nparray", filename: str) -> None:
         if not filename.endswith(".csv"):
             filename += ".csv"
 
-        np.savetxt(f"{experiments_root_dir}/results/{filename}", scores, delimiter = ",")
+        np.savetxt(f"{experiments_root_dir}/results/{filename}", 
+                   scores, delimiter = ",")
 
 
-def read_scores_from_csv(filename: str) -> "np.array[float]":
+def read_scores_from_csv(filename: str) -> "np.ndarray[float]":
     """
     Read scores from a CSV file with single column
     and return them as a single numpy array.
@@ -55,6 +56,33 @@ def read_scores_from_csv(filename: str) -> "np.array[float]":
     # Read scores from CSV file
     scores = np.loadtxt(f"{experiments_root_dir}/results/{filename}", delimiter=",")
     return scores
+
+
+def append_scores_to_csv(scores: "np.ndarray", filename: str) -> None:
+    """
+    Append a numpy array of scores to an existing CSV file.
+    Default directory is `parent/code/experiments/results`.
+
+    - Pre: `scores` contains numpy array of scores,
+    argument 2 `filename` is a string (extension is allowed but optional).
+    - Post: a new column with scores is appended to `filename.csv`
+    in the results subdirectory.
+
+    """
+    # Add .csv extension if not present
+    if not filename.endswith(".csv"):
+        filename += ".csv"
+
+    # Read the existing CSV file into a DataFrame 
+    df = pd.read_csv(f"{experiments_root_dir}/results/{filename}", 
+                     header=None) 
+
+    # Add the new column 
+    df['new_column'] = scores
+
+    # Write the updated DataFrame back to the CSV file 
+    df.to_csv(f"{experiments_root_dir}/results/{filename}",
+               index=False, header=False) 
 
 
 def write_solution_to_csv(routes: list[Route], filename: str):
@@ -83,7 +111,7 @@ def write_solution_to_csv(routes: list[Route], filename: str):
         writer.writerow(["score", f"{score}"])
 
 
-def calculate_p_value(sample1: "np.array[float]", sample2: "np.array[float]"
+def calculate_p_value(sample1: "np.ndarray[float]", sample2: "np.ndarray[float]"
                       , return_type: str = "p_value_only") -> float:
     """
     Calculates a p-value to infer if the difference between two sets of scores
@@ -114,10 +142,10 @@ def calculate_p_value(sample1: "np.array[float]", sample2: "np.array[float]"
         raise ValueError("Invalid return_type argument, choose 'p_value_only', 'object' or 'significant'.")
 
 
-def plot_scores_fancy(sample1: "np.array[float]", 
-                      sample2: "np.array[float]" = None, 
-                      sample3: "np.array[float]" = None, 
-                      sample4: "np.array[float]" = None, 
+def plot_scores_fancy(sample1: "np.ndarray[float]", 
+                      sample2: "np.ndarray[float]" = None, 
+                      sample3: "np.ndarray[float]" = None, 
+                      sample4: "np.ndarray[float]" = None, 
                       
                       # save settings
                       save_to_pdf: bool = False, preview: bool = True, 
@@ -354,31 +382,33 @@ def plot_scores(filename: str, scores: list[float]):
 
 
 #example/test usage
-if __name__ == "__main__":
-    map = "Nationaal"
-    data = RailNL(map)
-    scores2 = []
-    for i in range(100):
-        print(f"{i+1}-de run")
-        algorithm = Random_Greedy(data)
-        algorithm.run(final_number_of_routes=20, starting_stations="original_stations_only_hard")
-        hillclimber_alg = Hillclimber(data, algorithm, map)
-        hillclimber_alg.run(10000)
-        routes = hillclimber_alg.output()
-        routes_to_csv(routes, "output")
-        scores2.append(routes_score(routes, map))
-    scores1 = []
-    for i in range(100):
-        print(f"{i+1}-de run")
-        algorithm = Random_Greedy(data)
-        algorithm.run(final_number_of_routes=20)
-        hillclimber_alg = Hillclimber(data, algorithm, map)
-        hillclimber_alg.run(10000)
-        routes = hillclimber_alg.output()
-        routes_to_csv(routes, "output")
-        scores1.append(routes_score(routes, map))
+# if __name__ == "__main__":
+#     map = "Nationaal"
+#     data = RailNL(map)
+#     scores2 = []
+#     for i in range(100):
+#         print(f"{i+1}-de run")
+#         algorithm = Random_Greedy(data)
+#         algorithm.run(final_number_of_routes=20, starting_stations="original_stations_only_hard")
+#         hillclimber_alg = Hillclimber(data, algorithm, map)
+#         hillclimber_alg.run(10000)
+#         routes = hillclimber_alg.output()
+#         routes_to_csv(routes, "output")
+#         scores2.append(routes_score(routes, map))
+#     scores1 = []
+#     for i in range(100):
+#         print(f"{i+1}-de run")
+#         algorithm = Random_Greedy(data)
+#         algorithm.run(final_number_of_routes=20)
+#         hillclimber_alg = Hillclimber(data, algorithm, map)
+#         hillclimber_alg.run(10000)
+#         routes = hillclimber_alg.output()
+#         routes_to_csv(routes, "output")
+#         scores1.append(routes_score(routes, map))
 
-    plot_scores_fancy(scores1, scores2, title="Nationaal 10000 iteraties 100 keer", save_to_pdf=True, preview=True, binwidth=50)
+#     plot_scores_fancy(scores1, scores2, title="Nationaal 10000 iteraties 100 keer", save_to_pdf=True, preview=True, binwidth=50)
+
+
 # if __name__ == "__main__":
 #     map = "Holland"
 #     data = RailNL(map)
@@ -418,7 +448,8 @@ if __name__ == "__main__":
 
 
 # """Example usage plot_scores_fancy"""
-# if __name__ == "__main__":
+if __name__ == "__main__":
+    # write_solution_to_csv(Random_Greedy(RailNL("Holland")).run(), "output2")
     
     # randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
     # randomv2_2_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_2_connections_100000.csv")
@@ -432,4 +463,5 @@ if __name__ == "__main__":
     #                   title= "Random algorithm scores",
     #                   legend_labels=("Random", "Greedy"))
 
-    # write_scores_to_csv(Experiment(Random_Greedy).run_experiment(1000), "test")
+    # write_scores_to_csv(Experiment(Random_Greedy).run_experiment(10), "test")
+    append_scores_to_csv(Experiment(Random_Greedy).run_experiment(10), "test2")
