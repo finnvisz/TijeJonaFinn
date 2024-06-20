@@ -8,49 +8,66 @@ from parent.code.classes.railnl import RailNL
 from parent.code.classes.route import Route
 from parent.code.classes.station_class import Station
 
-# pick station to start from with most connections if not all connections are already used
-# implement randomv2 algorithm that prioritizes use of all connections
-# pick a connection not yet used with shortest length, if not possible, start a new route
+""" Pick station to start from with most connections if not all connections 
+are already used. Implement randomv2 algorithm that prioritizes use of all 
+connections. Pick a connection not yet used with shortest length, if not 
+possible, start a new route """
 
 class Random_Greedy(Algorithm):
     def __init__(self, load: RailNL) -> None:
         super().__init__(load)
-
         
-    def run(self, original_connections_only: bool = False, starting_stations: str = "fully_random", starting_station_list: None | list["Station"] = None,
-            next_connection_choice: str = "random", final_number_of_routes: int = 7, chance_of_early_route_end: bool = False) -> list[Route]:
+    def run(self, original_connections_only: bool = False, 
+            starting_stations: str = "fully_random", 
+            starting_station_list: None | list[Station] = None,
+            next_connection_choice: str = "random", 
+            final_number_of_routes: int = 7, 
+            chance_of_early_route_end: bool = False) -> list[Route]:
         """
         Random algorithm with various options for starting stations per route.
 
         args:
-        - original_connections_only: (NOTE: leave on False when `next_connection_choice = "random", creates solutions with very short connections)
-        When True, each route uses only unused connections.
+        - original_connections_only: (NOTE: leave on False when 
+        `next_connection_choice = "random", creates solutions with very 
+        short connections) When True, each route uses only unused connections.
         i.e.: within a route, no connection is used more than once. When False,
         connections are fully random and can be used multiple times within a route.
         
-        - starting_stations: Specify how to pick the starting station for each route.
-        Options: "fully_random", "prefer_unused", "custom_list_with_replacement", "custom_list_without_replacement". 
-        NOTE: When picking without replacement from a custom list, options will be reused when length of list is < 7.
+        - starting_stations: Specify how to pick the starting station for 
+        each route. Options: "fully_random", "prefer_unused", 
+        "custom_list_with_replacement", "custom_list_without_replacement". 
+        NOTE: When picking without replacement from a custom list, 
+        options will be reused when length of list is < 7.
         
-        - starting_station_list: list of stations to pick from. Only used when starting_stations is set to "custom_list_with_replacement" or "custom_list_without_replacement"
+        - starting_station_list: list of stations to pick from. 
+        Only used when starting_stations is set to "custom_list_with_replacement" 
+        or "custom_list_without_replacement"
         
-        - next_connection_choice: Specify how to pick the next connection in the route. Options: "random" (default), or "shortest" for a greedy approach to connections.
+        - next_connection_choice: Specify how to pick the next connection 
+        in the route. Options: "random" (default), or "shortest" for a 
+        greedy approach to connections.
         
         - final_number_of_routes: Number of routes to generate. Default is 7.
         
-        - chance_of_early_route_end: If set to True, routes can end before 120 minutes. Default is False.
+        - chance_of_early_route_end: If set to True, routes can end 
+        before 120 minutes. Default is False.
         """
+        
         # Check for correct input:
         # With greedy approach, original connections only is required for correct functioning
         if next_connection_choice == "shortest" and original_connections_only == False:
-            raise ValueError("You are about to run an algorithm greedy on connections. Set original_connections_only to True. If not your algorithm will get stuck going back and forth between two stations.")
+            raise ValueError("""You are about to run an algorithm greedy on connections. 
+                             Set original_connections_only to True. If not your algorithm 
+                             will get stuck going back and forth between two stations.""")
         
-        if starting_stations == "custom_list_with_replacement" or starting_stations == "custom_list_without_replacement":
-            assert starting_station_list is not None, "Starting station list must be provided when starting_stations is set to 'custom_list_with_replacement' or 'custom_list_without_replacement'."
+        if (starting_stations == "custom_list_with_replacement" or 
+            starting_stations == "custom_list_without_replacement"):
+            assert starting_station_list is not None, """Starting station list 
+                must be provided when starting_stations is set to 
+                'custom_list_with_replacement' or 'custom_list_without_replacement'."""
         
-
-        # If starting_station_list is provided and we draw without replacement,
-        # randomize it's order
+        """If starting_station_list is provided and we draw without 
+        replacement, randomize it's order."""
         if starting_stations == "custom_list_without_replacement":
  
             # Make a copy of the list to avoid changing the original list
@@ -63,12 +80,13 @@ class Random_Greedy(Algorithm):
         self.routes: list[Route] = []
         
 
-        # Unused_connections starts off with all connections
-        # Unused connections will be moved to used connections when they are used
+        """ Unused_connections starts off with all connections. Unused 
+        connections will be moved to used connections when they are used """
         self.used_connections: dict = dict()
         
         self.unused_connections: dict = dict()
         for connection in self.load.connections:
+
             # Save the names of the stations in this connection in a tuple
             station_names_as_tuple = tuple(sorted([connection[0].name, connection[1].name]))
 
@@ -78,27 +96,28 @@ class Random_Greedy(Algorithm):
 
         # Unused stations starts off with all stations
         # Unused stations will be moved to used stations when they are used
-        self.unused_stations: list = list(self.load.stations.values()) # internal list of stations
+        # Internal list of stations
+        self.unused_stations: list = list(self.load.stations.values()) 
         self.used_stations: list = list()
 
         # DEBUG
         # print(self.unused_stations)
 
-
-        # While there are less than <final_number_of_routes> routes and there are still unused connections
+        # While there are less than <final_number_of_routes> routes and 
+        # there are still unused connections
         # i.e. for each route
         while self.number_of_routes() < final_number_of_routes and len(self.unused_connections) > 0:
+
             # Create a new route
             route = Route()
+
             # DEBUG
             # print(f"Route {self.number_of_routes() + 1}")
 
-
-
             # And set a first station for this route (method depends on starting_stations argument):
-            
             # If "starting_stations" is set to "prefer_unused", try to pick unused stations
             if starting_stations == "prefer_unused":
+
                 # Plan A: pick a random unused station
                 if len(self.unused_stations) > 0:
                     current_station = random.choice(self.unused_stations)
@@ -121,13 +140,13 @@ class Random_Greedy(Algorithm):
             # If flag set to "custom_list_without_replacement", 
             # pop from randomized version of custom list
             elif starting_stations == "custom_list_without_replacement":
+
                 # If list is empty, refill it
                 if len(starting_station_list_copy) == 0:
                     starting_station_list_copy = copy.deepcopy(self.used_stations)
                     random.shuffle(starting_station_list_copy)
 
                 current_station = starting_station_list_copy.pop()
-
 
             # While time is less than 120 minutes
             while route.time < 120: 
@@ -141,7 +160,6 @@ class Random_Greedy(Algorithm):
                     self.used_stations.append(self.unused_stations.pop(index))
                 except ValueError:
                     pass
-                
                 
                 # Get connections of current station, sorted by duration
                 # This is a queue of possible connections, with the shortest connection first
@@ -165,7 +183,6 @@ class Random_Greedy(Algorithm):
                 else:
                     raise ValueError("next_connection_choice must be set to 'random' or 'shortest'.")
 
-
                 # If arg. original_connections_only set to True
                 if original_connections_only:
                     # Pop used connections from queue (until unused connection is found)
@@ -180,14 +197,12 @@ class Random_Greedy(Algorithm):
                 if len(connections) == 0:
                     break
 
-
                 # For chance_of_early_route_end, check if connection with duration of 0 is next
                 # This means the route will end here
                 if chance_of_early_route_end:
                     # If the connection has a duration of 0, end the route
                     if connections[0][1] == 0:
                         break
-
 
                 # First connection in queue is the next station
                 next_station = connections[0][0]
@@ -223,9 +238,6 @@ class Random_Greedy(Algorithm):
             # Pop this key-value pair from unused and add to the used connections
             self.used_connections[connection_key] = self.unused_connections.pop(connection_key)
 
-    
-        
-
 # Run  and print results
 if __name__ == "__main__":
     
@@ -236,7 +248,6 @@ if __name__ == "__main__":
     
     output = randomv2.run(chance_of_early_route_end=True)
     
-
     # Print results + extra info
     for route in output:
         for connection in route.get_connections_used():
