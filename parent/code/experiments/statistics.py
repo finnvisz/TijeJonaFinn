@@ -15,6 +15,7 @@ from parent.code.experiments.experiments import Experiment
 from parent.code.classes.route import Route
 from parent.code.classes.railnl import RailNL
 from parent.code.algorithms.score import routes_score
+from parent.code.algorithms.random_greedy import Random_Greedy
 
 
 # Default directory for plots, can be changed if needed
@@ -159,20 +160,15 @@ def routes_to_csv(routes: list[Route], filename: str):
 
 if __name__ == "__main__":
     railnl = RailNL("Holland")
-    algorithm = Finn(railnl)
+    algorithm = Random_Greedy(railnl)
     algorithm.run()
     routes = algorithm.output()
     routes_to_csv(routes, "output")
 
 # if __name__ == "__main__":
 
-<<<<<<< HEAD
 #     # Example usage
 #     randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000")
-=======
-    # Example usage
-    randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
->>>>>>> a52b82a (read_scores_from_csv: filename moet nu worden ingevoerd mét extensie)
 
 #     plot_scores_fancy(randomv2_least_connections)
 # if __name__ == "__main__":
