@@ -18,7 +18,6 @@ def get_station_subgroups() -> tuple[list["Station"], list["Station"]]:
     # Create collection with various subgroups of stations:
     Stations = railnl.stations_dict()
 
-
     # 1. Stations with most connections
     stations_with_most_connections = []
 
@@ -43,7 +42,6 @@ def get_station_subgroups() -> tuple[list["Station"], list["Station"]]:
 
     print(f"Amount of stations with least connections: {len(stations_with_least_connections)}")
 
-
     # 3. Stations with 2 connections
     stations_with_2_connections = []
 
@@ -62,7 +60,6 @@ def get_station_subgroups() -> tuple[list["Station"], list["Station"]]:
 
     print(f"Amount of stations with 3 connections: {len(stations_with_3_connections)}")
 
-
     # # 5. Stations in between the two extremes combined (2 or 3 connections for Holland)
     # stations_in_between = []
     
@@ -80,12 +77,12 @@ def get_station_subgroups() -> tuple[list["Station"], list["Station"]]:
     return stations_with_most_connections, stations_with_least_connections, stations_with_2_connections, stations_with_3_connections
     
 if __name__ == "__main__":
+
     # Get station subgroups
     stations_with_most_connections, stations_with_least_connections, stations_with_2_connections, stations_with_3_connections = get_station_subgroups()
 
     # Initialize experiment
     randomv2_experiment = Experiment(Random_Greedy, "Holland")
-
 
     # Run algorithm with different starting stations:
     iterations = 100000
@@ -109,7 +106,6 @@ if __name__ == "__main__":
     results_3_connections = randomv2_experiment.run_experiment(iterations=iterations, starting_stations="custom_list_without_replacement", 
                                                 starting_station_list = stations_with_3_connections)
     randomv2_experiment.write_scores_to_csv(f"best_starting_stations/results/randomv2_3_connections_{iterations}")
-
 
     # Calculate average scores
     print(f"Average score for stations with least connections: {np.mean(results_least_connections)}")
