@@ -60,8 +60,8 @@ def read_scores_from_csv(filename: str) -> "np.ndarray[float]":
 
 def append_scores_to_csv(scores: "np.ndarray", filename: str) -> None:
     """
-    Append a numpy array of scores to an existing CSV file. If `filename`
-    does not yet exist, it will be created.
+    Append a numpy array of scores to an existing CSV file. If 
+    `filename.csv` does not yet exist, a new file will be created.
     Default directory is `parent/code/experiments/results`.
 
     - Pre: `scores` contains numpy array of scores,
