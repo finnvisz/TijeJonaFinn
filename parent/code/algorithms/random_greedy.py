@@ -43,11 +43,11 @@ class Random_Greedy(Algorithm):
         Options per connection: (How to pick the next connection in the
         route)
         
-        - next_connection_choice: Specify how to pick the next connection 
+        - `next_connection_choice`: Specify how to pick the next connection 
         in the route. Options: "random" (default), or "shortest" for a
         greedy approach to connections.
         
-        - original_connections_only: (NOTE: leave on False when 
+        - `original_connections_only`: (NOTE: leave on False when 
         `next_connection_choice = "random", creates solutions with very
         short connections) When True, each route uses only unused
         connections. i.e.: within a route, no connection is used more
@@ -57,14 +57,17 @@ class Random_Greedy(Algorithm):
 
         Options for starting station per route:
 
-        - starting_stations: Specify how to pick the starting station for 
-        each route. Options: "fully_random", "prefer_unused",
-        "custom_list_with_replacement",
-        "custom_list_without_replacement". NOTE: When picking without
-        replacement from a custom list, options will be reused when
-        length of list is < 7.
+        - `starting_stations`: Specify how to pick the starting station for 
+        each route. Options: 
+        1. `fully_random`: pick random with replacement from all stations.
+        2. `prefer_unused`: pick random station with 0 connections, or 
+        else random station with unused connections.
+        3. `custom_list_with_replacement`: pick random from custom list
+        (with replacement)
+        4. `custom_list_without_replacement`: pick random from custom list
+        (without replacement; NOTE: make sure the list is long enough.)
         
-        - starting_station_list: list of stations to pick from. 
+        - `starting_station_list`: list of stations to pick from. 
         Only used when starting_stations is set to
         "custom_list_with_replacement" or
         "custom_list_without_replacement"
@@ -72,48 +75,23 @@ class Random_Greedy(Algorithm):
         
         Options for number + length of routes:
 
-        - final_number_of_routes: Number of routes to generate. Can be 
+        - `final_number_of_routes`: Number of routes to generate. Can be 
         either int, or tuple[int] for random choice between multiple
         values for each route. Default is 7 for Holland map, 20 for
         Nationaal map.
 
-        - route_time_limit: Maximum time for each route. Default is 120 
+        - `route_time_limit`: Maximum time for each route. Default is 120 
         minutes for Holland map, 180 minutes for Nationaal map.
 
 
         Experimental (USE AT OWN RISK):
         
-        - chance_of_early_route_end: (CREATE ROUTES WITH 0 CONNECTIONS)
+        - `chance_of_early_route_end`: (CREATE ROUTES WITH 0 CONNECTIONS)
         If set to True, routes can end before `route_time_limit` minutes.
         Default is False.
         """
-        
-        # Check for correct input:
-        # With greedy approach, original connections only is required for correct functioning
-        if next_connection_choice == "shortest" and original_connections_only == False:
-            raise ValueError("""You are about to run an algorithm 
-                             greedy on connections. Set 
-                             original_connections_only to True. 
-                             If not your algorithm 
-                             will get stuck going back and forth between 
-                             two stations.""")
-        
-        if (starting_stations == "custom_list_with_replacement" or 
-            starting_stations == "custom_list_without_replacement"):
-            assert starting_station_list is not None, """Starting station list 
-                must be provided when starting_stations is set to 
-                'custom_list_with_replacement' or 'custom_list_without_replacement'."""
-        
 
-        # For Holland map, the default time limit is 120 minutes
-        # For the Netherlands map, the default time limit is 180 minutes
-        if route_time_limit is None:
-            if self.load.mapname == "Holland":
-                route_time_limit = 120
-            elif self.load.mapname == "Nationaal":
-                route_time_limit = 180
-            else:
-                raise ValueError("Invalid mapname. Please use 'Holland' or 'Nationaal'.")
+        # Set default values for final_number_of_routes and route_time_limit:
 
         # For Holland map, the default number of routes is 7
         # For the Netherlands map, the default number of routes is 10
@@ -124,6 +102,62 @@ class Random_Greedy(Algorithm):
                 final_number_of_routes = 20
             else:
                 raise ValueError("Invalid mapname. Please use 'Holland' or 'Nationaal'.")
+        
+        # For Holland map, the default time limit is 120 minutes
+        # For the Netherlands map, the default time limit is 180 minutes
+        if route_time_limit is None:
+            if self.load.mapname == "Holland":
+                route_time_limit = 120
+            elif self.load.mapname == "Nationaal":
+                route_time_limit = 180
+            else:
+                raise ValueError("Invalid mapname. Please use 'Holland' or 'Nationaal'.")
+
+
+        # Check for correct input:
+
+        # Check for correct input for next_connection_choice
+        assert next_connection_choice in ["random", "shortest"], """
+        next_connection_choice must be set to 'random' or 'shortest'."""
+
+        # Check for correct input for starting_stations
+        assert starting_stations in ["fully_random", "prefer_unused",
+                                    "custom_list_with_replacement", 
+                                    "custom_list_without_replacement"], """
+                                    starting_stations must be set to 
+                                    'fully_random', 'prefer_unused', 
+                                    'custom_list_with_replacement', or 
+                                    'custom_list_without_replacement'."""
+
+
+        # With greedy approach, original connections only is required for correct functioning
+        if next_connection_choice == "shortest" and original_connections_only == False:
+            raise ValueError("""You are about to run an algorithm 
+                             greedy on connections. Set 
+                             original_connections_only to True. 
+                             If not your algorithm 
+                             will get stuck going back and forth between 
+                             two stations.""")
+        
+        # With custom list, list must be provided
+        if (starting_stations == "custom_list_with_replacement" or 
+            starting_stations == "custom_list_without_replacement"):
+            assert starting_station_list is not None, """Starting station list 
+                must be provided when starting_stations is set to 
+                'custom_list_with_replacement' or 'custom_list_without_replacement'."""
+        
+        # For custom list without replacement, list must be long enough
+        if starting_stations == "custom_list_without_replacement":
+            
+            if type(final_number_of_routes) == int:
+                assert len(starting_station_list) == final_number_of_routes, """
+                Starting station list must be exactly as long as the number 
+                of routes."""
+
+            if type(final_number_of_routes) == tuple:
+                assert len(starting_station_list) == max(final_number_of_routes), """
+                Starting station list must be exactly as long as the maximum 
+                number of routes."""
 
 
         # If starting_station_list is provided and we draw without replacement,
@@ -161,12 +195,10 @@ class Random_Greedy(Algorithm):
         # DEBUG
         # print(self.unused_stations)
 
-        # While there are less than <final_number_of_routes> routes and 
-        # there are still unused connections
-        # i.e. for each route
-        # random.choice(final_number_of_routes) is used to add some randomness to the number of routes
-        # final_number_of_routes can be set to a list of numbers, 
+ 
+        # final_number_of_routes can be set to a tuple of numbers, 
         # so the number of routes will be randomly chosen from this list
+        # For single int: make it a tuple of length 1
         if type(final_number_of_routes) == int:
             final_number_of_routes = tuple([final_number_of_routes])
         else:
@@ -174,6 +206,10 @@ class Random_Greedy(Algorithm):
         # DEBUG
         # print(len(final_number_of_routes))
 
+
+        # While there are less than <final_number_of_routes> routes and 
+        # there are still unused connections
+        # i.e. for each route
         while self.number_of_routes() < random.choice(final_number_of_routes) and len(self.unused_connections) > 0:
             # Create a new route
             route = Route()
@@ -208,11 +244,10 @@ class Random_Greedy(Algorithm):
             # pop from randomized version of custom list
             elif starting_stations == "custom_list_without_replacement":
 
-                # If list is empty, refill it
-                if len(starting_station_list_copy) == 0:
-                    starting_station_list_copy = copy.deepcopy(self.used_stations)
-                    random.shuffle(starting_station_list_copy)
-
+                # Shuffle
+                random.shuffle(starting_station_list_copy)
+                
+                # Pop the last station from the list
                 current_station = starting_station_list_copy.pop()
 
 
@@ -245,11 +280,9 @@ class Random_Greedy(Algorithm):
                 if next_connection_choice == "random":
                     random.shuffle(connections)
                 # If set to "shortest", sort by duration
-                elif next_connection_choice == "shortest":
+                else:
                     # Sort list by duration
                     connections.sort(key=lambda x: x[1])
-                else:
-                    raise ValueError("next_connection_choice must be set to 'random' or 'shortest'.")
 
                 # If arg. original_connections_only set to True
                 if original_connections_only:
@@ -312,9 +345,11 @@ if __name__ == "__main__":
     # Run algorithm with desired settings
     randomv2 = Random_Greedy(RailNL("Holland"))
     
-    # custom_starting_stations = [randomv2.load.stations["Rotterdam Centraal"], randomv2.load.stations["Amsterdam Centraal"]]
+    custom_starting_stations = [randomv2.load.stations["Rotterdam Centraal"]]
     
-    output = randomv2.run()
+    output = randomv2.run(final_number_of_routes = (1,2), 
+                          starting_stations="custom_list_without_replacement", 
+                          starting_station_list=custom_starting_stations)
     
     # Print results + extra info
     for route in output:
