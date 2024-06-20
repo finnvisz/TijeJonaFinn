@@ -280,15 +280,15 @@ if __name__ == "__main__":
     map = "Holland"
     data = RailNL(map)
     scores = []
-    for _ in range(10):
+    for _ in range(100):
         algorithm = Random_Greedy(data)
         algorithm.run()
         hillclimber_alg = Hillclimber(data, algorithm, map)
-        hillclimber_alg.run(100)
+        hillclimber_alg.run(1000)
         routes = hillclimber_alg.output()
         routes_to_csv(routes, "output")
         scores.append(routes_score(routes, map))
-    plot_scores_fancy(scores, title="end scores 100 iteraties, random", save_to_pdf=True)
+    plot_scores_fancy(scores, title="end scores 1000 iteraties 100 keer, random", save_to_pdf=True)
 
 # if __name__ == "__main__":
 #     railnl = RailNL("Holland")
