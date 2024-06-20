@@ -18,54 +18,85 @@ class Random_Greedy(Algorithm):
         super().__init__(load)
         
     def run(self, 
+            # Options per connection:
+            # How to pick the next connection in the route
             next_connection_choice: str = "random",
             original_connections_only: bool = False, 
             
+            # Options for starting station per route:
             starting_stations: str = "fully_random", 
             starting_station_list: None | list["Station"] = None,
              
-            final_number_of_routes: int | tuple[int] = 7, 
+            # Options for number + length of routes: 
+            final_number_of_routes: int | tuple[int] | None = None, 
             route_time_limit: int | None = None,
-        
+
+            # Options for early route end (before time limit):
+            # USE AT OWN RISK, CREATES ROUTES WITH ZERO CONNECTIONS
             chance_of_early_route_end: bool = False) -> list[Route]:
         """
-        Random algorithm with various options for starting stations per route.
+        Random algorithm with various options for starting stations per
+        route.
 
         args:
-        - original_connections_only: (NOTE: leave on False when 
-        `next_connection_choice = "random", creates solutions with very 
-        short connections) When True, each route uses only unused connections.
-        i.e.: within a route, no connection is used more than once. When False,
-        connections are fully random and can be used multiple times within a route.
         
-        - starting_stations: Specify how to pick the starting station for 
-        each route. Options: "fully_random", "prefer_unused", 
-        "custom_list_with_replacement", "custom_list_without_replacement". 
-        NOTE: When picking without replacement from a custom list, 
-        options will be reused when length of list is < 7.
-        
-        - starting_station_list: list of stations to pick from. 
-        Only used when starting_stations is set to "custom_list_with_replacement" 
-        or "custom_list_without_replacement"
+        Options per connection: (How to pick the next connection in the
+        route)
         
         - next_connection_choice: Specify how to pick the next connection 
-        in the route. Options: "random" (default), or "shortest" for a 
+        in the route. Options: "random" (default), or "shortest" for a
         greedy approach to connections.
         
-        - final_number_of_routes: Number of routes to generate. Can be either int or tuple[int] for random choice between multiple values for each route
-        . Default is 7.
+        - original_connections_only: (NOTE: leave on False when 
+        `next_connection_choice = "random", creates solutions with very
+        short connections) When True, each route uses only unused
+        connections. i.e.: within a route, no connection is used more
+        than once. When False, connections are fully random and can be
+        used multiple times within a route.
         
-        - chance_of_early_route_end: If set to True, routes can end before `route_time_limit` minutes. Default is False.
 
-        - route_time_limit: Maximum time for each route. Default is 120 minutes for Holland map, 180 minutes for Nationaal map.
+        Options for starting station per route:
+
+        - starting_stations: Specify how to pick the starting station for 
+        each route. Options: "fully_random", "prefer_unused",
+        "custom_list_with_replacement",
+        "custom_list_without_replacement". NOTE: When picking without
+        replacement from a custom list, options will be reused when
+        length of list is < 7.
+        
+        - starting_station_list: list of stations to pick from. 
+        Only used when starting_stations is set to
+        "custom_list_with_replacement" or
+        "custom_list_without_replacement"
+
+        
+        Options for number + length of routes:
+
+        - final_number_of_routes: Number of routes to generate. Can be 
+        either int, or tuple[int] for random choice between multiple
+        values for each route. Default is 7 for Holland map, 20 for
+        Nationaal map.
+
+        - route_time_limit: Maximum time for each route. Default is 120 
+        minutes for Holland map, 180 minutes for Nationaal map.
+
+
+        Experimental (USE AT OWN RISK):
+        
+        - chance_of_early_route_end: (CREATE ROUTES WITH 0 CONNECTIONS)
+        If set to True, routes can end before `route_time_limit` minutes.
+        Default is False.
         """
         
         # Check for correct input:
         # With greedy approach, original connections only is required for correct functioning
         if next_connection_choice == "shortest" and original_connections_only == False:
-            raise ValueError("""You are about to run an algorithm greedy on connections. 
-                             Set original_connections_only to True. If not your algorithm 
-                             will get stuck going back and forth between two stations.""")
+            raise ValueError("""You are about to run an algorithm 
+                             greedy on connections. Set 
+                             original_connections_only to True. 
+                             If not your algorithm 
+                             will get stuck going back and forth between 
+                             two stations.""")
         
         if (starting_stations == "custom_list_with_replacement" or 
             starting_stations == "custom_list_without_replacement"):
@@ -81,6 +112,16 @@ class Random_Greedy(Algorithm):
                 route_time_limit = 120
             elif self.load.mapname == "Nationaal":
                 route_time_limit = 180
+            else:
+                raise ValueError("Invalid mapname. Please use 'Holland' or 'Nationaal'.")
+
+        # For Holland map, the default number of routes is 7
+        # For the Netherlands map, the default number of routes is 10
+        if final_number_of_routes is None:
+            if self.load.mapname == "Holland":
+                final_number_of_routes = 7
+            elif self.load.mapname == "Nationaal":
+                final_number_of_routes = 20
             else:
                 raise ValueError("Invalid mapname. Please use 'Holland' or 'Nationaal'.")
 
