@@ -28,16 +28,17 @@ class Hillclimber(Algorithm):
         self.maprange = maprange
         self.best_score = routes_score(self.routes, self.maprange)
         
+
     def generate_random_route(self) -> Route:
-        """
-        Generate a random route within the rail network.
+        """Generate a random route within the rail network.
 
-        Returns:
-            Route: A randomly generated route.
-
-        Pre: `load` is initialized and contains station data.
         Post: Returns a Route object with a random set of connections.
         """
+        if self.maprange == "Holland":
+            max_time = 120
+        elif self.maprange  == "Nationaal":
+            max_time = 180
+
         time_used = 0
         route = Route()
         current_station = self.load.get_random_station()
@@ -48,7 +49,7 @@ class Hillclimber(Algorithm):
             connection = random.choice(connections)
             duration = int(current_station.connection_duration(connection))
             total = time_used + duration
-            if total < 120:
+            if total < max_time:
                 time_used = total
                 route.add_connection(current_station, connection, duration)
                 current_station = connection  # Move to the next station
@@ -56,42 +57,36 @@ class Hillclimber(Algorithm):
                 break
         return route
         
+
     def add_random_route(self, routes: list[Route]) -> list[Route]:
-        """
-        Add a random route to the list of routes.
+        """Add a random route to the list of routes.
 
-        Args:
-            routes (List[Route]): List of current routes.
-
-        Returns:
-            List[Route]: Updated list of routes with an additional random route.
-
-        Pre: `routes` is a valid list of Route objects.
+        Pre: routes (List[Route]): List of current routes.
         Post: Returns an updated list of Route objects including a new random route.
         """
         new_routes = copy.deepcopy(routes)
+
+        # generate a random route
         new_route = self.generate_random_route()
+
+        # add it to the list of routes
         new_routes.append(new_route)
         return new_routes
 
+
     def remove_random_route(self, routes: list[Route]) -> list[Route]:
+        """Remove a random route from the list of routes.
+
+        Post: Returns an updated list of Route objects with one less route if at least one route exists.
         """
-        Remove a random route from the list of routes.
-
-        Args:
-            routes (List[Route]): List of current routes.
-
-        Returns:
-            List[Route]: Updated list of routes with one random route removed.
-
-        Pre: `routes` is a valid list of Route objects.
-        Post: Returns an updated list of Route objects with one less route if more than one route exists.
-        """
-        if len(routes) > 1:
+        if len(routes) > 1: # check list is not empty
             new_routes = copy.deepcopy(routes)
+
+            #remove a random route from the list
             new_routes.pop(random.randint(0, len(new_routes) - 1))
             return new_routes
         return routes
+
 
     def run(self, iterations: int) -> None:
         """
@@ -102,10 +97,9 @@ class Hillclimber(Algorithm):
         """
         self.iterations = iterations
         start_score = self.best_score
-        print(f"{self.iterations} iterations")
-        print(f"Start score: {round(start_score, 1)}")
 
-        for i in range(self.iterations):
+        for _ in range(self.iterations):
+            # each iteration, remove a random route and add another
             new_routes = copy.deepcopy(self.routes)
 
             new_routes = self.remove_random_route(new_routes)
@@ -113,25 +107,34 @@ class Hillclimber(Algorithm):
 
             new_score = routes_score(new_routes, self.maprange)
 
+            # check new_score
             if new_score > self.best_score:
+                # use the new routes next iteration
                 self.routes = new_routes
                 self.best_score = new_score
                 self.scores.append(new_score)
-                print(f"Iteration {i}, New score: {round(new_score, 1)}")
+
+                # if there is an empty route, remove it
+                for route in self.routes:
+                    if route.get_connections_used() == []:
+                        self.routes.pop(self.routes.index(route))
+
             else:
+                # use the old routes next iteration
                 self.scores.append(self.best_score)
 
         print(f"Start score: {start_score}, End score: {self.best_score}")
 
+
+# Example/test usage
 if __name__ == "__main__":
-    data = RailNL("Holland")
+    data = RailNL("Nationaal")
 
     # Test Hillclimber algorithm with RandomAlgorithm as starting state
     random_alg = Random_Greedy(data)
     random_alg.run(starting_stations="prefer_unused")
     hillclimber_alg = Hillclimber(data, random_alg, "Holland")
-    hillclimber_alg.run(10000)
-    # hillclimber_alg.make_picture() 
+    hillclimber_alg.run(1000)
 
     # Show routes
     for i, route in enumerate(hillclimber_alg.routes):
@@ -144,6 +147,3 @@ if __name__ == "__main__":
     plt.ylabel('Score')
     plt.title('Start: Random prefer unused, Hillclimber Algorithm Holland')
     plt.savefig("/home/finnvisz/TijeJonaFinn/parent/code/experiments/plots/random_prefer_unused_hollans_score_vs_iteration.png")
-
-    
-
