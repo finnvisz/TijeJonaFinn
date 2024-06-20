@@ -97,8 +97,9 @@ class Hillclimber(Algorithm):
         """
         self.iterations = iterations
         start_score = self.best_score
+        count_no_change = 0
 
-        for _ in range(self.iterations):
+        for i in range(self.iterations):
             # each iteration, remove a random route and add another
             new_routes = copy.deepcopy(self.routes)
 
@@ -107,8 +108,9 @@ class Hillclimber(Algorithm):
 
             new_score = routes_score(new_routes, self.maprange)
 
-            # check new_score
-            if new_score > self.best_score:
+            # Simulated annealing
+            if random.random() < 2 ** (new_score - self.best_score):
+            #if new_score > self.best_score:
                 # use the new routes next iteration
                 self.routes = new_routes
                 self.best_score = new_score
@@ -118,10 +120,18 @@ class Hillclimber(Algorithm):
                 for route in self.routes:
                     if route.get_connections_used() == []:
                         self.routes.pop(self.routes.index(route))
+                
+                count_no_change = 0
+                print(f"iteratie {i}, score {new_score}")
 
             else:
                 # use the old routes next iteration
                 self.scores.append(self.best_score)
+                count_no_change += 1
+
+            if count_no_change == 300:
+                print("Too long no change")
+                break
 
         print(f"Start score: {start_score}, End score: {self.best_score}")
 
@@ -132,9 +142,9 @@ if __name__ == "__main__":
 
     # Test Hillclimber algorithm with RandomAlgorithm as starting state
     random_alg = Random_Greedy(data)
-    random_alg.run(starting_stations="prefer_unused")
-    hillclimber_alg = Hillclimber(data, random_alg, "Holland")
-    hillclimber_alg.run(1000)
+    random_alg.run()
+    hillclimber_alg = Hillclimber(data, random_alg, "Nationaal")
+    hillclimber_alg.run(10000)
 
     # Show routes
     for i, route in enumerate(hillclimber_alg.routes):
@@ -146,4 +156,4 @@ if __name__ == "__main__":
     plt.xlabel('Iteration')
     plt.ylabel('Score')
     plt.title('Start: Random prefer unused, Hillclimber Algorithm Holland')
-    plt.savefig("/home/finnvisz/TijeJonaFinn/parent/code/experiments/plots/random_prefer_unused_hollans_score_vs_iteration.png")
+    plt.savefig("/home/finnvisz/TijeJonaFinn/parent/code/experiments/plots/score_vs_iteration.png")

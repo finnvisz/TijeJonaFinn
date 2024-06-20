@@ -276,32 +276,32 @@ def routes_to_csv(routes: list[Route], filename: str):
         score = routes_score(routes, "Holland")
         writer.writerow(["score", f"{score}"])
 
-<<<<<<< HEAD
 #example/test usage
 if __name__ == "__main__":
     map = "Nationaal"
     data = RailNL(map)
-    scores1 = []
-    for _ in range(10):
-        algorithm = Random_Greedy(data)
-        algorithm.run(final_number_of_routes=20)
-        hillclimber_alg = Hillclimber(data, algorithm, map)
-        hillclimber_alg.run(1000)
-        routes = hillclimber_alg.output()
-        routes_to_csv(routes, "output")
-        scores1.append(routes_score(routes, map))
     scores2 = []
-    for _ in range(10):
+    for i in range(100):
+        print(f"{i+1}-de run")
         algorithm = Random_Greedy(data)
-        algorithm.run(final_number_of_routes=20, starting_stations="prefer_unused")
+        algorithm.run(final_number_of_routes=20, starting_stations="original_stations_only_hard")
         hillclimber_alg = Hillclimber(data, algorithm, map)
-        hillclimber_alg.run(1000)
+        hillclimber_alg.run(10000)
         routes = hillclimber_alg.output()
         routes_to_csv(routes, "output")
         scores2.append(routes_score(routes, map))
+    scores1 = []
+    for i in range(100):
+        print(f"{i+1}-de run")
+        algorithm = Random_Greedy(data)
+        algorithm.run(final_number_of_routes=20)
+        hillclimber_alg = Hillclimber(data, algorithm, map)
+        hillclimber_alg.run(10000)
+        routes = hillclimber_alg.output()
+        routes_to_csv(routes, "output")
+        scores1.append(routes_score(routes, map))
 
-    plot_scores_fancy(scores1, scores2, title="Nationaal 1000 iteraties 10 keer", save_to_pdf=True, preview=True, binwidth=50)
-=======
+    plot_scores_fancy(scores1, scores2, title="Nationaal 10000 iteraties 100 keer", save_to_pdf=True, preview=True, binwidth=50)
 # if __name__ == "__main__":
 #     map = "Holland"
 #     data = RailNL(map)
@@ -315,7 +315,6 @@ if __name__ == "__main__":
 #         routes_to_csv(routes, "output")
 #         scores.append(routes_score(routes, map))
 #     plot_scores_fancy(scores, title="end scores 1000 iteraties 100 keer, random", save_to_pdf=True)
->>>>>>> 3d1ce5636e5b56882c9cb9d2af522d595a2d7f9b
 
 # if __name__ == "__main__":
 #     railnl = RailNL("Holland")
@@ -324,12 +323,12 @@ if __name__ == "__main__":
 #     routes = algorithm.output()
 #     routes_to_csv(routes, "output")
 
-if __name__ == "__main__":
-    result_90 = read_scores_from_csv("time_experiment_results/90.csv")
-    result_100 = read_scores_from_csv("time_experiment_results/100.csv")
-    result_110 = read_scores_from_csv("time_experiment_results/110.csv")
-    result_120 = read_scores_from_csv("time_experiment_results/120.csv")
-    plot_scores_fancy(result_120, result_110, result_100, result_90, title = "Random scores given different uniform route time limit.")
+# if __name__ == "__main__":
+#     result_90 = read_scores_from_csv("time_experiment_results/90.csv")
+#     result_100 = read_scores_from_csv("time_experiment_results/100.csv")
+#     result_110 = read_scores_from_csv("time_experiment_results/110.csv")
+#     result_120 = read_scores_from_csv("time_experiment_results/120.csv")
+#     plot_scores_fancy(result_120, result_110, result_100, result_90, title = "Random scores given different uniform route time limit.")
 
 #     # Example usage
 #     randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
