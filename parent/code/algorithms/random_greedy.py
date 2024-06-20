@@ -60,11 +60,14 @@ class Random_Greedy(Algorithm):
         - `starting_stations`: Specify how to pick the starting station for 
         each route. Options: 
         1. `fully_random`: pick random with replacement from all stations.
-        2. `prefer_unused`: pick random station with 0 connections, or 
-        else random station with unused connections.
-        3. `custom_list_with_replacement`: pick random from custom list
+        2. `original_stations_only_soft`: (Tije version) (NOTE: not implemented yet)
+        3. `original_stations_only_hard`: (Jona version) pick 
+        random station with 0 connections, or else random station with
+        unused connections.
+        
+        4. `custom_list_with_replacement`: pick random from custom list
         (with replacement)
-        4. `custom_list_without_replacement`: pick random from custom list
+        5. `custom_list_without_replacement`: pick random from custom list
         (without replacement; NOTE: make sure the list is long enough.)
         
         - `starting_station_list`: list of stations to pick from. 
@@ -121,11 +124,11 @@ class Random_Greedy(Algorithm):
         next_connection_choice must be set to 'random' or 'shortest'."""
 
         # Check for correct input for starting_stations
-        assert starting_stations in ["fully_random", "prefer_unused",
+        assert starting_stations in ["fully_random", "original_stations_only_hard",
                                     "custom_list_with_replacement", 
                                     "custom_list_without_replacement"], """
                                     starting_stations must be set to 
-                                    'fully_random', 'prefer_unused', 
+                                    'fully_random', 'original_stations_only_hard', 
                                     'custom_list_with_replacement', or 
                                     'custom_list_without_replacement'."""
 
@@ -218,8 +221,8 @@ class Random_Greedy(Algorithm):
             # print(f"Route {self.number_of_routes() + 1}")
 
             # And set a first station for this route (method depends on starting_stations argument):
-            # If "starting_stations" is set to "prefer_unused", try to pick unused stations
-            if starting_stations == "prefer_unused":
+            # If "starting_stations" is set to "original_stations_only_hard", try to pick unused stations
+            if starting_stations == "original_stations_only_hard":
 
                 # Plan A: pick a random unused station
                 if len(self.unused_stations) > 0:
