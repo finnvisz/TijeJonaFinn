@@ -27,11 +27,11 @@ def read_scores_from_csv(filename: str) -> "np.array[float]":
     Read scores from a CSV file and return them as a numpy array.
 
     - Pre: CSV file with scores exists in the experiments directory
-      (or path to subdirectory).
+      (or path to subdirectory of experiments).
     - Post: returns a numpy array with scores.
     """
     # Read scores from CSV file
-    scores = np.loadtxt(f"parent/code/experiments/{filename}", delimiter=",")
+    scores = np.loadtxt(f"{experiments_root_dir}/{filename}", delimiter=",")
     return scores
 
 def calculate_p_value(sample1: "np.array[float]", sample2: "np.array[float]"
@@ -255,7 +255,7 @@ def plot_scores(filename: str, scores: list[float]):
     plt.grid(True)
     plt.tight_layout()
     
-    plt.savefig(f"plots/{filename}.png")
+    plt.savefig(f"{experiments_root_dir}/plots/{filename}.png")
 
 def routes_to_csv(routes: list[Route], filename: str):
     """
@@ -276,6 +276,7 @@ def routes_to_csv(routes: list[Route], filename: str):
         score = routes_score(routes, "Holland")
         writer.writerow(["score", f"{score}"])
 
+<<<<<<< HEAD
 #example/test usage
 if __name__ == "__main__":
     map = "Nationaal"
@@ -300,14 +301,35 @@ if __name__ == "__main__":
         scores2.append(routes_score(routes, map))
 
     plot_scores_fancy(scores1, scores2, title="Nationaal 1000 iteraties 10 keer", save_to_pdf=True, preview=True, binwidth=50)
+=======
+# if __name__ == "__main__":
+#     map = "Holland"
+#     data = RailNL(map)
+#     scores = []
+#     for _ in range(100):
+#         algorithm = Random_Greedy(data)
+#         algorithm.run()
+#         hillclimber_alg = Hillclimber(data, algorithm, map)
+#         hillclimber_alg.run(1000)
+#         routes = hillclimber_alg.output()
+#         routes_to_csv(routes, "output")
+#         scores.append(routes_score(routes, map))
+#     plot_scores_fancy(scores, title="end scores 1000 iteraties 100 keer, random", save_to_pdf=True)
+>>>>>>> 3d1ce5636e5b56882c9cb9d2af522d595a2d7f9b
 
 # if __name__ == "__main__":
 #     railnl = RailNL("Holland")
-#     algorithm = Finn(railnl)
+#     algorithm = Random_Greedy(railnl)
 #     algorithm.run()
 #     routes = algorithm.output()
 #     routes_to_csv(routes, "output")
 
+if __name__ == "__main__":
+    result_90 = read_scores_from_csv("time_experiment_results/90.csv")
+    result_100 = read_scores_from_csv("time_experiment_results/100.csv")
+    result_110 = read_scores_from_csv("time_experiment_results/110.csv")
+    result_120 = read_scores_from_csv("time_experiment_results/120.csv")
+    plot_scores_fancy(result_120, result_110, result_100, result_90, title = "Random scores given different uniform route time limit.")
 
 #     # Example usage
 #     randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")

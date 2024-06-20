@@ -105,14 +105,21 @@ class Experiment:
 
         np.savetxt(f"{export_directory}/{filename}.csv", self.scores, delimiter = ",")
         
-# Example usage
+# Time experiment
 if __name__ == "__main__":
-    random_experiment = Experiment(algorithm_class = Random_Greedy)
-    results = random_experiment.run_experiment(iterations = 10, starting_stations="prefer_unused")
-    # print(results)
-    print(f"Random Algorithm Average Score: {np.mean(results)}")
-    random_experiment.write_scores_to_csv("randomv2_scores")
 
-    # finn_experiment = Experiment(Finn, map, iterations=100)
-    # print(f"Finn Average Score: {finn_experiment.average_score()}")  # should be 8919
-    # print(finn_experiment.scores)
+    random_experiment = Experiment(algorithm_class = Random_Greedy)
+    random_experiment.run_experiment(iterations = 10000, route_time_limit = 90)
+    random_experiment.write_scores_to_csv("time_experiment_results/90")
+
+    random_experiment = Experiment(algorithm_class = Random_Greedy)
+    random_experiment.run_experiment(iterations = 10000, route_time_limit = 100)
+    random_experiment.write_scores_to_csv("time_experiment_results/100")
+
+    random_experiment = Experiment(algorithm_class = Random_Greedy)
+    random_experiment.run_experiment(iterations = 10000, route_time_limit = 110)
+    random_experiment.write_scores_to_csv("time_experiment_results/110")
+
+    random_experiment = Experiment(algorithm_class = Random_Greedy)
+    random_experiment.run_experiment(iterations = 10000, route_time_limit = 120)
+    random_experiment.write_scores_to_csv("time_experiment_results/120")
