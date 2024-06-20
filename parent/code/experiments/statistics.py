@@ -27,11 +27,11 @@ def read_scores_from_csv(filename: str) -> "np.array[float]":
     Read scores from a CSV file and return them as a numpy array.
 
     - Pre: CSV file with scores exists in the experiments directory
-      (or path to subdirectory).
+      (or path to subdirectory of experiments).
     - Post: returns a numpy array with scores.
     """
     # Read scores from CSV file
-    scores = np.loadtxt(f"parent/code/experiments/{filename}", delimiter=",")
+    scores = np.loadtxt(f"{experiments_root_dir}/{filename}", delimiter=",")
     return scores
 
 def calculate_p_value(sample1: "np.array[float]", sample2: "np.array[float]"
@@ -255,7 +255,7 @@ def plot_scores(filename: str, scores: list[float]):
     plt.grid(True)
     plt.tight_layout()
     
-    plt.savefig(f"plots/{filename}.png")
+    plt.savefig(f"{experiments_root_dir}/plots/{filename}.png")
 
 def routes_to_csv(routes: list[Route], filename: str):
     """
