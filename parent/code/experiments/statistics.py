@@ -17,12 +17,7 @@ from parent.code.classes.railnl import RailNL
 from parent.code.algorithms.score import routes_score
 from parent.code.algorithms.random_greedy import Random_Greedy
 
-<<<<<<< HEAD
 # Default directory for all functions in this file, can be changed if needed
-=======
-
-# Default directory for plots, can be changed if needed
->>>>>>> 91ac2b3548a608682cdd47345aeb2766f1f62129
 # Don't delete! Used in plot_scores_fancy function
 experiments_root_dir = "parent/code/experiments"
 
@@ -281,7 +276,6 @@ def routes_to_csv(routes: list[Route], filename: str):
         score = routes_score(routes, "Holland")
         writer.writerow(["score", f"{score}"])
 
-<<<<<<< HEAD
 if __name__ == "__main__":
     map = "Holland"
     data = RailNL(map)
@@ -296,11 +290,6 @@ if __name__ == "__main__":
         scores.append(routes_score(routes, map))
     plot_scores_fancy(scores, title="end scores 100 iteraties, random", save_to_pdf=True)
 
-=======
-
-
-"""Example usage routes_to_csv"""
->>>>>>> 91ac2b3548a608682cdd47345aeb2766f1f62129
 # if __name__ == "__main__":
 #     railnl = RailNL("Holland")
 #     algorithm = Finn(railnl)
@@ -309,12 +298,7 @@ if __name__ == "__main__":
 #     routes_to_csv(routes, "output")
 
 
-<<<<<<< HEAD
 #     # Example usage
-=======
-"""Example usage plot_scores_fancy"""
-# if __name__ == "__main__":
->>>>>>> 91ac2b3548a608682cdd47345aeb2766f1f62129
 #     randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
 #     randomv2_2_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_2_connections_100000.csv")
 #     randomv2_3_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_3_connections_100000.csv")
@@ -322,7 +306,6 @@ if __name__ == "__main__":
 
 #     plot_scores_fancy(randomv2_least_connections, randomv2_2_connections, randomv2_3_connections, randomv2_most_connections, title="Bewijs dat 4 datasets werkt")
 
-<<<<<<< HEAD
     # # Example usage
     # randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
     # randomv2_2_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_2_connections_100000.csv")
@@ -330,8 +313,6 @@ if __name__ == "__main__":
     # randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
 
     # plot_scores_fancy(randomv2_least_connections, randomv2_2_connections, randomv2_3_connections, randomv2_most_connections, title="Bewijs dat 4 datasets werkt")
-=======
->>>>>>> 91ac2b3548a608682cdd47345aeb2766f1f62129
 
 """Example usage plot_scores"""
 # if __name__ == "__main__":
