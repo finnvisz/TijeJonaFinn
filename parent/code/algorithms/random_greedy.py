@@ -85,7 +85,9 @@ class Random_Greedy(Algorithm):
         (without replacement; NOTE: make sure the list length is equal to
         the number of routes generated.)
         
-        - `starting_station_list`: list of stations to pick from. 
+        - `starting_station_list`: list of stations to pick from,
+        OR list with multiple station lists is also possible 
+        (in that case one of the station lists will be chosen randomly).
         Only used when starting_stations is set to
         "custom_list_with_replacement" or
         "custom_list_without_replacement"
@@ -169,6 +171,23 @@ class Random_Greedy(Algorithm):
             assert starting_station_list is not None, """Starting station list 
                 must be provided when starting_stations is set to 
                 'custom_list_with_replacement' or 'custom_list_without_replacement'."""
+
+            # If list of lists is provided, check if all elements are lists
+            # And afterwords randomly select a list from the list of lists.
+            # (For the TA reading this, I'm a bit confused as well.) 
+            if type(starting_station_list[0]) is list:
+                # Assert all elements are lists
+                assert all(
+                isinstance(element, list) 
+                for element in starting_station_list), """
+                Provide either a single list of stations,
+                or a list of lists of stations. Don't mix the two!"""
+
+                # And choose a random list from the list of lists
+                starting_station_list = random.choice(starting_station_list)
+
+                # DEBUG
+                print(starting_station_list)
         
         # For custom list without replacement, list must be long enough
         if starting_stations == "custom_list_without_replacement":
@@ -390,14 +409,22 @@ class Random_Greedy(Algorithm):
 # Run  and print results
 if __name__ == "__main__":
     
+    
 
     random_greedy = Random_Greedy(RailNL("Holland"))
+    
+    starting_stations_1 = [random_greedy.load.stations["Rotterdam Centraal"], random_greedy.load.stations["Amsterdam Centraal"]]
+    starting_stations_2 = [random_greedy.load.stations["Dordrecht"], random_greedy.load.stations["Gouda"]]
+    
+    list_of_lists = [starting_stations_1, starting_stations_2, random_greedy.load.stations["Den Helder"]]
+    # print(list_of_lists)
+
     # Run algorithm with desired settings 
     output = random_greedy.run(
-            final_number_of_routes = (5,7), 
-            starting_stations="original_stations_only_soft")
+            final_number_of_routes = 2, 
+            starting_stations="custom_list_without_replacement", starting_station_list=list_of_lists)
     
-    print(len(output))
+    # # print(len(output))
     # # Print results + extra info
     # for route in output:
     #     for connection in route.get_connections_used():
@@ -407,5 +434,5 @@ if __name__ == "__main__":
     #     print(f"Total time: {route.time}")
     #     print("")
 
-    # print(f"Unused stations: {len(random_greedy.unused_stations)}")
+    print(f"Unused stations: {len(random_greedy.unused_stations)}")
     # print(f"Unused connections: {len(random_greedy.unused_connections)}")
