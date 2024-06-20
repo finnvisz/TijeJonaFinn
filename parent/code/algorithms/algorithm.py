@@ -64,6 +64,10 @@ class Algorithm:
         return set(self.total_connections_used)
     
     def get_stations_used(self) -> set:
+        """Makes a set of the stations that are used in the output routes
+        
+        Post: a set of station
+        """
         for route in self.routes:
             for station in route.get_stations():
                 self.stations_used.add(station)
@@ -80,38 +84,4 @@ class Algorithm:
         return self.total_minutes
     
 
-    def make_picture(self):
-        if not self.routes:
-            print("No routes to plot.")
-            return
-
-        for i, route in enumerate(self.routes):
-            fig, ax = plt.subplots(figsize=(20, 20))
-            ax.set_xlabel('X Coordinate')
-            ax.set_ylabel('Y Coordinate')
-            ax.grid(False)  # Remove grid from plot
-
-            for connection in self.load.connections:
-                station1, station2 = connection
-                station1_o = self.load.stations[station1.name]
-                station2_o = self.load.stations[station2.name]
-
-                x_values = [station1_o.long, station2_o.long]
-                y_values = [station1_o.lat, station2_o.lat]
-                ax.plot(x_values, y_values, marker='o', linestyle='-', color='red')
-                ax.text(station1_o.long, station1_o.lat, station1.name, ha='center')
-                ax.text(station2_o.long, station2_o.lat, station2.name, ha='center')
-
-            for connection in route.connections_used:
-                con_0 = self.load.stations[connection[0]]
-                con_1 = self.load.stations[connection[1]]
-
-                x_values = [con_0.long, con_1.long]
-                y_values = [con_0.lat, con_1.lat]
-                ax.plot(x_values, y_values, marker='o', linestyle='-', color='blue')
-
-            ax.set_title(f'Route {i+1}')  # Set title for each plot
-
-            plt.tight_layout()
-            plt.savefig(f'route_{i+1}.png')
-            plt.close()
+    
