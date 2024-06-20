@@ -30,6 +30,10 @@ def read_scores_from_csv(filename: str) -> "np.array[float]":
       (or path to subdirectory of experiments).
     - Post: returns a numpy array with scores.
     """
+    # Add .csv extension if not present
+    if not filename.endswith(".csv"):
+        filename += ".csv"
+
     # Read scores from CSV file
     scores = np.loadtxt(f"{experiments_root_dir}/{filename}", delimiter=",")
     return scores
@@ -64,13 +68,20 @@ def calculate_p_value(sample1: "np.array[float]", sample2: "np.array[float]"
     else:
         raise ValueError("Invalid return_type argument, choose 'p_value_only', 'object' or 'significant'.")
 
-def plot_scores_fancy(sample1: "np.array[float]", sample2: "np.array[float]" = None, 
-                      sample3: "np.array[float]" = None, sample4: "np.array[float]" = None, 
+def plot_scores_fancy(sample1: "np.array[float]", 
+                      sample2: "np.array[float]" = None, 
+                      sample3: "np.array[float]" = None, 
+                      sample4: "np.array[float]" = None, 
                       
-                      save_to_pdf: bool = False, preview: bool = True, # save settings
+                      # save settings
+                      save_to_pdf: bool = False, preview: bool = True, 
                       filename: str | None = None,
                       
-                      title: str | None = None, binwidth: int = 400, # plot settings
+                      # plot settings
+                      title: str | None = None, 
+                      legend_title: str = "Groep",
+                      legend_labels: tuple[str] | None = None,
+                      binwidth: int = 400, 
                       alpha: float | None = None) -> None:
     """
     Plot the scores of 1 to 4 samples in a histogram.
@@ -78,22 +89,35 @@ def plot_scores_fancy(sample1: "np.array[float]", sample2: "np.array[float]" = N
     - Pre: Each sample is given as a numpy arrays of floats.
     - Post: histogram is plotted (default: only preview, save to pdf also possible).
 
+    Example usage:
+    `plot_scores_fancy(sample1, sample2,
+    title = "Condition 1 vs Condition 2", 
+    legend_labels = ("Condition 1", "Condition 2"))`
+
     args:
 
     Save settings:
-    - `save_to_pdf`: save plot to pdf file in directory `plot_dir` (which is defined right after
-    the imports of this script).
+    - `save_to_pdf`: save plot to pdf file in directory `plot_dir` 
+    (which is defined right after the imports of this script).
     - `preview`: show preview of plot.
-    - `filename`: (optional) custom filename for the plot. 
-    When not provided, user-provided `title` is used or else a default name with timestamp.
+    - `filename`: (optional) custom filename for the plot. When not 
+    provided, user-provided `title` is used or else a default name with 
+    timestamp.
     
     Plot settings:
-    - `title`: (optional) title of the plot, also used as filename if saved to pdf.
+    - `title`: title of the plot, also used as filename if saved to pdf.
     When not provided, a default name with timestamp is used.
-    - `binwidth`: width of the bins in the histogram (default is 400, seems a sweet spot).
-    - `alpha`: (optional) set custom transparency of the bars in the histogram. 
-    Value between 0 and 1. Default is 0.85 for single sample and 0.7 for multiple samples.
+    - `legend_title`: title of the legend in the plot. Default is "Groep".
+    - `legend_labels`: custom labels for the legend. Should be a tuple
+    of strings with the same length as the number of samples.
+    
+    - `binwidth`: width of the bins in the histogram (default is 400, 
+    seems a sweet spot).
+    - `alpha`: (optional) set custom transparency of the bars in the 
+    histogram. Value between 0 and 1. Default is 0.85 for single sample 
+    and 0.7 for multiple samples.
     """
+
     # Settings for plot
     color_palette = ("lightblue", "lightgrey", "lightsalmon", "lightgreen")
     p9.options.figure_size = (9, 5) # overwritten for single sample
@@ -124,7 +148,26 @@ def plot_scores_fancy(sample1: "np.array[float]", sample2: "np.array[float]" = N
     if not filename.endswith(".pdf"):
         filename += ".pdf"
     
+
+    # Ensure correct legend labels
+    # If provided, check for correct amount of labels
+    if legend_labels is not None:
+        assert len(legend_labels) == sum([sample1 is not None,
+                                            sample2 is not None, 
+                                            sample3 is not None, 
+                                            sample4 is not None]), """
+        Number of legend labels should match number of samples."""
+    
+    # If not provided, use default labels
+    else:
+        legend_label_options = ("Sample 1", "Sample 2", "Sample 3", "Sample 4")
+        legend_labels = legend_label_options[:sum([sample1 is not None,
+                                                    sample2 is not None, 
+                                                    sample3 is not None, 
+                                                    sample4 is not None])]
+
         
+
     # If sample2 is not provided, create plot for single sample
     if sample2 is None:
         
@@ -133,7 +176,7 @@ def plot_scores_fancy(sample1: "np.array[float]", sample2: "np.array[float]" = N
 
         # Create dataframe with scores
         df = pd.DataFrame({
-            "sample1": sample1,
+            "Score": sample1,
         })
 
         # Default alpha value
@@ -143,11 +186,10 @@ def plot_scores_fancy(sample1: "np.array[float]", sample2: "np.array[float]" = N
         # Histogram for single sample
         plot = (
             p9.ggplot(df) +
-            p9.aes(x = "sample1") +
-            p9.geom_histogram(binwidth = binwidth, alpha = alpha, position = "identity", fill = color_palette[0], color = "darkgrey") +
-            p9.xlim(0,10000) + 
-            # p9.labs(title = title, x = "Score", y = "Aantal waarnemingen") + 
-            p9.theme_minimal()
+            p9.aes(x = "Score") +
+            p9.geom_histogram(binwidth = binwidth, alpha = alpha, 
+                              position = "identity", fill = color_palette[0], 
+                              color = "darkgrey")
         )
     
     # Else create plot for 2 samples
@@ -169,11 +211,8 @@ def plot_scores_fancy(sample1: "np.array[float]", sample2: "np.array[float]" = N
         plot = (
             p9.ggplot(df) +
             p9.aes(x = "Score", fill = "Groep", colour = "Groep") +
-            p9.geom_histogram(binwidth = binwidth, alpha = alpha, position = "identity", color = "darkgrey") +
-            p9.xlim(0,10000) + 
-            # p9.labs(title = title, y = "Aantal waarnemingen") + 
-            p9.scale_fill_manual(values = color_palette[:2]) +
-            p9.theme_minimal()
+            p9.geom_histogram(binwidth = binwidth, alpha = alpha, 
+                              position = "identity", color = "darkgrey")
         )
 
     # Else create plot for 3 samples
@@ -195,11 +234,8 @@ def plot_scores_fancy(sample1: "np.array[float]", sample2: "np.array[float]" = N
         plot = (
             p9.ggplot(df) +
             p9.aes(x = "Score", fill = "Groep", colour = "Groep") +
-            p9.geom_histogram(binwidth = binwidth, alpha = alpha, position = "identity", color = "darkgrey") +
-
-            p9.xlim(0,10000) + 
-            p9.scale_fill_manual(values = color_palette[:3]) +
-            p9.theme_minimal()
+            p9.geom_histogram(binwidth = binwidth, alpha = alpha, 
+                              position = "identity", color = "darkgrey")
         )
 
     # Else create plot for 4 samples
@@ -222,16 +258,25 @@ def plot_scores_fancy(sample1: "np.array[float]", sample2: "np.array[float]" = N
         plot = (
             p9.ggplot(df) +
             p9.aes(x = "Score", fill = "Groep", colour = "Groep") +
-            p9.geom_histogram(binwidth = binwidth, alpha = alpha, position = "identity", color = "darkgrey") +
-
-            p9.xlim(0,10000) + 
-            # p9.labs(title = title, y = "Aantal waarnemingen") + 
-            p9.scale_fill_manual(values = color_palette) +
-            p9.theme_minimal() 
-            # + p9.theme(figure_size=(16, 8))
+            p9.geom_histogram(binwidth = binwidth, alpha = alpha, 
+                              position = "identity", color = "darkgrey")    
         )
-
-    plot += p9.labs(title = title, subtitle= f"Iterations = {len(sample1)}", y = "Aantal waarnemingen") 
+    
+    
+    # Add labels, title, theme and limits
+    # The same for all plots
+    plot += p9.xlim(0,10000)
+    plot += p9.scale_fill_manual(name = legend_title,
+                                values = 
+                                color_palette[:sum([sample1 is not None,
+                                                    sample2 is not None, 
+                                                    sample3 is not None, 
+                                                    sample4 is not None])],
+                                labels = legend_labels)
+    plot += p9.theme_minimal() 
+    plot += p9.labs(title = title, 
+                    subtitle= f"Iteraties = {len(sample1)}", 
+                    y = "Aantal waarnemingen")
 
 
 
@@ -243,6 +288,8 @@ def plot_scores_fancy(sample1: "np.array[float]", sample2: "np.array[float]" = N
     if preview:
         # Show the plot
         plot.show()
+
+
 
 def plot_scores(filename: str, scores: list[float]):
     # Plotting the frequency distribution of scores
@@ -256,6 +303,7 @@ def plot_scores(filename: str, scores: list[float]):
     plt.tight_layout()
     
     plt.savefig(f"{experiments_root_dir}/plots/{filename}.png")
+
 
 def routes_to_csv(routes: list[Route], filename: str):
     """
@@ -324,33 +372,31 @@ if __name__ == "__main__":
 #     routes = algorithm.output()
 #     routes_to_csv(routes, "output")
 
-if __name__ == "__main__":
-    result_90 = read_scores_from_csv("time_experiment_results/90.csv")
-    result_100 = read_scores_from_csv("time_experiment_results/100.csv")
-    result_110 = read_scores_from_csv("time_experiment_results/110.csv")
-    result_120 = read_scores_from_csv("time_experiment_results/120.csv")
-    plot_scores_fancy(result_120, result_110, result_100, result_90, title = "Random scores given different uniform route time limit.")
+# if __name__ == "__main__":
+#     result_90 = read_scores_from_csv("time_experiment_results/90.csv")
+#     result_100 = read_scores_from_csv("time_experiment_results/100.csv")
+#     result_110 = read_scores_from_csv("time_experiment_results/110.csv")
+#     result_120 = read_scores_from_csv("time_experiment_results/120.csv")
+#     plot_scores_fancy(result_120, result_110, result_100, result_90, 
+#                       title = "Random scores given different uniform route time limit.")
 
-#     # Example usage
-#     randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
-#     randomv2_2_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_2_connections_100000.csv")
-#     randomv2_3_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_3_connections_100000.csv")
-#     randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
-
-#     plot_scores_fancy(randomv2_least_connections, randomv2_2_connections, randomv2_3_connections, randomv2_most_connections, title="Bewijs dat 4 datasets werkt")
-
-    # # Example usage
-    # randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
-    # randomv2_2_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_2_connections_100000.csv")
-    # randomv2_3_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_3_connections_100000.csv")
-    # randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
-
-    # plot_scores_fancy(randomv2_least_connections, randomv2_2_connections, randomv2_3_connections, randomv2_most_connections, title="Bewijs dat 4 datasets werkt")
-
-"""Example usage plot_scores"""
+# """Example usage plot_scores"""
 # if __name__ == "__main__":
 
-    # randomv2_least_connections = read_scores_from_csv("randomv2_least_connections")
-    # randomv2_most_connections = read_scores_from_csv("randomv2_most_connections")
+#     randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
+#     randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
 
-    # plot_scores(randomv2_least_connections, randomv2_most_connections)
+#     plot_scores(randomv2_least_connections, randomv2_most_connections)
+
+
+"""Example usage plot_scores_fancy"""
+if __name__ == "__main__":
+    
+    randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
+    randomv2_2_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_2_connections_100000.csv")
+    randomv2_3_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_3_connections_100000.csv")
+    randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
+
+    plot_scores_fancy(randomv2_least_connections, randomv2_2_connections,
+                        randomv2_3_connections,
+                      title= "Minste connecties vs 2 connecties")
