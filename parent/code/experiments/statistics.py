@@ -17,13 +17,11 @@ from parent.code.classes.railnl import RailNL
 from parent.code.algorithms.score import routes_score
 from parent.code.algorithms.random_greedy import Random_Greedy
 
-
 # Default directory for plots, can be changed if needed
 # Don't delete! Used in plot_scores_fancy function
 plot_dir = "parent/code/experiments/plots"
 
-
-def read_scores_from_csv(filename: str) -> "nparray[float]":
+def read_scores_from_csv(filename: str) -> "np.array[float]":
     """
     Read scores from a CSV file and return them as a numpy array.
 
@@ -34,7 +32,7 @@ def read_scores_from_csv(filename: str) -> "nparray[float]":
     scores = np.loadtxt(f"parent/code/experiments/{filename}", delimiter=",")
     return scores
 
-def calculate_p_value(sample1: "nparray[float]", sample2: "nparray[float]", return_type: str = "p_value_only") -> float:
+def calculate_p_value(sample1: "np.array[float]", sample2: "np.array[float]", return_type: str = "p_value_only") -> float:
     """
     Calculates a p-value to infer if the difference between two sets of scores is significant.
     Function uses the Mann-Whitney U rank test to test the null hypothesis that 
@@ -60,9 +58,8 @@ def calculate_p_value(sample1: "nparray[float]", sample2: "nparray[float]", retu
     else:
         raise ValueError("Invalid return_type argument, choose 'p_value_only', 'object' or 'significant'.")
 
-
-def plot_scores_fancy(sample1: "nparray[float]", sample2: "nparray[float]" = None, 
-                      sample3: "nparray[float]" = None, sample4: "nparray[float]" = None, 
+def plot_scores_fancy(sample1: "np.array[float]", sample2: "np.array[float]" = None, 
+                      sample3: "np.array[float]" = None, sample4: "np.array[float]" = None, 
                       
                       save_to_pdf: bool = False, preview: bool = True, # save settings
                       filename: str | None = None,
@@ -145,7 +142,6 @@ def plot_scores_fancy(sample1: "nparray[float]", sample2: "nparray[float]" = Non
             p9.theme_minimal()
         )
     
-
     # Else create plot for 2 samples
     elif sample3 is None:
         
@@ -171,7 +167,6 @@ def plot_scores_fancy(sample1: "nparray[float]", sample2: "nparray[float]" = Non
             p9.scale_fill_manual(values = color_palette[:2]) +
             p9.theme_minimal()
         )
-
 
     # Else create plot for 3 samples
     elif sample4 is None:
@@ -200,7 +195,6 @@ def plot_scores_fancy(sample1: "nparray[float]", sample2: "nparray[float]" = Non
             p9.theme_minimal()
         )
 
-    
     # Else create plot for 4 samples
     else:
         # Create dataframe with scores
@@ -230,7 +224,6 @@ def plot_scores_fancy(sample1: "nparray[float]", sample2: "nparray[float]" = Non
             # + p9.theme(figure_size=(16, 8))
         )
 
-
     # Save to pdf if specified
     if save_to_pdf:
         plot.save(filename = filename, path=plot_dir)
@@ -239,8 +232,6 @@ def plot_scores_fancy(sample1: "nparray[float]", sample2: "nparray[float]" = Non
     if preview:
         # Show the plot
         plot.show()
-
-
 
 def plot_scores(filename: str, scores: list[float]):
     # Plotting the frequency distribution of scores
@@ -262,7 +253,7 @@ def routes_to_csv(routes: list[Route], filename: str):
     - Pre: list of route objects and filename to write to.
     - Post: csv-file of given format located in route_csv map. 
     """
-
+    
     with open(f"route_csv/{filename}.csv", 'w') as file:
         writer = csv.writer(file)
 
@@ -274,16 +265,6 @@ def routes_to_csv(routes: list[Route], filename: str):
         score = routes_score(routes, "Holland")
         writer.writerow(["score", f"{score}"])
 
-<<<<<<< HEAD
-if __name__ == "__main__":
-    railnl = RailNL("Holland")
-    algorithm = RandomAlgorithm(railnl, [7], 120)
-    algorithm.run()
-    routes = algorithm.output()
-    routes_to_csv(routes, "output")
-
-=======
->>>>>>> 89cb13c0335f668316c6dfac097a190a2c40a2a0
 # if __name__ == "__main__":
 #     railnl = RailNL("Holland")
 #     algorithm = Finn(railnl)
@@ -300,7 +281,6 @@ if __name__ == "__main__":
     randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
 
     plot_scores_fancy(randomv2_least_connections, randomv2_2_connections, randomv2_3_connections, randomv2_most_connections, title="Bewijs dat 4 datasets werkt")
-
 
 # if __name__ == "__main__":
 #     # Example usage

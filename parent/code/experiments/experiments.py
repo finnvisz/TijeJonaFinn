@@ -9,6 +9,7 @@ from parent.code.algorithms.score import Score
 from parent.code.algorithms.random_greedy import Random_Greedy
 
 class Experiment:
+
     def __init__(self, algorithm_class: "Algorithm", map: str = "Holland", **algorithm_kwargs) -> None:
         """
         Initialize experiment object with given algorithm and map.
@@ -32,8 +33,6 @@ class Experiment:
         self.station_indices = {station: idx for idx, station in enumerate(self.total_stations)}
         self.count_stations_used = np.zeros(len(self.total_stations))
         
-
-
     def run_experiment(self, iterations: int = 100, **algorithm_kwargs) -> float:
         """
         Runs algorithm N times (default 100), and returns the scores in a numpy array.
@@ -45,23 +44,30 @@ class Experiment:
         """
         # Scores are saved in numpy array, way faster than list!
         # Space in memory is reserved and filled with zeros
-        self.scores: "nparray[float]" = np.zeros(iterations)
+        self.scores: "np.array[float]" = np.zeros(iterations)
         
         for i in range(iterations):
+
             # Ensure each run starts with a fresh state.
             data_instance = RailNL(self.map)
+
             # Initialize algorithm
             algorithm_instance = self.algorithm_class(data_instance, **self.algorithm_kwargs)
+
             # Run and calculate score
             score = Score(algorithm_instance, **algorithm_kwargs).calculate()
+
             # Add score to array at correct positions
             self.scores[i] = score
 
             # Count each connection used
             used_connections = algorithm_instance.get_total_connections_used()
+
             for connection in used_connections:
+
                 # Normalize the connection tuple to match the total connections format
                 normalized_connection = tuple(sorted(connection[:2]))
+
                 if normalized_connection in self.connection_indices:
                     self.count_connections_used[self.connection_indices[normalized_connection]] += 1
                 else:
@@ -99,7 +105,6 @@ class Experiment:
 
         np.savetxt(f"{export_directory}/{filename}.csv", self.scores, delimiter = ",")
         
-
 # Example usage
 if __name__ == "__main__":
     random_experiment = Experiment(algorithm_class = Random_Greedy)

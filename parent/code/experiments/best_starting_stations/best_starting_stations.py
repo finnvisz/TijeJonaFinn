@@ -5,6 +5,7 @@ import numpy as np
 from parent.code.classes.railnl import RailNL
 from parent.code.algorithms.random_greedy import Random_Greedy
 from parent.code.experiments.experiments import Experiment
+from parent.code.classes.station_class import Station
 
 def get_station_subgroups() -> tuple[list["Station"], list["Station"]]:
     """
@@ -30,7 +31,6 @@ def get_station_subgroups() -> tuple[list["Station"], list["Station"]]:
 
     print(f"Amount of stations with most connections: {len(stations_with_most_connections)}")
 
-
     # 2. Stations with least connections
     stations_with_least_connections = []
 
@@ -52,7 +52,6 @@ def get_station_subgroups() -> tuple[list["Station"], list["Station"]]:
             stations_with_2_connections.append(station)
 
     print(f"Amount of stations with 2 connections: {len(stations_with_2_connections)}")
-
 
     # 4. Stations with 3 connections
     stations_with_3_connections = []
