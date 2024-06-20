@@ -1,15 +1,15 @@
 # External imports
 import numpy as np
 import scipy.stats as stats
-# import plotnine as p9
-# import pandas as pd
+import plotnine as p9
+import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import csv
 from datetime import datetime
 
 # Internal imports
-from parent.code.algorithms.random_algorithm import RandomAlgorithm
+from parent.code.algorithms.hillclimber import Hillclimber
 from parent.code.algorithms.finnsroutes import Finn
 from parent.code.experiments.experiments import Experiment
 from parent.code.classes.route import Route
@@ -17,9 +17,9 @@ from parent.code.classes.railnl import RailNL
 from parent.code.algorithms.score import routes_score
 from parent.code.algorithms.random_greedy import Random_Greedy
 
-# Default directory for plots, can be changed if needed
+# Default directory for all functions in this file, can be changed if needed
 # Don't delete! Used in plot_scores_fancy function
-plot_dir = "parent/code/experiments/plots"
+experiments_root_dir = "parent/code/experiments"
 
 def read_scores_from_csv(filename: str) -> "np.array[float]":
     """
@@ -226,7 +226,7 @@ def plot_scores_fancy(sample1: "np.array[float]", sample2: "np.array[float]" = N
 
     # Save to pdf if specified
     if save_to_pdf:
-        plot.save(filename = filename, path=plot_dir)
+        plot.save(filename = filename, path=f"{experiments_root_dir}/plots")
     
     # Show preview of plot if specified
     if preview:
@@ -254,7 +254,7 @@ def routes_to_csv(routes: list[Route], filename: str):
     - Post: csv-file of given format located in route_csv map. 
     """
     
-    with open(f"route_csv/{filename}.csv", 'w') as file:
+    with open(f"{experiments_root_dir}/route_csv/{filename}.csv", 'w') as file:
         writer = csv.writer(file)
 
         writer.writerow(["train", "stations"])
@@ -265,16 +265,20 @@ def routes_to_csv(routes: list[Route], filename: str):
         score = routes_score(routes, "Holland")
         writer.writerow(["score", f"{score}"])
 
-<<<<<<< HEAD
 if __name__ == "__main__":
-    railnl = RailNL("Holland")
-    algorithm = RandomAlgorithm(railnl, [7], 120)
-    algorithm.run()
-    routes = algorithm.output()
-    routes_to_csv(routes, "output")
+    map = "Holland"
+    data = RailNL(map)
+    scores = []
+    for _ in range(10):
+        algorithm = Random_Greedy(data)
+        algorithm.run()
+        hillclimber_alg = Hillclimber(data, algorithm, map)
+        hillclimber_alg.run(100)
+        routes = hillclimber_alg.output()
+        routes_to_csv(routes, "output")
+        scores.append(routes_score(routes, map))
+    plot_scores_fancy(scores, title="end scores 100 iteraties, random", save_to_pdf=True)
 
-=======
->>>>>>> 3f1dc115b787f70488c3240ca975d0e4fad03ba9
 # if __name__ == "__main__":
 #     railnl = RailNL("Holland")
 #     algorithm = Finn(railnl)
@@ -284,22 +288,19 @@ if __name__ == "__main__":
 
 # if __name__ == "__main__":
 
-<<<<<<< HEAD
 #     # Example usage
 #     randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
 #     randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
 
 #     plot_scores_fancy(randomv2_least_connections, randomv2_most_connections)
 
-=======
-    # Example usage
-    randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
-    randomv2_2_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_2_connections_100000.csv")
-    randomv2_3_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_3_connections_100000.csv")
-    randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
+    # # Example usage
+    # randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
+    # randomv2_2_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_2_connections_100000.csv")
+    # randomv2_3_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_3_connections_100000.csv")
+    # randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
 
-    plot_scores_fancy(randomv2_least_connections, randomv2_2_connections, randomv2_3_connections, randomv2_most_connections, title="Bewijs dat 4 datasets werkt")
->>>>>>> 3f1dc115b787f70488c3240ca975d0e4fad03ba9
+    # plot_scores_fancy(randomv2_least_connections, randomv2_2_connections, randomv2_3_connections, randomv2_most_connections, title="Bewijs dat 4 datasets werkt")
 
 # if __name__ == "__main__":
 #     # Example usage

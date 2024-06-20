@@ -64,6 +64,10 @@ class Algorithm:
         return set(self.total_connections_used)
     
     def get_stations_used(self) -> set:
+        """Makes a set of the stations that are used in the output routes
+        
+        Post: a set of station
+        """
         for route in self.routes:
             for station in route.get_stations():
                 self.stations_used.add(station)
