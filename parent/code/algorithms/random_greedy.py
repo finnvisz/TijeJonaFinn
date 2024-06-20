@@ -75,11 +75,9 @@ class Random_Greedy(Algorithm):
             
             random.shuffle(starting_station_list_copy)
 
-
         # List to store the various routes
         self.routes: list[Route] = []
         
-
         """ Unused_connections starts off with all connections. Unused 
         connections will be moved to used connections when they are used """
         self.used_connections: dict = dict()

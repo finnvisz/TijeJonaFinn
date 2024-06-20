@@ -253,7 +253,7 @@ def routes_to_csv(routes: list[Route], filename: str):
     - Pre: list of route objects and filename to write to.
     - Post: csv-file of given format located in route_csv map. 
     """
-    
+
     with open(f"route_csv/{filename}.csv", 'w') as file:
         writer = csv.writer(file)
 
@@ -267,7 +267,7 @@ def routes_to_csv(routes: list[Route], filename: str):
 
 # if __name__ == "__main__":
 #     railnl = RailNL("Holland")
-#     algorithm = Finn(railnl)
+#     algorithm = Random_Greedy(railnl)
 #     algorithm.run()
 #     routes = algorithm.output()
 #     routes_to_csv(routes, "output")
