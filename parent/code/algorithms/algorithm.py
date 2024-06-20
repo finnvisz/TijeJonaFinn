@@ -6,8 +6,8 @@ class Algorithm:
     """Base algorithm script.
     """
 
-    def __init__(self, load: RailNL) -> None:
-        self.load = load
+    def __init__(self, map: str) -> None:
+        self.load = RailNL(map)
         self.routes: list[Route] = []
         self.total_minutes: int = 0
         self.total_connections_used: set[tuple[str, str, float]] = set()

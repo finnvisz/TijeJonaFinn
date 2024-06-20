@@ -2,35 +2,35 @@ import random
 import copy
 from parent.code.algorithms.algorithm import Algorithm
 from parent.code.algorithms.random_algorithm import RandomAlgorithm
-from parent.code.algorithms.score import Score
+from parent.code.algorithms.score import routes_score
 from parent.code.classes.railnl import RailNL
 from parent.code.classes.route import Route
 import matplotlib.pyplot as plt
 
 class Hillclimber(Algorithm):
-    def __init__(self, load: RailNL, algorithm: Algorithm) -> None:
-        super().__init__(load)
-        self.load = load
+    def __init__(self, algorithm: Algorithm) -> None:
+        super().__init__(map)
+        self.load = RailNL(map)
         self.algorithm = algorithm
         self.routes = algorithm.routes
         self.scores = []
-        self.best_score = self.calculate_new_score(self.routes)
+        self.best_score = routes_score(self.routes, map)
 
-    def new_connections_used(self, routes) -> set:
-        new_connections = set()
-        for route in routes:
-            for connection_list in route.get_connections_used():
-                connection = tuple(connection_list)
-                reverse_connection = (connection[1], connection[0], connection[2])
-                if reverse_connection not in new_connections:
-                    new_connections.add(connection)
-        return set(new_connections)
+    # def new_connections_used(self, routes) -> set:
+    #     new_connections = set()
+    #     for route in routes:
+    #         for connection_list in route.get_connections_used():
+    #             connection = tuple(connection_list)
+    #             reverse_connection = (connection[1], connection[0], connection[2])
+    #             if reverse_connection not in new_connections:
+    #                 new_connections.add(connection)
+    #     return set(new_connections)
 
-    def new_total_minutes(self, routes) -> int:
-        total_minutes = 0
-        for route in routes:
-            total_minutes += route.time
-        return total_minutes
+    # def new_total_minutes(self, routes) -> int:
+    #     total_minutes = 0
+    #     for route in routes:
+    #         total_minutes += route.time
+    #     return total_minutes
     
     def generate_random_route(self) -> "Route":
         time_used = 0
@@ -63,10 +63,10 @@ class Hillclimber(Algorithm):
             return new_routes
         return routes
 
-    def calculate_new_score(self, routes) -> float:
-        p = len(self.new_connections_used(routes)) / len(self.load.get_total_connections())
-        T = len(routes)
-        return p * 10000 - (T * 100 + self.new_total_minutes(routes))
+    # def calculate_new_score(self, routes) -> float:
+    #     p = len(self.new_connections_used(routes)) / len(self.load.get_total_connections())
+    #     T = len(routes)
+    #     return p * 10000 - (T * 100 + self.new_total_minutes(routes))
 
     def run(self, iterations) -> None:
         self.iterations = iterations # modify to liking
@@ -80,7 +80,7 @@ class Hillclimber(Algorithm):
             new_routes = self.remove_random_route(new_routes)
             new_routes = self.add_random_route(new_routes)
                 
-            new_score = self.calculate_new_score(new_routes)
+            new_score = routes_score(new_routes, map)
             
             if new_score > self.best_score:
                 self.routes = new_routes

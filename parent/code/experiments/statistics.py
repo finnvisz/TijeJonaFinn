@@ -1,8 +1,8 @@
 # External imports
 import numpy as np
 import scipy.stats as stats
-import plotnine as p9
-import pandas as pd
+# import plotnine as p9
+# import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import csv
@@ -161,7 +161,6 @@ def routes_to_csv(routes: list[Route], filename: str):
         score = routes_score(routes, "Holland")
         writer.writerow(["score", f"{score}"])
 
-<<<<<<< HEAD
 if __name__ == "__main__":
     railnl = RailNL("Holland")
     algorithm = RandomAlgorithm(railnl, [7], 120)
@@ -169,8 +168,6 @@ if __name__ == "__main__":
     routes = algorithm.output()
     routes_to_csv(routes, "output")
 
-=======
->>>>>>> 89cb13c0335f668316c6dfac097a190a2c40a2a0
 # if __name__ == "__main__":
 #     railnl = RailNL("Holland")
 #     algorithm = Finn(railnl)
@@ -178,13 +175,13 @@ if __name__ == "__main__":
 #     routes = algorithm.output()
 #     routes_to_csv(routes, "output")
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    # Example usage
-    randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
-    randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
+#     # Example usage
+#     randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
+#     randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
 
-    plot_scores_fancy(randomv2_least_connections, randomv2_most_connections)
+#     plot_scores_fancy(randomv2_least_connections, randomv2_most_connections)
 
 
 # if __name__ == "__main__":
