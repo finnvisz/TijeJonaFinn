@@ -17,8 +17,12 @@ class Random_Greedy(Algorithm):
     def __init__(self, load: RailNL) -> None:
         super().__init__(load)
         
-    def run(self, original_connections_only: bool = False, starting_stations: str = "fully_random", starting_station_list: None | list["Station"] = None,
-            next_connection_choice: str = "random", final_number_of_routes: int | tuple[int] = 7, chance_of_early_route_end: bool = False,
+    def run(self, original_connections_only: bool = False, 
+            starting_stations: str = "fully_random", 
+            starting_station_list: None | list["Station"] = None,
+            next_connection_choice: str = "random", 
+            final_number_of_routes: int | tuple[int] = 7, 
+            chance_of_early_route_end: bool = False,
             route_time_limit: int | None = None) -> list[Route]:
         """
         Random algorithm with various options for starting stations per route.
