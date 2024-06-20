@@ -103,7 +103,6 @@ class Hillclimber(Algorithm):
         self.iterations = iterations
         start_score = self.best_score
         print(f"{self.iterations} iterations")
-        print(f"Start score: {round(start_score, 1)}")
 
         for i in range(self.iterations):
             new_routes = copy.deepcopy(self.routes)
@@ -117,7 +116,7 @@ class Hillclimber(Algorithm):
                 self.routes = new_routes
                 self.best_score = new_score
                 self.scores.append(new_score)
-                print(f"Iteration {i}, New score: {round(new_score, 1)}")
+                # print(f"Iteration {i}, New score: {round(new_score, 1)}")
             else:
                 self.scores.append(self.best_score)
 
