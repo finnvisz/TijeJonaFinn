@@ -17,34 +17,45 @@ from parent.code.classes.railnl import RailNL
 from parent.code.algorithms.score import routes_score
 from parent.code.algorithms.random_greedy import Random_Greedy
 
+<<<<<<< HEAD
 # Default directory for all functions in this file, can be changed if needed
+=======
+
+# Default directory for plots, can be changed if needed
+>>>>>>> 91ac2b3548a608682cdd47345aeb2766f1f62129
 # Don't delete! Used in plot_scores_fancy function
 experiments_root_dir = "parent/code/experiments"
+
 
 def read_scores_from_csv(filename: str) -> "np.array[float]":
     """
     Read scores from a CSV file and return them as a numpy array.
 
-    - Pre: CSV file with scores exists in the experiments directory (or path to subdirectory).
+    - Pre: CSV file with scores exists in the experiments directory
+      (or path to subdirectory).
     - Post: returns a numpy array with scores.
     """
     # Read scores from CSV file
     scores = np.loadtxt(f"parent/code/experiments/{filename}", delimiter=",")
     return scores
 
-def calculate_p_value(sample1: "np.array[float]", sample2: "np.array[float]", return_type: str = "p_value_only") -> float:
+def calculate_p_value(sample1: "np.array[float]", sample2: "np.array[float]"
+                      , return_type: str = "p_value_only") -> float:
     """
-    Calculates a p-value to infer if the difference between two sets of scores is significant.
-    Function uses the Mann-Whitney U rank test to test the null hypothesis that 
-    the distribution underlying sample 1 is the same as the distribution underlying sample 2.
-    Return value under 0.05 is a common threshold for significance.
+    Calculates a p-value to infer if the difference between two sets of scores
+    is significant. Function uses the Mann-Whitney U rank test to test the null
+    hypothesis that the distribution underlying sample 1 is the same as
+    the distribution underlying sample 2. Return value under 0.05 is a common
+    threshold for significance.
 
-    - Pre: sample1 and sample2 are independent samples, given as numpy arrays of floats.
-    The alternative hypothesis is two-sided (no specific directionality).
+    - Pre: sample1 and sample2 are independent samples, given as numpy arrays
+    of floats. The alternative hypothesis is two-sided 
+    (no specific directionality).
     - Post: returns the p-value of a Mann-Whitney U rank test.
 
     options:
-    - return_type: "p_value_only" (default), "object" (returns full object with test statistic inluded),
+    - return_type: "p_value_only" (default), "object" (returns full object with
+      test statistic inluded),
     "significant" (returns True if p-value < 0.05)
     """
     result_as_object = stats.mannwhitneyu(sample1, sample2)
@@ -85,7 +96,8 @@ def plot_scores_fancy(sample1: "np.array[float]", sample2: "np.array[float]" = N
     - `title`: (optional) title of the plot, also used as filename if saved to pdf.
     When not provided, a default name with timestamp is used.
     - `binwidth`: width of the bins in the histogram (default is 400, seems a sweet spot).
-    - `alpha`: (optional) set custom transparency of the bars in the histogram
+    - `alpha`: (optional) set custom transparency of the bars in the histogram. 
+    Value between 0 and 1. Default is 0.85 for single sample and 0.7 for multiple samples.
     """
     # Settings for plot
     color_palette = ("lightblue", "lightgrey", "lightsalmon", "lightgreen")
@@ -96,9 +108,11 @@ def plot_scores_fancy(sample1: "np.array[float]", sample2: "np.array[float]" = N
     # See docs for more info
     if filename is not None:
         if title is None:
+            # get current time
             now = datetime.now()
             current_time = now.strftime("%H:%M:%S")
             
+            # Set title
             title = f"Histogram: fancy_plot_{current_time}"
     
     else:
@@ -137,8 +151,7 @@ def plot_scores_fancy(sample1: "np.array[float]", sample2: "np.array[float]" = N
             p9.aes(x = "sample1") +
             p9.geom_histogram(binwidth = binwidth, alpha = alpha, position = "identity", fill = color_palette[0], color = "darkgrey") +
             p9.xlim(0,10000) + 
-            p9.labs(title = title, x = "Score", 
-                    y = "Aantal waarnemingen") + 
+            # p9.labs(title = title, x = "Score", y = "Aantal waarnemingen") + 
             p9.theme_minimal()
         )
     
@@ -163,7 +176,7 @@ def plot_scores_fancy(sample1: "np.array[float]", sample2: "np.array[float]" = N
             p9.aes(x = "Score", fill = "Groep", colour = "Groep") +
             p9.geom_histogram(binwidth = binwidth, alpha = alpha, position = "identity", color = "darkgrey") +
             p9.xlim(0,10000) + 
-            p9.labs(title = title, y = "Aantal waarnemingen") + 
+            # p9.labs(title = title, y = "Aantal waarnemingen") + 
             p9.scale_fill_manual(values = color_palette[:2]) +
             p9.theme_minimal()
         )
@@ -190,7 +203,6 @@ def plot_scores_fancy(sample1: "np.array[float]", sample2: "np.array[float]" = N
             p9.geom_histogram(binwidth = binwidth, alpha = alpha, position = "identity", color = "darkgrey") +
 
             p9.xlim(0,10000) + 
-            p9.labs(title = title, y = "Aantal waarnemingen") + 
             p9.scale_fill_manual(values = color_palette[:3]) +
             p9.theme_minimal()
         )
@@ -218,11 +230,15 @@ def plot_scores_fancy(sample1: "np.array[float]", sample2: "np.array[float]" = N
             p9.geom_histogram(binwidth = binwidth, alpha = alpha, position = "identity", color = "darkgrey") +
 
             p9.xlim(0,10000) + 
-            p9.labs(title = title, y = "Aantal waarnemingen") + 
+            # p9.labs(title = title, y = "Aantal waarnemingen") + 
             p9.scale_fill_manual(values = color_palette) +
             p9.theme_minimal() 
             # + p9.theme(figure_size=(16, 8))
         )
+
+    plot += p9.labs(title = title, subtitle= f"Iterations = {len(sample1)}", y = "Aantal waarnemingen") 
+
+
 
     # Save to pdf if specified
     if save_to_pdf:
@@ -265,6 +281,7 @@ def routes_to_csv(routes: list[Route], filename: str):
         score = routes_score(routes, "Holland")
         writer.writerow(["score", f"{score}"])
 
+<<<<<<< HEAD
 if __name__ == "__main__":
     map = "Holland"
     data = RailNL(map)
@@ -279,6 +296,11 @@ if __name__ == "__main__":
         scores.append(routes_score(routes, map))
     plot_scores_fancy(scores, title="end scores 100 iteraties, random", save_to_pdf=True)
 
+=======
+
+
+"""Example usage routes_to_csv"""
+>>>>>>> 91ac2b3548a608682cdd47345aeb2766f1f62129
 # if __name__ == "__main__":
 #     railnl = RailNL("Holland")
 #     algorithm = Finn(railnl)
@@ -286,14 +308,21 @@ if __name__ == "__main__":
 #     routes = algorithm.output()
 #     routes_to_csv(routes, "output")
 
-# if __name__ == "__main__":
 
+<<<<<<< HEAD
 #     # Example usage
+=======
+"""Example usage plot_scores_fancy"""
+# if __name__ == "__main__":
+>>>>>>> 91ac2b3548a608682cdd47345aeb2766f1f62129
 #     randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
+#     randomv2_2_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_2_connections_100000.csv")
+#     randomv2_3_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_3_connections_100000.csv")
 #     randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
 
-#     plot_scores_fancy(randomv2_least_connections, randomv2_most_connections)
+#     plot_scores_fancy(randomv2_least_connections, randomv2_2_connections, randomv2_3_connections, randomv2_most_connections, title="Bewijs dat 4 datasets werkt")
 
+<<<<<<< HEAD
     # # Example usage
     # randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
     # randomv2_2_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_2_connections_100000.csv")
@@ -301,9 +330,12 @@ if __name__ == "__main__":
     # randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
 
     # plot_scores_fancy(randomv2_least_connections, randomv2_2_connections, randomv2_3_connections, randomv2_most_connections, title="Bewijs dat 4 datasets werkt")
+=======
+>>>>>>> 91ac2b3548a608682cdd47345aeb2766f1f62129
 
+"""Example usage plot_scores"""
 # if __name__ == "__main__":
-#     # Example usage
+
     # randomv2_least_connections = read_scores_from_csv("randomv2_least_connections")
     # randomv2_most_connections = read_scores_from_csv("randomv2_most_connections")
 

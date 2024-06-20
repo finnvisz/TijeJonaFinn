@@ -9,10 +9,13 @@ class RailNL:
 
     def __init__(self, maprange: str) -> None:
         """Creates Railnl object, loads stations and connections into it."""
+        self.mapname = maprange
+        
         self.stations: dict[str, "Station"] = {}
         self.connections = set()
         self.load_stations(f"{parent_path}/data/Stations{maprange}.csv")
         self.load_connections(f"{parent_path}/data/Connecties{maprange}.csv")
+        
     
     def load_stations(self, filepath: str) -> None:
         """Load stations from data file into self.stations.
