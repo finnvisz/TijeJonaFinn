@@ -100,10 +100,14 @@ class Experiment:
         `filename` is a string without extension.
         - Post: scores are written to `filename`.csv in the results subdirectory.
         """
+        # Add .csv extension if not present
+        if not filename.endswith(".csv"):
+            filename += ".csv"
+        
         # Set default export directory
         export_directory: str = "parent/code/experiments"
 
-        np.savetxt(f"{export_directory}/{filename}.csv", self.scores, delimiter = ",")
+        np.savetxt(f"{export_directory}/{filename}", self.scores, delimiter = ",")
         
 # Time experiment
 if __name__ == "__main__":
