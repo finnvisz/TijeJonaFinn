@@ -1,6 +1,7 @@
 # Library imports
 import random
 import copy
+import numpy as np
 
 # Local imports
 from parent.code.algorithms.algorithm import Algorithm
@@ -8,12 +9,15 @@ from parent.code.classes.railnl import RailNL
 from parent.code.classes.route import Route
 from parent.code.classes.station_class import Station
 
-""" Pick station to start from with most connections if not all connections 
-are already used. Implement randomv2 algorithm that prioritizes use of all 
-connections. Pick a connection not yet used with shortest length, if not 
-possible, start a new route """
 
 class Random_Greedy(Algorithm):
+    """
+    Initialize fresh Random_Greedy algorithm class with RailNL object.
+    NOTE: make sure to reinitialize the class each time you run the algorithm.
+
+    Pre: Class of this method is initialized with a RailNL object.
+    Post: Random_Greedy object is created and ready to run the algorithm.
+    """
     def __init__(self, load: RailNL) -> None:
         super().__init__(load)
         
@@ -35,13 +39,21 @@ class Random_Greedy(Algorithm):
             # USE AT OWN RISK, CREATES ROUTES WITH ZERO CONNECTIONS
             chance_of_early_route_end: bool = False) -> list[Route]:
         """
-        Random algorithm with various options for starting stations per
-        route.
+        
+        Random and/or greedy algorithm to generate routes, with lots of options.
+        Meant for running random-based tests and comparing various 
+        subsets of the total state space.
+
+        NOTE: make sure to reinitialize the class when running multiple times.
+
+        - Pre: run method is called on a fresh Random_Greedy object 
+        (i.e. this is the first time run is called on this object).
+        - Post: Returns a list of routes
 
         args:
         
-        Options per connection: (How to pick the next connection in the
-        route)
+        Options per connection (How to pick the next connection in the
+        route):
         
         - `next_connection_choice`: Specify how to pick the next connection 
         in the route. Options: "random" (default), or "shortest" for a
@@ -60,7 +72,9 @@ class Random_Greedy(Algorithm):
         - `starting_stations`: Specify how to pick the starting station for 
         each route. Options: 
         1. `fully_random`: pick random with replacement from all stations.
-        2. `original_stations_only_soft`: (Tije version) (NOTE: not implemented yet)
+        2. `original_stations_only_soft`: (Tije version) pick random
+        with replacement, but if another route starts at this station, 
+        pick another.
         3. `original_stations_only_hard`: (Jona version) pick 
         random station with 0 connections, or else random station with
         unused connections.
@@ -68,7 +82,8 @@ class Random_Greedy(Algorithm):
         4. `custom_list_with_replacement`: pick random from custom list
         (with replacement)
         5. `custom_list_without_replacement`: pick random from custom list
-        (without replacement; NOTE: make sure the list is long enough.)
+        (without replacement; NOTE: make sure the list length is equal to
+        the number of routes generated.)
         
         - `starting_station_list`: list of stations to pick from. 
         Only used when starting_stations is set to
@@ -79,9 +94,9 @@ class Random_Greedy(Algorithm):
         Options for number + length of routes:
 
         - `final_number_of_routes`: Number of routes to generate. Can be 
-        either int, or tuple[int] for random choice between multiple
-        values for each route. Default is 7 for Holland map, 20 for
-        Nationaal map.
+        either int, or tuple[int] for random choice with replacement
+        between multiple values for each route. Default is 7 for Holland
+        map, 20 for Nationaal map.
 
         - `route_time_limit`: Maximum time for each route. Default is 120 
         minutes for Holland map, 180 minutes for Nationaal map.
@@ -119,18 +134,24 @@ class Random_Greedy(Algorithm):
 
         # Check for correct input:
 
+        # final_number_of_routes must be an integer or a tuple of integers
+        assert type(final_number_of_routes) == tuple or type(
+            final_number_of_routes) == int, """
+            final_number_of_routes must be an integer or a tuple of integers."""
+
         # Check for correct input for next_connection_choice
         assert next_connection_choice in ["random", "shortest"], """
         next_connection_choice must be set to 'random' or 'shortest'."""
 
         # Check for correct input for starting_stations
-        assert starting_stations in ["fully_random", "original_stations_only_hard",
+        assert starting_stations in ["fully_random",
+                                    "original_stations_only_soft", 
+                                    "original_stations_only_hard",
                                     "custom_list_with_replacement", 
                                     "custom_list_without_replacement"], """
-                                    starting_stations must be set to 
-                                    'fully_random', 'original_stations_only_hard', 
-                                    'custom_list_with_replacement', or 
-                                    'custom_list_without_replacement'."""
+        starting_stations must be set to 'fully_random', 
+        'original_stations_only_hard', 'custom_list_with_replacement', or 
+        'custom_list_without_replacement'."""
 
 
         # With greedy approach, original connections only is required for correct functioning
@@ -161,6 +182,7 @@ class Random_Greedy(Algorithm):
                 assert len(starting_station_list) == max(final_number_of_routes), """
                 Starting station list must be exactly as long as the maximum 
                 number of routes."""
+
 
 
         # If starting_station_list is provided and we draw without replacement,
@@ -198,46 +220,69 @@ class Random_Greedy(Algorithm):
         # DEBUG
         # print(self.unused_stations)
 
- 
-        # final_number_of_routes can be set to a tuple of numbers, 
-        # so the number of routes will be randomly chosen from this list
-        # For single int: make it a tuple of length 1
-        if type(final_number_of_routes) == int:
-            final_number_of_routes = tuple([final_number_of_routes])
-        else:
-            assert type(final_number_of_routes) == tuple, "final_number_of_routes must be an integer or a tuple of integers."
-        # DEBUG
-        # print(len(final_number_of_routes))
 
+        # If starting_stations is set to "original_stations_only_soft",
+        # create list to keep track of used starting stations
+        if starting_stations == "original_stations_only_soft":
+            used_starting_stations = []
+ 
+
+        # final_number_of_routes can be set to a tuple of numbers, 
+        # if so the number of routes will be randomly chosen from this tuple
+        if type(final_number_of_routes) is tuple:
+            final_number_of_routes = np.random.choice(final_number_of_routes)
+
+        # DEBUG
+        # print(final_number_of_routes)
 
         # While there are less than <final_number_of_routes> routes and 
         # there are still unused connections
         # i.e. for each route
-        while self.number_of_routes() < random.choice(final_number_of_routes) and len(self.unused_connections) > 0:
+        while(self.number_of_routes() < final_number_of_routes
+               and len(self.unused_connections) > 0):
             # Create a new route
             route = Route()
-
             # DEBUG
             # print(f"Route {self.number_of_routes() + 1}")
 
-            # And set a first station for this route (method depends on starting_stations argument):
-            # If "starting_stations" is set to "original_stations_only_hard", try to pick unused stations
-            if starting_stations == "original_stations_only_hard":
+            
+            # And set a first station for this route 
+            # (method depends on starting_stations argument; 
+            # lots of options!!):
+
+            # If flag set to "fully_random", pick random from all stations
+            if starting_stations == "fully_random":
+                current_station = self.load.get_random_station()
+            
+            # If flag set to "original_stations_only_soft:
+            # Pick random, but if another route starts at this station,
+            # pick another
+            elif starting_stations == "original_stations_only_soft":
+                # Random pick ("do while" loop)
+                current_station = self.load.get_random_station()
+                
+                # Pick again until a station is found that has not been 
+                # used as a starting station in another route
+                while current_station in used_starting_stations:
+                    current_station = self.load.get_random_station()
+
+                # Add this station to the list of used starting stations
+                used_starting_stations.append(current_station)
+
+            # If "starting_stations" is set to "original_stations_only_hard", 
+            # try to pick unused stations
+            elif starting_stations == "original_stations_only_hard":
 
                 # Plan A: pick a random unused station
                 if len(self.unused_stations) > 0:
                     current_station = random.choice(self.unused_stations)
                 
-                # Option 2: pick station with an unused connection
+                # Plan B: pick station with an unused connection
                 else:
                     random_unused_connection = random.choice(list(self.unused_connections.values()))
                     random_index = random.choice([0, 1])
                     
-                    current_station = random_unused_connection[random_index]
-
-            # If flag set to "fully_random", pick random from all stations
-            elif starting_stations == "fully_random":
-                current_station = self.load.get_random_station()
+                    current_station = random_unused_connection[random_index]   
 
             # If flag set to "custom_list_with_replacement", pick from the custom list
             elif starting_stations == "custom_list_with_replacement":
@@ -345,23 +390,22 @@ class Random_Greedy(Algorithm):
 # Run  and print results
 if __name__ == "__main__":
     
-    # Run algorithm with desired settings
-    randomv2 = Random_Greedy(RailNL("Holland"))
-    
-    custom_starting_stations = [randomv2.load.stations["Rotterdam Centraal"]]
-    
-    output = randomv2.run(final_number_of_routes = (1,2), 
-                          starting_stations="custom_list_without_replacement", 
-                          starting_station_list=custom_starting_stations)
-    
-    # Print results + extra info
-    for route in output:
-        for connection in route.get_connections_used():
-            print(connection[0], " - ", connection[1], connection[2], end=" -> ")
-        
-        print("")
-        print(f"Total time: {route.time}")
-        print("")
 
-    print(f"Unused stations: {len(randomv2.unused_stations)}")
-    print(f"Unused connections: {len(randomv2.unused_connections)}")
+    random_greedy = Random_Greedy(RailNL("Holland"))
+    # Run algorithm with desired settings 
+    output = random_greedy.run(
+            final_number_of_routes = (5,7), 
+            starting_stations="original_stations_only_soft")
+    
+    print(len(output))
+    # # Print results + extra info
+    # for route in output:
+    #     for connection in route.get_connections_used():
+    #         print(connection[0], " - ", connection[1], connection[2], end=" -> ")
+        
+    #     print("")
+    #     print(f"Total time: {route.time}")
+    #     print("")
+
+    # print(f"Unused stations: {len(random_greedy.unused_stations)}")
+    # print(f"Unused connections: {len(random_greedy.unused_connections)}")
