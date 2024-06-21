@@ -58,6 +58,12 @@ def read_scores_from_csv(filename: str) -> "np.ndarray[float]":
     return scores
 
 def read_solution_from_csv(filename: str, map="Holland") -> list[Route]:
+    """
+    Read solution from a CSV file
+
+    - Post: return a list of Route objects
+    """
+    
     # Add .csv extension if not present
     if not filename.endswith(".csv"):
         filename += ".csv"
