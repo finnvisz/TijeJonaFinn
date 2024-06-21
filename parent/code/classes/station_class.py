@@ -11,11 +11,11 @@ class Station:
         """Return string representation of Station object."""
         return f"Station({self.name})"
 
-    def add_connection(self, other: "Station", afstand: int) -> None:
-        self.connections[other] = afstand
+    def add_connection(self, other: "Station", duration: int) -> None:
+        self.connections[other] = duration
 
-    def has_connection(self, connection: "Station") -> bool:
-        return connection in self.connections
+    def has_connection(self, station: "Station") -> bool:
+        return station in self.connections
 
     def amount_connecting(self) -> int:
         return len(self.connections)
