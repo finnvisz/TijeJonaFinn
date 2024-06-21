@@ -1,11 +1,13 @@
 import random
 import copy
+import matplotlib.pyplot as plt
+
 from parent.code.algorithms.algorithm import Algorithm
 from parent.code.algorithms.random_greedy import Random_Greedy
 from parent.code.algorithms.score import routes_score
 from parent.code.classes.railnl import RailNL
 from parent.code.classes.route import Route
-import matplotlib.pyplot as plt
+from parent.code.experiments.statistics import append_scores_to_csv
 
 class Hillclimber(Algorithm):
     """Hillclimber algorithm to optimize train routes.
@@ -90,17 +92,29 @@ class Hillclimber(Algorithm):
         return routes
 
 
-    def run(self, iterations: int, simulated_annealing=False, cap=10**99) -> None:
+    def run(self, iterations: int, simulated_annealing=False, cap=10**99,
+            
+            data_csv: str | None = None) -> None:
         """
         Run the Hillclimber optimization for a specified number of iterations.
 
         Pre: 
-        - iterations (int) is the number of iterations to run the optimization.
-        - if cap=True then it stops running when there hasn't been a change in a while
-        - If simulated_annealing=True, then it accepts worse scores sometimes
 
 
-        Post: The Hillclimber algorithm runs for the specified number of iterations, optimizing the routes.
+        Post: The Hillclimber algorithm runs for the specified number
+          of iterations, optimizing the routes.
+
+        args:
+        
+        Algorithm settings:
+        - iterations: max number of iterations to run the algorithm.
+        - simulated_annealing: if True, accept worse scores sometimes
+        - cap: if True, stop running when there hasn't been a change in a while
+
+        Data collection settings:
+        - data_csv: if not None, append score per iteration to specified 
+        csv file (`hillclimber_data.csv`). Default dir is
+        `experiments/results/`.
         """
         self.iterations = iterations
         self.start_score = self.best_score
@@ -154,6 +168,13 @@ class Hillclimber(Algorithm):
                     print("Too long no change")
                     break
 
+        
+        # When done:
+        # If set, write score per iteration to csv file
+        if data_csv is not None:
+            append_scores_to_csv(self.scores, data_csv)
+
+        # Print summary
         print(f"Start score: {self.start_score}, End score: {self.best_score}")
 
 

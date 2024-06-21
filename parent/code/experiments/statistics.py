@@ -9,7 +9,7 @@ import csv
 from datetime import datetime
 
 # Internal imports
-from parent.code.algorithms.hillclimber import Hillclimber
+# from parent.code.algorithms.hillclimber import Hillclimber
 from parent.code.experiments.experiments import Experiment
 from parent.code.classes.route import Route
 from parent.code.classes.railnl import RailNL
@@ -58,6 +58,7 @@ def read_scores_from_csv(filename: str) -> "np.ndarray[float]":
     # Read scores from CSV file
     scores = np.loadtxt(f"{experiments_root_dir}/results/{filename}", delimiter=",")
     return scores
+
 
 def read_solution_from_csv(filename: str, map="Holland") -> list[Route]:
     """
@@ -132,9 +133,6 @@ def append_scores_to_csv(scores: "np.ndarray", filename: str) -> None:
             index=False, header=False)
         
     
-
-
-
 def write_solution_to_csv(routes: list[Route], filename: str, map="Holland"):
     """
     Translate algorithm output (solution consisting of multiple Route objects) 
@@ -459,7 +457,7 @@ def plot_scores_fancy(sample1: "np.ndarray[float]",
         plot.show()
 
 
-def plot_hillclimer(csv_file: str, 
+def plot_hillclimber(csv_file: str, 
                     
                     # save settings
                     save_to_pdf: bool = False, preview: bool = True,
@@ -469,6 +467,14 @@ def plot_hillclimer(csv_file: str,
 
                     ) -> None:
     
+    # Settings for plot
+    color_palette = ("lightblue", "darkgrey", "lightsalmon")
+    legend_labels = ("Max", "Gemiddelde", "Min")
+
+    p9.options.figure_size = (9, 5)
+    p9.geoms.geom_line.DEFAULT_AES['size'] = 2
+
+
     # Add .csv extension if not present
     if not csv_file.endswith(".csv"):
         csv_file += ".csv"
@@ -487,23 +493,31 @@ def plot_hillclimer(csv_file: str,
     df_data = pd.read_csv(f"{experiments_root_dir}/results/{csv_file}", 
                         header=None)
 
-    # DEBUG
-    # print(df_data)
-
     # Create a new dataframe with the mean, max and min
-    df_data_aggregated = df_data.agg(['mean', 'max', 'min'], axis=1)
+    df_data_aggregated = df_data.agg(['mean', 'max', 'min'], axis=1).reset_index()
+    
+    # Melt dataframe to long format for plotnine
+    df_data_aggregated = df_data_aggregated.melt(id_vars='index', 
+                                                 var_name="Statistiek", 
+                                                 value_name="Score")
 
-    # DEBUG
-    # print(df_data_aggregated)
 
     # Create plotnine plot with the mean, max and min per iteration
     plot = (
         p9.ggplot(df_data_aggregated) +
-        p9.aes(x = df_data_aggregated.index, y = "mean") +
+        p9.aes(x = "index", y = "Score", color = "Statistiek") +
+        
         p9.geom_line() +
-        p9.geom_line(p9.aes(y = "max"), color = "blue") +
-        p9.geom_line(p9.aes(y = "min"), color = "red") +
-        p9.labs(title = title, x = "Iteraties", y = "Score") +
+        
+        p9.scale_color_manual(name = "Per iteratie",
+                            values = color_palette, 
+                            labels = legend_labels) +
+        
+        p9.labs(title = title,
+                subtitle = f"Aantal runs: {len(df_data.columns)}",
+                x = "Iteraties", 
+                y = "Score") +
+        
         p9.theme_minimal()
     )
 
