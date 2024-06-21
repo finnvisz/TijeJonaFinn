@@ -480,36 +480,59 @@ def plot_scores(filename: str, scores: list[float]):
 #     print(solution)
 
 
+# if __name__ == "__main__":
+#     map = "Holland"
+#     data = RailNL(map)
+#     scores1 = []
+#     startscores1 = []
+#     for i in range(2):
+#         print(f"1. iteratie {i}")
+#         algorithm = Random_Greedy(data)
+#         algorithm.run(starting_stations="original_stations_only_hard", final_number_of_routes=(1,2,3,4,5,6,7))
+#         hillclimber_alg = Hillclimber(data, algorithm, map)
+#         hillclimber_alg.run(10000, cap=500)
+#         startscores1.append(hillclimber_alg.start_score)
+#         routes = hillclimber_alg.output()
+#         write_solution_to_csv(routes, "output")
+#         score = routes_score(routes, map)
+#         if score > 9000:
+#             write_scores_to_csv(routes, f"output_score{score}.csv")
+#         scores1.append(score)
+#     # append_scores_to_csv(scores1, "Scores_Hillclimer.csv")
+#     scores2 = []
+#     startscores2 = []
+#     for i in range(100):
+#         print(f"2. iteratie {i}")
+#         algorithm = Random_Greedy(data)
+#         algorithm.run(final_number_of_routes=(1,2,3,4,5,6,7))
+#         hillclimber_alg = Hillclimber(data, algorithm, map)
+#         hillclimber_alg.run(10000, cap=1000)
+#         startscores2.append(hillclimber_alg.start_score)
+#         routes = hillclimber_alg.output()
+#         write_solution_to_csv(routes, "output")
+#         scores2.append(routes_score(routes, map))
+#     plot_scores_fancy(scores1, scores2, title="1-7 routes end scores", save_to_pdf=True, binwidth=50, legend_labels=("original stations only hard", "random"))
+#     plot_scores_fancy(startscores1, startscores2, title="1-7 routes start scores, 6 routes max", save_to_pdf=True, binwidth=50, legend_labels=("original stations only hard", "random"))
+
 if __name__ == "__main__":
-    map = "Holland"
+    map = "Nationaal"
     data = RailNL(map)
     scores1 = []
-    startscores1 = []
-    for i in range(2):
+    for i in range(100):
         print(f"1. iteratie {i}")
         algorithm = Random_Greedy(data)
-        algorithm.run(starting_stations="original_stations_only_hard")
+        algorithm.run(starting_stations="original_stations_only_hard", final_number_of_routes=20)
         hillclimber_alg = Hillclimber(data, algorithm, map)
-        hillclimber_alg.run(10000, cap=300)
-        startscores1.append(hillclimber_alg.start_score)
+        hillclimber_alg.run(2000, cap=500)
         routes = hillclimber_alg.output()
-        write_solution_to_csv(routes, "output")
-        scores1.append(routes_score(routes, map))
+        write_solution_to_csv(routes, "Nationaal_output", map=map)
+        score = routes_score(routes, map)
+        if score > 6000:
+            write_solution_to_csv(routes, f"Nationaal_output_score{score}.csv", map=map)
+        scores1.append(score)
     append_scores_to_csv(scores1, "Scores_Hillclimer.csv")
-    scores2 = []
-    startscores2 = []
-    for i in range(100):
-        print(f"2. iteratie {i}")
-        algorithm = Random_Greedy(data)
-        algorithm.run()
-        hillclimber_alg = Hillclimber(data, algorithm, map)
-        hillclimber_alg.run(10000, cap=1000)
-        startscores2.append(hillclimber_alg.start_score)
-        routes = hillclimber_alg.output()
-        write_solution_to_csv(routes, "output")
-        scores2.append(routes_score(routes, map))
-    plot_scores_fancy(scores1, scores2, title="Holland max 1000 iteraties, cap=1000, end scores, 6 routes max", save_to_pdf=True, binwidth=50, legend_labels=("original stations only hard", "random"))
-    plot_scores_fancy(startscores1, startscores2, title="Holland max 1000 iteraties, cap=1000, start scores, 6 routes max", save_to_pdf=True, binwidth=50, legend_labels=("original stations only hard", "random"))
+    plot_scores_fancy(scores1, title="Nationaal scores", save_to_pdf=True, binwidth=50)
+
 
 # if __name__ == "__main__":
 #     result_90 = read_scores_from_csv("time_experiment_results/90.csv")
