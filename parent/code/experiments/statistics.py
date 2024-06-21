@@ -91,7 +91,7 @@ def append_scores_to_csv(scores: "np.ndarray", filename: str) -> None:
                index=False, header=False) 
 
 
-def write_solution_to_csv(routes: list[Route], filename: str):
+def write_solution_to_csv(routes: list[Route], filename: str, map: str):
     """
     Translate algorithm output (solution consisting of multiple Route objects) 
     to required .csv file.
@@ -113,7 +113,7 @@ def write_solution_to_csv(routes: list[Route], filename: str):
         for i in range(len(routes)):
             writer.writerow([f"train_{i+1}", routes[i].stations_list()])
 
-        score = routes_score(routes, "Holland")
+        score = routes_score(routes, map)
         writer.writerow(["score", f"{score}"])
 
 
@@ -388,31 +388,31 @@ def plot_scores(filename: str, scores: list[float]):
 
 
 #example/test usage
-# if __name__ == "__main__":
-#     map = "Nationaal"
-#     data = RailNL(map)
-#     scores2 = []
-#     for i in range(100):
-#         print(f"{i+1}-de run")
-#         algorithm = Random_Greedy(data)
-#         algorithm.run(final_number_of_routes=20, starting_stations="original_stations_only_hard")
-#         hillclimber_alg = Hillclimber(data, algorithm, map)
-#         hillclimber_alg.run(10000)
-#         routes = hillclimber_alg.output()
-#         routes_to_csv(routes, "output")
-#         scores2.append(routes_score(routes, map))
-#     scores1 = []
-#     for i in range(100):
-#         print(f"{i+1}-de run")
-#         algorithm = Random_Greedy(data)
-#         algorithm.run(final_number_of_routes=20)
-#         hillclimber_alg = Hillclimber(data, algorithm, map)
-#         hillclimber_alg.run(10000)
-#         routes = hillclimber_alg.output()
-#         routes_to_csv(routes, "output")
-#         scores1.append(routes_score(routes, map))
+if __name__ == "__main__":
+    map = "Nationaal"
+    data = RailNL(map)
+    scores2 = []
+    for i in range(100):
+        print(f"{i+1}-de run")
+        algorithm = Random_Greedy(data)
+        algorithm.run(final_number_of_routes=20, starting_stations="original_stations_only_hard")
+        hillclimber_alg = Hillclimber(data, algorithm, map)
+        hillclimber_alg.run(10000)
+        routes = hillclimber_alg.output()
+        write_solution_to_csv(routes, "output", map)
+        scores2.append(routes_score(routes, map))
+    scores1 = []
+    for i in range(100):
+        print(f"{i+1}-de run")
+        algorithm = Random_Greedy(data)
+        algorithm.run(final_number_of_routes=20)
+        hillclimber_alg = Hillclimber(data, algorithm, map)
+        hillclimber_alg.run(10000)
+        routes = hillclimber_alg.output()
+        write_solution_to_csv(routes, "output", map)
+        scores1.append(routes_score(routes, map))
 
-#     plot_scores_fancy(scores1, scores2, title="Nationaal 10000 iteraties 100 keer", save_to_pdf=True, preview=True, binwidth=50)
+    plot_scores_fancy(scores1, scores2, title="Nationaal 10000 iteraties 100 keer", save_to_pdf=True, preview=True, binwidth=50)
 
 
 # if __name__ == "__main__":
