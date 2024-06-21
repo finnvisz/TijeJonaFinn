@@ -7,7 +7,7 @@ parent_path = abspath(join(dirname(__file__), '../..'))
 class RailNL:
     """Class containing all stations and their connections."""
 
-    def __init__(self, maprange: str) -> None:
+    def __init__(self, maprange: str = "Holland") -> None:
         """Creates Railnl object, loads stations and connections into it."""
         self.mapname = maprange
         

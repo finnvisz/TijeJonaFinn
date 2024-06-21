@@ -18,7 +18,7 @@ class Random_Greedy(Algorithm):
     Pre: Class of this method is initialized with a RailNL object.
     Post: Random_Greedy object is created and ready to run the algorithm.
     """
-    def __init__(self, load: RailNL) -> None:
+    def __init__(self, load: RailNL = RailNL()) -> None:
         super().__init__(load)
         
     def run(self, 

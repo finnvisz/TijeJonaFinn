@@ -16,7 +16,8 @@ from parent.code.classes.railnl import RailNL
 from parent.code.classes.station_class import Station
 from parent.code.algorithms.score import routes_score
 from parent.code.algorithms.random_greedy import Random_Greedy
-from starting_bins import Sort_Starting
+from parent.code.experiments.starting_bins import Sort_Starting
+
 
 # Default directory for all functions in this file, can be changed if needed
 # Don't delete! Used by all functions in this file.
@@ -57,38 +58,6 @@ def read_scores_from_csv(filename: str) -> "np.ndarray[float]":
     # Read scores from CSV file
     scores = np.loadtxt(f"{experiments_root_dir}/results/{filename}", delimiter=",")
     return scores
-
-def read_solution_from_csv(filename: str, map="Holland") -> list[Route]:
-    """
-    Read solution from a CSV file
-
-    - Post: return a list of Route objects
-    """
-    
-    # Add .csv extension if not present
-    if not filename.endswith(".csv"):
-        filename += ".csv"
-
-    # Initialize the RailNL object once
-    rail_network = RailNL(map)
-
-    # Read the solution from the CSV file
-    solution = []
-    with open(f"{experiments_root_dir}/route_csv/{filename}", 'r') as file:
-        reader = csv.reader(file)
-        next(reader)  # Skip header
-        for row in reader:
-            if row[0] != "score":
-                route = Route()
-                station_names = row[1].strip("[]").split(", ")
-                stations = []
-                for station_name in station_names:
-                    stations.append(rail_network.stations_dict()[station_name])
-                for i in range(len(stations)-1):
-                    connection_duration = stations[i].connections[stations[i + 1]]
-                    route.add_connection(stations[i], stations[i+1], connection_duration)
-                solution.append(route)
-    return solution
 
 
 def append_scores_to_csv(scores: "np.ndarray", filename: str) -> None:
@@ -131,8 +100,13 @@ def write_solution_to_csv(routes: list[Route], filename: str, map="Holland"):
     
     - Pre: `routes` is a list of route objects, `filename` contains 
     filename to write to in `experiments/route_csv` 
-    (extension is allowed but optional).
-    - Post: csv-file of given format is located in `route_csv` folder. 
+    (extension is optional).
+    - Post: csv-file of given format is located in `route_csv` folder.
+
+    args:
+    - `routes`: list of Route objects, output of algorithm.
+    - `filename`: name of the file to write to, extension is optional.
+    - `map`: name of the map used in the algorithm. Default is "Holland".
     """
     # Add .csv extension if not present
     if not filename.endswith(".csv"):
@@ -148,6 +122,46 @@ def write_solution_to_csv(routes: list[Route], filename: str, map="Holland"):
 
         score = routes_score(routes, map)
         writer.writerow(["score", f"{score}"])
+
+
+def read_solution_from_csv(filename: str, map="Holland", for_manim = False) -> list[Route]:
+    """
+    Read a solution for the RailNL problem from a CSV file.
+
+    - Pre: CSV file with solution created by `write_solution_to_csv()`
+      exists in the `experiments/route_csv/` directory
+    - Post: return a list of Route objects
+    """
+    
+    # Manim needs relative path
+    if for_manim:
+        experiments_root_dir = "../experiments"
+
+    # Add .csv extension if not present
+    if not filename.endswith(".csv"):
+        filename += ".csv"
+
+    # Initialize the RailNL object once
+    rail_network = RailNL(map)
+
+    # Read the solution from the CSV file
+    solution = []
+    with open(f"{experiments_root_dir}/route_csv/{filename}", 'r') as file:
+        reader = csv.reader(file)
+        next(reader)  # Skip header
+        for row in reader:
+            if row[0] != "score":
+                route = Route()
+                station_names = row[1].strip("[]").split(", ")
+                stations = []
+                for station_name in station_names:
+                    stations.append(rail_network.stations_dict()[station_name])
+                for i in range(len(stations)-1):
+                    connection_duration = stations[i].connections[stations[i + 1]]
+                    route.add_connection(stations[i], stations[i+1], connection_duration)
+                solution.append(route)
+    
+    return solution
 
 
 def calculate_p_value(sample1: "np.ndarray[float]", sample2: "np.ndarray[float]"
