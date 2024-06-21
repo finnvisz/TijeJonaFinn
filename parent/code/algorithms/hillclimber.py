@@ -21,14 +21,32 @@ class Hillclimber(Algorithm):
     best_score (float): Best score achieved during optimization.
         
     """
-    def __init__(self, load: RailNL, algorithm: Algorithm, maprange: str) -> None:
-        super().__init__(load)
-        self.load = load
+    def __init__(self, start_position: list[Route], 
+                 maprange: str = "Holland") -> None:
+        """
+        Initialize a HillClimber object.
+
+        - Pre: Hillclimber object is initialized with a RailNL object, 
+        a set of routes to start off with and `maprange` is correctly 
+        set to "Holland" or "Nationaal".
+
+        - Post: Hillclimber is initialized with the given parameters, 
+        and ready to run.
+
+        Args:
+            - `start_position` `(list[Route])`: The set of routes to 
+            start off with.
+            - `maprange` `(str)`: The map to run the algorithm on 
+            ("Holland" or "Nationaal")
+        """
+        # Load RailNL data with given maprange
+        self.load = RailNL(maprange)
+        super().__init__(self.load)
+        
         self.start_score = 0
-        self.algorithm = algorithm
-        self.routes: list[Route] = algorithm.routes
+        self.routes: list[Route] = start_position
         self.scores = []
-        self.maprange = maprange
+        self.maprange = self.load.mapname
         self.best_score = routes_score(self.routes, self.maprange)
         
 
@@ -94,7 +112,7 @@ class Hillclimber(Algorithm):
 
     def run(self, iterations: int, simulated_annealing=False, cap=10**99,
             
-            data_csv: str | None = None) -> list[Route]:
+            log_csv: str | None = None) -> list[Route]:
         """
         Run the Hillclimber optimization for a specified number of iterations.
 
@@ -104,7 +122,7 @@ class Hillclimber(Algorithm):
         Post: The Hillclimber algorithm runs for the specified number
           of iterations, optimizing the routes.
 
-        args:
+        Args:
         
         Algorithm settings:
         - iterations: max number of iterations to run the algorithm.
@@ -112,9 +130,9 @@ class Hillclimber(Algorithm):
         - cap: if True, stop running when there hasn't been a change in a while
 
         Data collection settings:
-        - data_csv: if not None, append score per iteration to specified 
-        csv file (`hillclimber_data.csv`). Default dir is
-        `experiments/results/`.
+        - log_csv: if not None, append score per iteration to specified 
+        csv file (`hillclimber_data.csv`). Default dir is `parent`, so 
+        set a full path yourself.
         """
         self.iterations = iterations
         self.start_score = self.best_score
@@ -171,8 +189,8 @@ class Hillclimber(Algorithm):
         
         # When done:
         # If set, log score per iteration to csv file
-        if data_csv is not None:
-            append_scores_to_csv(self.scores, data_csv)
+        if log_csv is not None:
+            append_scores_to_csv(self.scores, log_csv, custom_file_path=True)
 
         # Print summary
         print(f"Start score: {self.start_score}, End score: {self.best_score}")

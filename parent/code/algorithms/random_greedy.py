@@ -12,16 +12,20 @@ from parent.code.classes.station_class import Station
 
 class Random_Greedy(Algorithm):
     """
-    Initialize fresh Random_Greedy algorithm class with RailNL object.
+    Initialize fresh Random_Greedy algorithm class with given maprange.
     NOTE: make sure to reinitialize the class each time you run the algorithm.
 
-    Pre: Class of this method is initialized with a RailNL object.
-    Post: Random_Greedy object is created and ready to run the algorithm.
+    - Pre: Class of this method is initialized for either "Holland" or 
+    "Nationaal" maprange.
+    - Post: Random_Greedy object is created and ready to run the algorithm.
     """
-    def __init__(self, load: RailNL = RailNL()) -> None:
-        super().__init__(load)
+    def __init__(self, maprange: str = "Holland") -> None:
+        # Load RailNL data with given maprange
+        self.load = RailNL(maprange)
+        super().__init__(self.load)
         
-    def run(self, 
+
+    def run(self,
             # Options per connection:
             # How to pick the next connection in the route
             next_connection_choice: str = "random",

@@ -24,7 +24,9 @@ from parent.code.experiments.starting_bins import Sort_Starting
 experiments_root_dir = "parent/code/experiments"
 
 
-def write_scores_to_csv(scores: "np.ndarray", filename: str) -> None:
+def write_scores_to_csv(scores: "np.ndarray", 
+                        filename: str, 
+                        custom_file_path: bool = False) -> None:
         """
         Write single numpy array of scores to a CSV file. 
         Default export directory is `parent/code/experiments/results`.
@@ -33,16 +35,32 @@ def write_scores_to_csv(scores: "np.ndarray", filename: str) -> None:
         argument 2 `filename` is a string (extension is allowed but optional).
         - Post: scores are written to `filename`.csv in the results subdirectory.
         Each score is written in a new row.
+
+        Args:
+        - `scores`: numpy array of scores.
+        - `filename`: name of the file to write to, extension is optional.
+        - `custom_file_path`: if True, override default directory so 
+        `filename` becomes a path from root directory of this project.
         """
+
+        # If custom file path is True, override default directory so 
+        # user can specify path from parent directory
+        if custom_file_path:
+            csv_results_dir = ""
+        else:
+            csv_results_dir = f"{experiments_root_dir}/results/"
+        
         # Add .csv extension if not present
         if not filename.endswith(".csv"):
             filename += ".csv"
 
-        np.savetxt(f"{experiments_root_dir}/results/{filename}", 
+
+        np.savetxt(f"{csv_results_dir}{filename}", 
                    scores, delimiter = ",")
 
 
-def read_scores_from_csv(filename: str) -> "np.ndarray[float]":
+def read_scores_from_csv(filename: str,
+                         custom_file_path: bool = False) -> "np.ndarray[float]":
     """
     Read scores from a CSV file with single column
     and return them as a single numpy array.
@@ -50,17 +68,32 @@ def read_scores_from_csv(filename: str) -> "np.ndarray[float]":
     - Pre: CSV file with scores exists in the `experiments/results/` directory
       and has a single column without header.
     - Post: returns a numpy array with scores.
+
+    Args:
+    - `filename`: name of the file to read from, extension is optional.
+    - `custom_file_path`: if True, override default directory so
+    `filename` becomes a path from root directory of this project.
     """
+    # If custom file path is True, override default directory so 
+    # user can specify path from parent directory
+    if custom_file_path:
+        csv_results_dir = ""
+    else:
+        csv_results_dir = f"{experiments_root_dir}/results/"
+    
     # Add .csv extension if not present
     if not filename.endswith(".csv"):
         filename += ".csv"
 
+
     # Read scores from CSV file
-    scores = np.loadtxt(f"{experiments_root_dir}/results/{filename}", delimiter=",")
+    scores = np.loadtxt(f"{csv_results_dir}{filename}", delimiter=",")
     return scores
 
 
-def read_solution_from_csv(filename: str, map="Holland") -> list[Route]:
+def read_solution_from_csv(filename: str, 
+                           map="Holland",
+                           custom_file_path: bool = False) -> list[Route]:
     """
     Read solution from a CSV file
 
@@ -93,17 +126,33 @@ def read_solution_from_csv(filename: str, map="Holland") -> list[Route]:
     return solution
 
 
-def append_scores_to_csv(scores: "np.ndarray", filename: str) -> None:
+def append_scores_to_csv(scores: "np.ndarray", 
+                         filename: str,
+                         custom_file_path: bool = False) -> None:
     """
-    Append a numpy array of scores to an existing CSV file. If 
-    `filename.csv` does not yet exist, a new file will be created.
+    Append a numpy array of scores to an existing CSV file as a new column.
+    If `filename.csv` does not yet exist, a new file will be created.
     Default directory is `parent/code/experiments/results`.
 
     - Pre: `scores` contains numpy array of scores,
     `filename.csv` exists (extension is allowed but optional).
     - Post: a new column with scores is appended to `filename.csv`
     in the results subdirectory.
+
+    Args:
+    - `scores`: numpy array of scores.
+    - `filename`: name of the file to append to, extension is optional.
+    - `custom_file_path`: if True, override default directory so
+    `filename` becomes a path from root directory of this project.
     """
+    
+    # If custom file path is True, override default directory so 
+    # user can specify path from parent directory
+    if custom_file_path:
+        csv_results_dir = ""
+    else:
+        csv_results_dir = f"{experiments_root_dir}/results/"
+
     # Add .csv extension if not present
     if not filename.endswith(".csv"):
         filename += ".csv"
@@ -112,12 +161,14 @@ def append_scores_to_csv(scores: "np.ndarray", filename: str) -> None:
     # Try to open existing CSV file, if not found run write_scores_to_csv
     try:
         # Read the existing CSV file into a DataFrame 
-        df_original = pd.read_csv(f"{experiments_root_dir}/results/{filename}", 
+        df_original = pd.read_csv(f"{csv_results_dir}{filename}", 
                          header=None) 
     
     except FileNotFoundError:
         # If file not found, run write_scores_to_csv
-        write_scores_to_csv(scores, filename)
+        write_scores_to_csv(scores, 
+                            filename, 
+                            custom_file_path = custom_file_path)
         return
 
 
@@ -129,11 +180,79 @@ def append_scores_to_csv(scores: "np.ndarray", filename: str) -> None:
         
 
     # Write the updated DataFrame back to the CSV file 
-    df_concatenated.to_csv(f"{experiments_root_dir}/results/{filename}",
-            index=False, header=False)
+    df_concatenated.to_csv(f"{csv_results_dir}{filename}",
+                            index=False, header=False)
         
+
+def append_single_score_to_csv(score: float,
+                               filename: str,
+                               custom_file_path: bool = False) -> None:
+    """
+    Append a single score to an existing CSV file as a new row.
+    If `filename.csv` does not yet exist, a new file will be created.
+    Default directory is `parent/code/experiments/results`.
+
+    Pre: `score` is a single float score, `filename.csv` exists.
+    Post: a new row with `score` is appended to `filename.csv`.
     
-def write_solution_to_csv(routes: list[Route], filename: str, map="Holland"):
+    Args:
+    - `score`: single float score to append.
+    - `filename`: name of the file to append to, extension is optional.
+    - `custom_file_path`: if True, override default directory so
+    `filename` becomes a path from root directory of this project.
+    """
+    
+    # If custom file path is True, override default directory so 
+    # user can specify path from parent directory
+    if custom_file_path:
+        csv_results_dir = ""
+    else:
+        csv_results_dir = f"{experiments_root_dir}/results/"
+
+    # Add .csv extension if not present
+    if not filename.endswith(".csv"):
+        filename += ".csv"
+
+
+    # Try to open existing CSV file, if not found run write_scores_to_csv
+    try:
+        # Read the existing CSV file into a DataFrame 
+        df_original = pd.read_csv(f"{csv_results_dir}{filename}", 
+                         header=None) 
+    
+    # But if file not found or empty, run write_scores_to_csv
+    except:
+        
+        write_scores_to_csv(np.array([score]), 
+                            filename, 
+                            custom_file_path = custom_file_path)
+        # print(np.array([score]))
+        return
+    
+
+    # print(df_original)
+
+    # Turn column 1 of df into numpy array
+    scores_array = df_original.iloc[:,0].to_numpy()
+
+
+    # print(f"Scores array before: {scores_array}")
+    
+    # Append the new score to the numpy array
+    scores_array = np.append(scores_array, score)
+
+    # print(f"Scores array after: {scores_array}")
+
+
+    # Write the updated numpy array back to the CSV file
+    np.savetxt(f"{csv_results_dir}{filename}",
+                scores_array, delimiter = ",")
+
+
+def write_solution_to_csv(routes: list[Route], 
+                          filename: str, 
+                          map="Holland", 
+                          custom_file_path: bool = False):
     """
     Translate algorithm output (solution consisting of multiple Route objects) 
     to required .csv file.
@@ -147,12 +266,22 @@ def write_solution_to_csv(routes: list[Route], filename: str, map="Holland"):
     - `routes`: list of Route objects, output of algorithm.
     - `filename`: name of the file to write to, extension is optional.
     - `map`: name of the map used in the algorithm. Default is "Holland".
+    - `custom_file_path`: if True, override default directory so
+    `filename` becomes a path from root directory of this project.
     """
+    # If custom file path is True, override default directory so 
+    # user can specify path from parent directory
+    if custom_file_path:
+        csv_solution_dir = ""
+    else:
+        csv_solution_dir = f"{experiments_root_dir}/route_csv/"
+    
     # Add .csv extension if not present
     if not filename.endswith(".csv"):
         filename += ".csv"
 
-    with open(f"{experiments_root_dir}/route_csv/{filename}", 'w') as file:
+    
+    with open(f"{csv_solution_dir}{filename}", 'w') as file:
         writer = csv.writer(file)
 
         writer.writerow(["train", "stations"])
@@ -461,12 +590,23 @@ def plot_hillclimber(csv_file: str,
                     
                     # save settings
                     save_to_pdf: bool = False, preview: bool = True,
+                    custom_file_path: bool = False,
                     
                     # plot settings
                     title: str | None = None
 
                     ) -> None:
+    """
+    """
     
+    # If custom file path is True, override default directory so
+    # user can specify path from parent directory
+    if custom_file_path:
+        csv_file_dir = ""
+    else:
+        csv_file_dir = f"{experiments_root_dir}/results/"
+    
+
     # Settings for plot
     color_palette = ("lightblue", "darkgrey", "lightsalmon")
     legend_labels = ("Max", "Gemiddelde", "Min")
@@ -490,7 +630,7 @@ def plot_hillclimber(csv_file: str,
 
 
     # Read the existing CSV file into a DataFrame 
-    df_data = pd.read_csv(f"{experiments_root_dir}/results/{csv_file}", 
+    df_data = pd.read_csv(f"{csv_file_dir}{csv_file}", 
                         header=None)
 
     # Create a new dataframe with the mean, max and min
