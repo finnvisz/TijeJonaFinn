@@ -107,22 +107,32 @@ def append_scores_to_csv(scores: "np.ndarray", filename: str) -> None:
     if not filename.endswith(".csv"):
         filename += ".csv"
 
+
     # Try to open existing CSV file, if not found run write_scores_to_csv
     try:
         # Read the existing CSV file into a DataFrame 
-        df = pd.read_csv(f"{experiments_root_dir}/results/{filename}", 
+        df_original = pd.read_csv(f"{experiments_root_dir}/results/{filename}", 
                          header=None) 
+    
     except FileNotFoundError:
         # If file not found, run write_scores_to_csv
         write_scores_to_csv(scores, filename)
         return
 
-    # Add the new column 
-    df['new_column'] = scores
+
+    # Create dataframe for the new scores
+    df_additional = pd.DataFrame({"new_column": scores})
+    
+    # Combine old df and new df
+    df_concatenated = pd.concat([df_original, df_additional], axis=1)
+        
 
     # Write the updated DataFrame back to the CSV file 
-    df.to_csv(f"{experiments_root_dir}/results/{filename}",
-               index=False, header=False) 
+    df_concatenated.to_csv(f"{experiments_root_dir}/results/{filename}",
+            index=False, header=False)
+        
+    
+
 
 
 def write_solution_to_csv(routes: list[Route], filename: str, map="Holland"):
@@ -449,6 +459,65 @@ def plot_scores_fancy(sample1: "np.ndarray[float]",
         plot.show()
 
 
+def plot_hillclimer(csv_file: str, 
+                    
+                    # save settings
+                    save_to_pdf: bool = False, preview: bool = True,
+                    
+                    # plot settings
+                    title: str | None = None
+
+                    ) -> None:
+    
+    # Add .csv extension if not present
+    if not csv_file.endswith(".csv"):
+        csv_file += ".csv"
+
+
+    # Set default title and filename if not provided
+    if title is None:
+        # Set title to input filename
+        title = f"Hillclimber: {csv_file}"
+        filename = f"Plot_{csv_file}"
+    else:
+        filename = title
+
+
+    # Read the existing CSV file into a DataFrame 
+    df_data = pd.read_csv(f"{experiments_root_dir}/results/{csv_file}", 
+                        header=None)
+
+    # DEBUG
+    # print(df_data)
+
+    # Create a new dataframe with the mean, max and min
+    df_data_aggregated = df_data.agg(['mean', 'max', 'min'], axis=1)
+
+    # DEBUG
+    # print(df_data_aggregated)
+
+    # Create plotnine plot with the mean, max and min per iteration
+    plot = (
+        p9.ggplot(df_data_aggregated) +
+        p9.aes(x = df_data_aggregated.index, y = "mean") +
+        p9.geom_line() +
+        p9.geom_line(p9.aes(y = "max"), color = "blue") +
+        p9.geom_line(p9.aes(y = "min"), color = "red") +
+        p9.labs(title = title, x = "Iteraties", y = "Score") +
+        p9.theme_minimal()
+    )
+
+
+    # Save to pdf if specified
+    if save_to_pdf:
+        plot.save(filename = filename, path=f"{experiments_root_dir}/plots")
+
+    # Show preview of plot if specified
+    if preview:
+        # Show the plot
+        plot.show()
+    
+
 def plot_scores(filename: str, scores: list[float]):
     # Plotting the frequency distribution of scores
     plt.figure(figsize=(10, 6))
@@ -537,12 +606,12 @@ if __name__ == "__main__":
 #     # randomv2_3_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_3_connections_100000.csv")
 #     # randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
 
-    # plot_scores_fancy(  Experiment(Random_Greedy).run_experiment(10000),
-    #                     Experiment(Random_Greedy).run_experiment(10000,
-    #                                                            starting_stations = "original_stations_only_soft"), 
-    #                     Experiment(Random_Greedy).run_experiment(10000,
-    #                                                            starting_stations = "original_stations_only_hard"),                                       
-    #                 title = "Starting station random, soft and hard pick.",
-    #                 legend_labels = ("Fully random", "Soft", "Hard"),
-    #                 save_to_pdf = True,
-    #                 filename = "Starting_station_pick_random_soft_hard")
+#     plot_scores_fancy(  Experiment(Random_Greedy).run_experiment(10000),
+#                         Experiment(Random_Greedy).run_experiment(10000,
+#                                                                starting_stations = "original_stations_only_soft"), 
+#                         Experiment(Random_Greedy).run_experiment(10000,
+#                                                                starting_stations = "original_stations_only_hard"),                                       
+#                     title = "Starting station random, soft and hard pick.",
+#                     legend_labels = ("Fully random", "Soft", "Hard"),
+#                     save_to_pdf = True,
+#                     filename = "Starting_station_pick_random_soft_hard")
