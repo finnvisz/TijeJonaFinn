@@ -65,7 +65,6 @@ class Random_Greedy(Algorithm):
         connections. i.e.: within a route, no connection is used more
         than once. When False, connections are fully random and can be
         used multiple times within a route.
-        
 
         Options for starting station per route:
 

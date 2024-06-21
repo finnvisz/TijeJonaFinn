@@ -16,6 +16,7 @@ from parent.code.classes.route import Route
 from parent.code.classes.railnl import RailNL
 from parent.code.algorithms.score import routes_score
 from parent.code.algorithms.random_greedy import Random_Greedy
+from starting_bins import Sort_Starting
 
 # Default directory for all functions in this file, can be changed if needed
 # Don't delete! Used by all functions in this file.
@@ -383,10 +384,6 @@ def plot_scores(filename: str, scores: list[float]):
     
     plt.savefig(f"{experiments_root_dir}/plots/{filename}.png")
 
-
-
-
-
 #example/test usage
 # if __name__ == "__main__":
 #     map = "Nationaal"
@@ -414,7 +411,6 @@ def plot_scores(filename: str, scores: list[float]):
 
 #     plot_scores_fancy(scores1, scores2, title="Nationaal 10000 iteraties 100 keer", save_to_pdf=True, preview=True, binwidth=50)
 
-
 # if __name__ == "__main__":
 #     map = "Holland"
 #     data = RailNL(map)
@@ -428,13 +424,6 @@ def plot_scores(filename: str, scores: list[float]):
 #         write_solution_to_csv(routes, "output")
 #         scores.append(routes_score(routes, map))
 #     plot_scores_fancy(scores, title="end scores 1000 iteraties 100 keer, random", save_to_pdf=True)
-
-# if __name__ == "__main__":
-#     railnl = RailNL("Holland")
-#     algorithm = Random_Greedy(railnl)
-#     algorithm.run()
-#     routes = algorithm.output()
-#     write_solution_to_csv(routes, "output")
 
 # if __name__ == "__main__":
 #     result_90 = read_scores_from_csv("time_experiment_results/90.csv")
@@ -462,12 +451,12 @@ if __name__ == "__main__":
     # randomv2_3_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_3_connections_100000.csv")
     # randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
 
-    # plot_scores_fancy(Experiment(Random_Greedy).run_experiment(1000),
-    #                 Experiment(Random_Greedy).run_experiment(1000, 
-    #                 next_connection_choice = "shortest", original_connections_only = True),
-                      
-    #                   title= "Random algorithm scores",
-    #                   legend_labels=("Random", "Greedy"))
-
-    # write_scores_to_csv(Experiment(Random_Greedy).run_experiment(10), "test")
-    append_scores_to_csv(Experiment(Random_Greedy).run_experiment(10), "test")
+    plot_scores_fancy(  Experiment(Random_Greedy).run_experiment(10000),
+                        Experiment(Random_Greedy).run_experiment(10000,
+                                                               starting_stations = "original_stations_only_soft"), 
+                        Experiment(Random_Greedy).run_experiment(10000,
+                                                               starting_stations = "original_stations_only_hard"),                                       
+                    title = "Starting station random, soft and hard pick.",
+                    legend_labels = ("Fully random", "Soft", "Hard"),
+                    save_to_pdf = True,
+                    filename = "Starting_station_pick_random_soft_hard")
