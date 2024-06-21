@@ -91,7 +91,7 @@ def append_scores_to_csv(scores: "np.ndarray", filename: str) -> None:
                index=False, header=False) 
 
 
-def write_solution_to_csv(routes: list[Route], filename: str, map: str):
+def write_solution_to_csv(routes: list[Route], filename: str, map="Holland"):
     """
     Translate algorithm output (solution consisting of multiple Route objects) 
     to required .csv file.
@@ -399,7 +399,7 @@ if __name__ == "__main__":
         hillclimber_alg = Hillclimber(data, algorithm, map)
         hillclimber_alg.run(10000)
         routes = hillclimber_alg.output()
-        write_solution_to_csv(routes, "output", map)
+        write_solution_to_csv(routes, "output", map= map)
         scores2.append(routes_score(routes, map))
     scores1 = []
     for i in range(100):
@@ -409,7 +409,7 @@ if __name__ == "__main__":
         hillclimber_alg = Hillclimber(data, algorithm, map)
         hillclimber_alg.run(10000)
         routes = hillclimber_alg.output()
-        write_solution_to_csv(routes, "output", map)
+        write_solution_to_csv(routes, "output", map=map)
         scores1.append(routes_score(routes, map))
 
     plot_scores_fancy(scores1, scores2, title="Nationaal 10000 iteraties 100 keer", save_to_pdf=True, preview=True, binwidth=50)
