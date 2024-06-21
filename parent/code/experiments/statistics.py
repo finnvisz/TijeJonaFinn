@@ -63,7 +63,7 @@ def read_solution_from_csv(filename: str, map="Holland") -> list[Route]:
 
     - Post: return a list of Route objects
     """
-    
+
     # Add .csv extension if not present
     if not filename.endswith(".csv"):
         filename += ".csv"
@@ -377,7 +377,7 @@ def plot_scores_fancy(sample1: "np.ndarray[float]",
     
     # Add labels, title, theme and limits
     # The same for all plots
-    plot += p9.xlim(0,10000)
+    plot += p9.xlim(5000,10000)
     plot += p9.scale_fill_manual(name = legend_title,
                                 values = 
                                 color_palette[:sum([sample1 is not None,
@@ -419,33 +419,50 @@ def plot_scores(filename: str, scores: list[float]):
 
 
 
-#example/test usage
-if __name__ == "__main__":
-    map = "Nationaal"
-    data = RailNL(map)
-    algorithm = Random_Greedy(data)
-    algorithm.run(final_number_of_routes=20)
-    hillclimber_alg = Hillclimber(data, algorithm, map)
-    hillclimber_alg.run(100, simulated_annealing=True)
-    routes = hillclimber_alg.output()
-    write_solution_to_csv(routes, "output", map=map)
-    solution = read_solution_from_csv("output.csv", map=map)
-    print(solution)
-
-
+# #example/test usage
 # if __name__ == "__main__":
-#     map = "Holland"
+#     map = "Nationaal"
 #     data = RailNL(map)
-#     scores = []
-#     for _ in range(100):
-#         algorithm = Random_Greedy(data)
-#         algorithm.run()
-#         hillclimber_alg = Hillclimber(data, algorithm, map)
-#         hillclimber_alg.run(1000)
-#         routes = hillclimber_alg.output()
-#         write_solution_to_csv(routes, "output")
-#         scores.append(routes_score(routes, map))
-#     plot_scores_fancy(scores, title="end scores 1000 iteraties 100 keer, random", save_to_pdf=True)
+#     algorithm = Random_Greedy(data)
+#     algorithm.run(final_number_of_routes=20)
+#     hillclimber_alg = Hillclimber(data, algorithm, map)
+#     hillclimber_alg.run(100, simulated_annealing=True)
+#     routes = hillclimber_alg.output()
+#     write_solution_to_csv(routes, "output", map=map)
+#     solution = read_solution_from_csv("output.csv", map=map)
+#     print(solution)
+
+
+if __name__ == "__main__":
+    map = "Holland"
+    data = RailNL(map)
+    scores1 = []
+    startscores1 = []
+    for i in range(2):
+        print(f"1. iteratie {i}")
+        algorithm = Random_Greedy(data)
+        algorithm.run(starting_stations="original_stations_only_hard")
+        hillclimber_alg = Hillclimber(data, algorithm, map)
+        hillclimber_alg.run(10000, cap=300)
+        startscores1.append(hillclimber_alg.start_score)
+        routes = hillclimber_alg.output()
+        write_solution_to_csv(routes, "output")
+        scores1.append(routes_score(routes, map))
+    append_scores_to_csv(scores1, "Scores_Hillclimer.csv")
+    scores2 = []
+    startscores2 = []
+    for i in range(100):
+        print(f"2. iteratie {i}")
+        algorithm = Random_Greedy(data)
+        algorithm.run()
+        hillclimber_alg = Hillclimber(data, algorithm, map)
+        hillclimber_alg.run(10000, cap=1000)
+        startscores2.append(hillclimber_alg.start_score)
+        routes = hillclimber_alg.output()
+        write_solution_to_csv(routes, "output")
+        scores2.append(routes_score(routes, map))
+    plot_scores_fancy(scores1, scores2, title="Holland max 1000 iteraties, cap=1000, end scores, 6 routes max", save_to_pdf=True, binwidth=50, legend_labels=("original stations only hard", "random"))
+    plot_scores_fancy(startscores1, startscores2, title="Holland max 1000 iteraties, cap=1000, start scores, 6 routes max", save_to_pdf=True, binwidth=50, legend_labels=("original stations only hard", "random"))
 
 # if __name__ == "__main__":
 #     railnl = RailNL("Holland")
@@ -472,20 +489,20 @@ if __name__ == "__main__":
 
 
 # """Example usage plot_scores_fancy"""
-if __name__ == "__main__":
-    # write_solution_to_csv(Random_Greedy(RailNL("Holland")).run(), "output2")
+# if __name__ == "__main__":
+#     # write_solution_to_csv(Random_Greedy(RailNL("Holland")).run(), "output2")
     
-    # randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
-    # randomv2_2_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_2_connections_100000.csv")
-    # randomv2_3_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_3_connections_100000.csv")
-    # randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
+#     # randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
+#     # randomv2_2_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_2_connections_100000.csv")
+#     # randomv2_3_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_3_connections_100000.csv")
+#     # randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
 
-    # plot_scores_fancy(Experiment(Random_Greedy).run_experiment(1000),
-    #                 Experiment(Random_Greedy).run_experiment(1000, 
-    #                 next_connection_choice = "shortest", original_connections_only = True),
+#     # plot_scores_fancy(Experiment(Random_Greedy).run_experiment(1000),
+#     #                 Experiment(Random_Greedy).run_experiment(1000, 
+#     #                 next_connection_choice = "shortest", original_connections_only = True),
                       
-    #                   title= "Random algorithm scores",
-    #                   legend_labels=("Random", "Greedy"))
+#     #                   title= "Random algorithm scores",
+#     #                   legend_labels=("Random", "Greedy"))
 
-    # write_scores_to_csv(Experiment(Random_Greedy).run_experiment(10), "test")
-    append_scores_to_csv(Experiment(Random_Greedy).run_experiment(10), "test")
+#     # write_scores_to_csv(Experiment(Random_Greedy).run_experiment(10), "test")
+#     append_scores_to_csv(Experiment(Random_Greedy).run_experiment(10), "test")

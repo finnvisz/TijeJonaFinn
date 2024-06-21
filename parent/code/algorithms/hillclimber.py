@@ -22,6 +22,7 @@ class Hillclimber(Algorithm):
     def __init__(self, load: RailNL, algorithm: Algorithm, maprange: str) -> None:
         super().__init__(load)
         self.load = load
+        self.start_score = 0
         self.algorithm = algorithm
         self.routes = algorithm.routes
         self.scores = []
@@ -89,7 +90,7 @@ class Hillclimber(Algorithm):
         return routes
 
 
-    def run(self, iterations: int, simulated_annealing=False, cap=iterations) -> None:
+    def run(self, iterations: int, simulated_annealing=False, cap=10**99) -> None:
         """
         Run the Hillclimber optimization for a specified number of iterations.
 
@@ -102,8 +103,8 @@ class Hillclimber(Algorithm):
         Post: The Hillclimber algorithm runs for the specified number of iterations, optimizing the routes.
         """
         self.iterations = iterations
-        start_score = self.best_score
-        print(f"start score: {start_score}")
+        self.start_score = self.best_score
+        print(f"start score: {self.start_score}")
         count_no_change = 0
         self.simulated_annealing = simulated_annealing
         self.cap = cap
@@ -120,7 +121,7 @@ class Hillclimber(Algorithm):
             accept_new = False
             if self.simulated_annealing == True:
                 # Simulated annealing, always accept a higher or equal score
-                temperature = self.best_score / 7000
+                temperature = self.best_score / 10000
                 if random.random() < 2 ** (temperature * (new_score - self.best_score)):
                     accept_new = True
             else:
@@ -148,12 +149,12 @@ class Hillclimber(Algorithm):
                 self.scores.append(self.best_score)
                 count_no_change += 1
 
-            if self.cap < iterations:
+            if self.cap < self.iterations:
                 if count_no_change == self.cap:
                     print("Too long no change")
                     break
 
-        print(f"Start score: {start_score}, End score: {self.best_score}")
+        print(f"Start score: {self.start_score}, End score: {self.best_score}")
 
 
 # Example/test usage
