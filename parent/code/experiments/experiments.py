@@ -5,7 +5,7 @@ import numpy as np
 from parent.code.algorithms.algorithm import Algorithm
 from parent.code.classes.station_class import Station
 from parent.code.classes.railnl import RailNL
-from parent.code.algorithms.score import Score
+from parent.code.algorithms.score import routes_score
 from parent.code.algorithms.random_greedy import Random_Greedy
 
 class Experiment:
@@ -55,7 +55,9 @@ class Experiment:
             algorithm_instance = self.algorithm_class(data_instance, **self.algorithm_kwargs)
 
             # Run and calculate score
-            score = Score(algorithm_instance, **algorithm_kwargs).calculate()
+            solution = algorithm_instance.run(**algorithm_kwargs)
+            
+            score = routes_score(solution, self.map)
 
             # Add score to array at correct positions
             self.scores[i] = score

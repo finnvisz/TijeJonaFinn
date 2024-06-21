@@ -4,20 +4,24 @@ from parent.code.algorithms.random_greedy import Random_Greedy
 from parent.code.algorithms.hillclimber import Hillclimber
 from parent.code.classes.railnl import RailNL
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
     
-    # for i in range(20):
-    #     data = RailNL()
+#     # for i in range(20):
+#         data = RailNL()
 
-    #     # Test Hillclimber algorithm with RandomAlgorithm as starting state
-    #     random_alg = Random_Greedy()
-    #     random_alg.run()
-    #     hillclimber_alg = Hillclimber(data, random_alg, "Holland")
-    #     hillclimber_alg.run(1000, data_csv = "test_jona.csv")
+#         # Test Hillclimber algorithm with RandomAlgorithm as starting state
+#         random_alg = Random_Greedy()
+#         random_alg.run()
+#         hillclimber_alg = Hillclimber(data, random_alg, "Holland")
+#         solution = hillclimber_alg.run(1000, data_csv = "test_jona.csv")
 
-    plot_hillclimber("test_jona.csv", title = "Hillclimber: progressie over iteraties")
+#         print(solution)
+
+#     # plot_hillclimber("test_jona.csv", title = "Hillclimber: progressie over iteraties")
         
-
+if __name__ == "__main__":
+    results = Experiment().run_experiment(100)
+    print(results)
 
 # if __name__ == '__main__':
 #     write_solution_to_csv(Random_Greedy().run(), "test_jona.csv")

@@ -545,13 +545,10 @@ def plot_scores(filename: str, scores: list[float]):
     
     plt.savefig(f"{experiments_root_dir}/plots/{filename}.png")
 
-<<<<<<< HEAD
-=======
 
 
 
 
->>>>>>> b690ea549d36ec53c06bdefe5630acb815a09530
 # #example/test usage
 # if __name__ == "__main__":
 #     map = "Nationaal"
@@ -564,10 +561,6 @@ def plot_scores(filename: str, scores: list[float]):
 #     write_solution_to_csv(routes, "output", map=map)
 #     solution = read_solution_from_csv("output.csv", map=map)
 #     print(solution)
-<<<<<<< HEAD
-=======
-
->>>>>>> b690ea549d36ec53c06bdefe5630acb815a09530
 
 # if __name__ == "__main__":
 #     map = "Holland"
@@ -649,17 +642,6 @@ if __name__ == "__main__":
 #     # randomv2_3_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_3_connections_100000.csv")
 #     # randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
 
-<<<<<<< HEAD
-    plot_scores_fancy(Experiment(Random_Greedy).run_experiment(10000, final_number_of_routes = (1, 2, 3, 4, 5, 6, 7), route_time_limit = 90),
-                      Experiment(Random_Greedy).run_experiment(10000, final_number_of_routes = (1, 2, 3, 4, 5, 6, 7), route_time_limit = 100),
-                      Experiment(Random_Greedy).run_experiment(10000, final_number_of_routes = (1, 2, 3, 4, 5, 6, 7), route_time_limit = 110),
-                      Experiment(Random_Greedy).run_experiment(10000, final_number_of_routes = (1, 2, 3, 4, 5, 6, 7)),
-                      filename = "Random_Holland_time_90_100_110_120",
-                      title = "Random Holland varying uniform time limit.",
-                      save_to_pdf = True,
-                      legend_labels = ("90 minutes", "100 minutes", "110 minutes", "120 minutes"),
-                      legend_title = "Time")
-=======
 #     plot_scores_fancy(  Experiment(Random_Greedy).run_experiment(10000),
 #                         Experiment(Random_Greedy).run_experiment(10000,
 #                                                                starting_stations = "original_stations_only_soft"), 
@@ -669,4 +651,3 @@ if __name__ == "__main__":
 #                     legend_labels = ("Fully random", "Soft", "Hard"),
 #                     save_to_pdf = True,
 #                     filename = "Starting_station_pick_random_soft_hard")
->>>>>>> b690ea549d36ec53c06bdefe5630acb815a09530
