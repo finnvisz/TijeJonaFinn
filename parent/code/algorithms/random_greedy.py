@@ -186,7 +186,7 @@ class Random_Greedy(Algorithm):
                 starting_station_list = random.choice(starting_station_list)
 
                 # DEBUG
-                print(starting_station_list)
+                # print(starting_station_list)
         
         # For custom list without replacement, list must be long enough
         if starting_stations == "custom_list_without_replacement":
