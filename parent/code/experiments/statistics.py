@@ -10,10 +10,10 @@ from datetime import datetime
 
 # Internal imports
 from parent.code.algorithms.hillclimber import Hillclimber
-from parent.code.algorithms.finnsroutes import Finn
 from parent.code.experiments.experiments import Experiment
 from parent.code.classes.route import Route
 from parent.code.classes.railnl import RailNL
+from parent.code.classes.station_class import Station
 from parent.code.algorithms.score import routes_score
 from parent.code.algorithms.random_greedy import Random_Greedy
 from starting_bins import Sort_Starting
@@ -58,6 +58,38 @@ def read_scores_from_csv(filename: str) -> "np.ndarray[float]":
     scores = np.loadtxt(f"{experiments_root_dir}/results/{filename}", delimiter=",")
     return scores
 
+def read_solution_from_csv(filename: str, map="Holland") -> list[Route]:
+    """
+    Read solution from a CSV file
+
+    - Post: return a list of Route objects
+    """
+    
+    # Add .csv extension if not present
+    if not filename.endswith(".csv"):
+        filename += ".csv"
+
+    # Initialize the RailNL object once
+    rail_network = RailNL(map)
+
+    # Read the solution from the CSV file
+    solution = []
+    with open(f"{experiments_root_dir}/route_csv/{filename}", 'r') as file:
+        reader = csv.reader(file)
+        next(reader)  # Skip header
+        for row in reader:
+            if row[0] != "score":
+                route = Route()
+                station_names = row[1].strip("[]").split(", ")
+                stations = []
+                for station_name in station_names:
+                    stations.append(rail_network.stations_dict()[station_name])
+                for i in range(len(stations)-1):
+                    connection_duration = stations[i].connections[stations[i + 1]]
+                    route.add_connection(stations[i], stations[i+1], connection_duration)
+                solution.append(route)
+    return solution
+
 
 def append_scores_to_csv(scores: "np.ndarray", filename: str) -> None:
     """
@@ -92,7 +124,7 @@ def append_scores_to_csv(scores: "np.ndarray", filename: str) -> None:
                index=False, header=False) 
 
 
-def write_solution_to_csv(routes: list[Route], filename: str):
+def write_solution_to_csv(routes: list[Route], filename: str, map="Holland"):
     """
     Translate algorithm output (solution consisting of multiple Route objects) 
     to required .csv file.
@@ -114,7 +146,7 @@ def write_solution_to_csv(routes: list[Route], filename: str):
         for i in range(len(routes)):
             writer.writerow([f"train_{i+1}", routes[i].stations_list()])
 
-        score = routes_score(routes, "Holland")
+        score = routes_score(routes, map)
         writer.writerow(["score", f"{score}"])
 
 
@@ -385,31 +417,17 @@ def plot_scores(filename: str, scores: list[float]):
     plt.savefig(f"{experiments_root_dir}/plots/{filename}.png")
 
 #example/test usage
-# if __name__ == "__main__":
-#     map = "Nationaal"
-#     data = RailNL(map)
-#     scores2 = []
-#     for i in range(100):
-#         print(f"{i+1}-de run")
-#         algorithm = Random_Greedy(data)
-#         algorithm.run(final_number_of_routes=20, starting_stations="original_stations_only_hard")
-#         hillclimber_alg = Hillclimber(data, algorithm, map)
-#         hillclimber_alg.run(10000)
-#         routes = hillclimber_alg.output()
-#         routes_to_csv(routes, "output")
-#         scores2.append(routes_score(routes, map))
-#     scores1 = []
-#     for i in range(100):
-#         print(f"{i+1}-de run")
-#         algorithm = Random_Greedy(data)
-#         algorithm.run(final_number_of_routes=20)
-#         hillclimber_alg = Hillclimber(data, algorithm, map)
-#         hillclimber_alg.run(10000)
-#         routes = hillclimber_alg.output()
-#         routes_to_csv(routes, "output")
-#         scores1.append(routes_score(routes, map))
-
-#     plot_scores_fancy(scores1, scores2, title="Nationaal 10000 iteraties 100 keer", save_to_pdf=True, preview=True, binwidth=50)
+if __name__ == "__main__":
+    map = "Nationaal"
+    data = RailNL(map)
+    algorithm = Random_Greedy(data)
+    algorithm.run(final_number_of_routes=20)
+    hillclimber_alg = Hillclimber(data, algorithm, map)
+    hillclimber_alg.run(100, simulated_annealing=True)
+    routes = hillclimber_alg.output()
+    write_solution_to_csv(routes, "output", map=map)
+    solution = read_solution_from_csv("output.csv", map=map)
+    print(solution)
 
 # if __name__ == "__main__":
 #     map = "Holland"

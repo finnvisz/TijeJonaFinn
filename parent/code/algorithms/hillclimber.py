@@ -64,6 +64,7 @@ class Hillclimber(Algorithm):
         Pre: routes (List[Route]): List of current routes.
         Post: Returns an updated list of Route objects including a new random route.
         """
+        # We want to be able to go back so we make a deepcopy
         new_routes = copy.deepcopy(routes)
 
         # generate a random route
@@ -88,7 +89,7 @@ class Hillclimber(Algorithm):
         return routes
 
 
-    def run(self, iterations: int) -> None:
+    def run(self, iterations: int, simulated_annealing=False) -> None:
         """
         Run the Hillclimber optimization for a specified number of iterations.
 
@@ -108,8 +109,18 @@ class Hillclimber(Algorithm):
 
             new_score = routes_score(new_routes, self.maprange)
 
-            # Simulated annealing
-            if random.random() < 2 ** (new_score - self.best_score):
+            accept_new = False
+            if simulated_annealing == True:
+                # Simulated annealing, always accept a higher or equal score
+                temperature = self.best_score / 7000
+                if random.random() < 2 ** (temperature * (new_score - self.best_score)):
+                    accept_new = True
+            else:
+                if new_score > self.best_score:
+                    accept_new = True
+
+            
+            if accept_new:
             #if new_score > self.best_score:
                 # use the new routes next iteration
                 self.routes = new_routes
