@@ -16,7 +16,8 @@ from parent.code.classes.railnl import RailNL
 from parent.code.classes.station_class import Station
 from parent.code.algorithms.score import routes_score
 from parent.code.algorithms.random_greedy import Random_Greedy
-from starting_bins import Sort_Starting
+from parent.code.experiments.starting_bins import Sort_Starting
+
 
 # Default directory for all functions in this file, can be changed if needed
 # Don't delete! Used by all functions in this file.
@@ -64,7 +65,7 @@ def read_solution_from_csv(filename: str, map="Holland") -> list[Route]:
 
     - Post: return a list of Route objects
     """
-    
+
     # Add .csv extension if not present
     if not filename.endswith(".csv"):
         filename += ".csv"
@@ -106,22 +107,32 @@ def append_scores_to_csv(scores: "np.ndarray", filename: str) -> None:
     if not filename.endswith(".csv"):
         filename += ".csv"
 
+
     # Try to open existing CSV file, if not found run write_scores_to_csv
     try:
         # Read the existing CSV file into a DataFrame 
-        df = pd.read_csv(f"{experiments_root_dir}/results/{filename}", 
+        df_original = pd.read_csv(f"{experiments_root_dir}/results/{filename}", 
                          header=None) 
+    
     except FileNotFoundError:
         # If file not found, run write_scores_to_csv
         write_scores_to_csv(scores, filename)
         return
 
-    # Add the new column 
-    df['new_column'] = scores
+
+    # Create dataframe for the new scores
+    df_additional = pd.DataFrame({"new_column": scores})
+    
+    # Combine old df and new df
+    df_concatenated = pd.concat([df_original, df_additional], axis=1)
+        
 
     # Write the updated DataFrame back to the CSV file 
-    df.to_csv(f"{experiments_root_dir}/results/{filename}",
-               index=False, header=False) 
+    df_concatenated.to_csv(f"{experiments_root_dir}/results/{filename}",
+            index=False, header=False)
+        
+    
+
 
 
 def write_solution_to_csv(routes: list[Route], filename: str, map="Holland"):
@@ -131,8 +142,13 @@ def write_solution_to_csv(routes: list[Route], filename: str, map="Holland"):
     
     - Pre: `routes` is a list of route objects, `filename` contains 
     filename to write to in `experiments/route_csv` 
-    (extension is allowed but optional).
-    - Post: csv-file of given format is located in `route_csv` folder. 
+    (extension is optional).
+    - Post: csv-file of given format is located in `route_csv` folder.
+
+    args:
+    - `routes`: list of Route objects, output of algorithm.
+    - `filename`: name of the file to write to, extension is optional.
+    - `map`: name of the map used in the algorithm. Default is "Holland".
     """
     # Add .csv extension if not present
     if not filename.endswith(".csv"):
@@ -148,6 +164,46 @@ def write_solution_to_csv(routes: list[Route], filename: str, map="Holland"):
 
         score = routes_score(routes, map)
         writer.writerow(["score", f"{score}"])
+
+
+def read_solution_from_csv(filename: str, map="Holland", for_manim = False) -> list[Route]:
+    """
+    Read a solution for the RailNL problem from a CSV file.
+
+    - Pre: CSV file with solution created by `write_solution_to_csv()`
+      exists in the `experiments/route_csv/` directory
+    - Post: return a list of Route objects
+    """
+    
+    # Manim needs relative path
+    if for_manim:
+        experiments_root_dir = "../experiments"
+
+    # Add .csv extension if not present
+    if not filename.endswith(".csv"):
+        filename += ".csv"
+
+    # Initialize the RailNL object once
+    rail_network = RailNL(map)
+
+    # Read the solution from the CSV file
+    solution = []
+    with open(f"{experiments_root_dir}/route_csv/{filename}", 'r') as file:
+        reader = csv.reader(file)
+        next(reader)  # Skip header
+        for row in reader:
+            if row[0] != "score":
+                route = Route()
+                station_names = row[1].strip("[]").split(", ")
+                stations = []
+                for station_name in station_names:
+                    stations.append(rail_network.stations_dict()[station_name])
+                for i in range(len(stations)-1):
+                    connection_duration = stations[i].connections[stations[i + 1]]
+                    route.add_connection(stations[i], stations[i+1], connection_duration)
+                solution.append(route)
+    
+    return solution
 
 
 def calculate_p_value(sample1: "np.ndarray[float]", sample2: "np.ndarray[float]"
@@ -378,7 +434,7 @@ def plot_scores_fancy(sample1: "np.ndarray[float]",
     
     # Add labels, title, theme and limits
     # The same for all plots
-    plot += p9.xlim(0,10000)
+    plot += p9.xlim(5000,10000)
     plot += p9.scale_fill_manual(name = legend_title,
                                 values = 
                                 color_palette[:sum([sample1 is not None,
@@ -403,6 +459,65 @@ def plot_scores_fancy(sample1: "np.ndarray[float]",
         plot.show()
 
 
+def plot_hillclimer(csv_file: str, 
+                    
+                    # save settings
+                    save_to_pdf: bool = False, preview: bool = True,
+                    
+                    # plot settings
+                    title: str | None = None
+
+                    ) -> None:
+    
+    # Add .csv extension if not present
+    if not csv_file.endswith(".csv"):
+        csv_file += ".csv"
+
+
+    # Set default title and filename if not provided
+    if title is None:
+        # Set title to input filename
+        title = f"Hillclimber: {csv_file}"
+        filename = f"Plot_{csv_file}"
+    else:
+        filename = title
+
+
+    # Read the existing CSV file into a DataFrame 
+    df_data = pd.read_csv(f"{experiments_root_dir}/results/{csv_file}", 
+                        header=None)
+
+    # DEBUG
+    # print(df_data)
+
+    # Create a new dataframe with the mean, max and min
+    df_data_aggregated = df_data.agg(['mean', 'max', 'min'], axis=1)
+
+    # DEBUG
+    # print(df_data_aggregated)
+
+    # Create plotnine plot with the mean, max and min per iteration
+    plot = (
+        p9.ggplot(df_data_aggregated) +
+        p9.aes(x = df_data_aggregated.index, y = "mean") +
+        p9.geom_line() +
+        p9.geom_line(p9.aes(y = "max"), color = "blue") +
+        p9.geom_line(p9.aes(y = "min"), color = "red") +
+        p9.labs(title = title, x = "Iteraties", y = "Score") +
+        p9.theme_minimal()
+    )
+
+
+    # Save to pdf if specified
+    if save_to_pdf:
+        plot.save(filename = filename, path=f"{experiments_root_dir}/plots")
+
+    # Show preview of plot if specified
+    if preview:
+        # Show the plot
+        plot.show()
+    
+
 def plot_scores(filename: str, scores: list[float]):
     # Plotting the frequency distribution of scores
     plt.figure(figsize=(10, 6))
@@ -416,6 +531,13 @@ def plot_scores(filename: str, scores: list[float]):
     
     plt.savefig(f"{experiments_root_dir}/plots/{filename}.png")
 
+<<<<<<< HEAD
+=======
+
+
+
+
+>>>>>>> b690ea549d36ec53c06bdefe5630acb815a09530
 # #example/test usage
 # if __name__ == "__main__":
 #     map = "Nationaal"
@@ -428,20 +550,64 @@ def plot_scores(filename: str, scores: list[float]):
 #     write_solution_to_csv(routes, "output", map=map)
 #     solution = read_solution_from_csv("output.csv", map=map)
 #     print(solution)
+<<<<<<< HEAD
+=======
+
+>>>>>>> b690ea549d36ec53c06bdefe5630acb815a09530
 
 # if __name__ == "__main__":
 #     map = "Holland"
 #     data = RailNL(map)
-#     scores = []
-#     for _ in range(100):
+#     scores1 = []
+#     startscores1 = []
+#     for i in range(2):
+#         print(f"1. iteratie {i}")
 #         algorithm = Random_Greedy(data)
-#         algorithm.run()
+#         algorithm.run(starting_stations="original_stations_only_hard", final_number_of_routes=(1,2,3,4,5,6,7))
 #         hillclimber_alg = Hillclimber(data, algorithm, map)
-#         hillclimber_alg.run(1000)
+#         hillclimber_alg.run(10000, cap=500)
+#         startscores1.append(hillclimber_alg.start_score)
 #         routes = hillclimber_alg.output()
 #         write_solution_to_csv(routes, "output")
-#         scores.append(routes_score(routes, map))
-#     plot_scores_fancy(scores, title="end scores 1000 iteraties 100 keer, random", save_to_pdf=True)
+#         score = routes_score(routes, map)
+#         if score > 9000:
+#             write_scores_to_csv(routes, f"output_score{score}.csv")
+#         scores1.append(score)
+#     # append_scores_to_csv(scores1, "Scores_Hillclimer.csv")
+#     scores2 = []
+#     startscores2 = []
+#     for i in range(100):
+#         print(f"2. iteratie {i}")
+#         algorithm = Random_Greedy(data)
+#         algorithm.run(final_number_of_routes=(1,2,3,4,5,6,7))
+#         hillclimber_alg = Hillclimber(data, algorithm, map)
+#         hillclimber_alg.run(10000, cap=1000)
+#         startscores2.append(hillclimber_alg.start_score)
+#         routes = hillclimber_alg.output()
+#         write_solution_to_csv(routes, "output")
+#         scores2.append(routes_score(routes, map))
+#     plot_scores_fancy(scores1, scores2, title="1-7 routes end scores", save_to_pdf=True, binwidth=50, legend_labels=("original stations only hard", "random"))
+#     plot_scores_fancy(startscores1, startscores2, title="1-7 routes start scores, 6 routes max", save_to_pdf=True, binwidth=50, legend_labels=("original stations only hard", "random"))
+
+if __name__ == "__main__":
+    map = "Nationaal"
+    data = RailNL(map)
+    scores1 = []
+    for i in range(100):
+        print(f"1. iteratie {i}")
+        algorithm = Random_Greedy(data)
+        algorithm.run(starting_stations="original_stations_only_hard", final_number_of_routes=20)
+        hillclimber_alg = Hillclimber(data, algorithm, map)
+        hillclimber_alg.run(2000, cap=500)
+        routes = hillclimber_alg.output()
+        write_solution_to_csv(routes, "Nationaal_output", map=map)
+        score = routes_score(routes, map)
+        if score > 6000:
+            write_solution_to_csv(routes, f"Nationaal_output_score{score}.csv", map=map)
+        scores1.append(score)
+    append_scores_to_csv(scores1, "Scores_Hillclimer.csv")
+    plot_scores_fancy(scores1, title="Nationaal scores", save_to_pdf=True, binwidth=50)
+
 
 # if __name__ == "__main__":
 #     result_90 = read_scores_from_csv("time_experiment_results/90.csv")
@@ -461,14 +627,15 @@ def plot_scores(filename: str, scores: list[float]):
 
 
 # """Example usage plot_scores_fancy"""
-if __name__ == "__main__":
-    # write_solution_to_csv(Random_Greedy(RailNL("Holland")).run(), "output2")
+# if __name__ == "__main__":
+#     # write_solution_to_csv(Random_Greedy(RailNL("Holland")).run(), "output2")
     
-    # randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
-    # randomv2_2_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_2_connections_100000.csv")
-    # randomv2_3_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_3_connections_100000.csv")
-    # randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
+#     # randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
+#     # randomv2_2_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_2_connections_100000.csv")
+#     # randomv2_3_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_3_connections_100000.csv")
+#     # randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
 
+<<<<<<< HEAD
     plot_scores_fancy(Experiment(Random_Greedy).run_experiment(10000, final_number_of_routes = (1, 2, 3, 4, 5, 6, 7), route_time_limit = 90),
                       Experiment(Random_Greedy).run_experiment(10000, final_number_of_routes = (1, 2, 3, 4, 5, 6, 7), route_time_limit = 100),
                       Experiment(Random_Greedy).run_experiment(10000, final_number_of_routes = (1, 2, 3, 4, 5, 6, 7), route_time_limit = 110),
@@ -478,3 +645,14 @@ if __name__ == "__main__":
                       save_to_pdf = True,
                       legend_labels = ("90 minutes", "100 minutes", "110 minutes", "120 minutes"),
                       legend_title = "Time")
+=======
+#     plot_scores_fancy(  Experiment(Random_Greedy).run_experiment(10000),
+#                         Experiment(Random_Greedy).run_experiment(10000,
+#                                                                starting_stations = "original_stations_only_soft"), 
+#                         Experiment(Random_Greedy).run_experiment(10000,
+#                                                                starting_stations = "original_stations_only_hard"),                                       
+#                     title = "Starting station random, soft and hard pick.",
+#                     legend_labels = ("Fully random", "Soft", "Hard"),
+#                     save_to_pdf = True,
+#                     filename = "Starting_station_pick_random_soft_hard")
+>>>>>>> b690ea549d36ec53c06bdefe5630acb815a09530

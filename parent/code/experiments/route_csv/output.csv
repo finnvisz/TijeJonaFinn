@@ -1,4 +1,5 @@
 train,stations
+<<<<<<< HEAD
 train_1,"[Almelo, Deventer, Zwolle, Assen, Groningen, Leeuwarden, Heerenveen, Steenwijk]"
 train_2,"[Weert, Roermond, Sittard, Roermond, Sittard, Heerlen, Sittard, Heerlen, Sittard, Heerlen, Sittard, Heerlen, Sittard]"
 train_3,"[Schiphol Airport, Amsterdam Zuid, Amsterdam Sloterdijk, Haarlem, Beverwijk, Haarlem, Heemstede-Aerdenhout, Haarlem, Heemstede-Aerdenhout, Haarlem, Heemstede-Aerdenhout, Leiden Centraal, Heemstede-Aerdenhout, Haarlem, Heemstede-Aerdenhout, Haarlem, Amsterdam Sloterdijk, Amsterdam Zuid, Schiphol Airport, Amsterdam Zuid]"
@@ -18,3 +19,13 @@ train_16,"[Gouda, Den Haag Centraal, Delft, Den Haag HS, Leiden Centraal, Alphen
 train_17,"[Assen, Zwolle, Amersfoort, Utrecht Centraal, Ede-Wageningen, Arnhem Centraal, Ede-Wageningen, Arnhem Centraal, Nijmegen]"
 train_18,"[Amsterdam Sloterdijk, Zaandam, Amsterdam Sloterdijk, Zaandam, Beverwijk, Castricum, Alkmaar, Castricum, Alkmaar, Den Helder, Alkmaar, Hoorn]"
 score,4441.404494382023
+=======
+train_1,"[Gouda, Rotterdam Alexander, Gouda, Den Haag Centraal, Leiden Centraal, Alphen a/d Rijn, Leiden Centraal, Heemstede-Aerdenhout, Leiden Centraal, Schiphol Airport]"
+train_2,"[Amsterdam Zuid, Schiphol Airport, Amsterdam Zuid, Amsterdam Amstel, Amsterdam Zuid, Amsterdam Amstel, Amsterdam Centraal, Amsterdam Sloterdijk, Amsterdam Zuid, Amsterdam Sloterdijk, Zaandam]"
+train_3,"[Alphen a/d Rijn, Gouda, Den Haag Centraal, Delft, Den Haag Centraal, Leiden Centraal]"
+train_4,"[Den Helder, Alkmaar, Castricum, Beverwijk, Zaandam, Castricum, Alkmaar]"
+train_5,"[Haarlem, Beverwijk, Haarlem, Heemstede-Aerdenhout, Haarlem, Amsterdam Sloterdijk, Haarlem]"
+train_6,"[Haarlem, Beverwijk, Castricum, Zaandam, Hoorn, Alkmaar]"
+train_7,"[Schiedam Centrum, Delft, Schiedam Centrum, Rotterdam Centraal, Rotterdam Alexander, Rotterdam Centraal, Dordrecht, Rotterdam Centraal, Rotterdam Alexander, Rotterdam Centraal, Schiedam Centrum, Rotterdam Centraal, Schiedam Centrum, Rotterdam Centraal, Rotterdam Alexander]"
+score,8638.0
+>>>>>>> b690ea549d36ec53c06bdefe5630acb815a09530

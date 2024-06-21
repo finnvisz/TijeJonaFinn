@@ -10,7 +10,7 @@ from parent.code.algorithms.random_greedy import Random_Greedy
 
 class Experiment:
 
-    def __init__(self, algorithm_class: "Algorithm", map: str = "Holland", **algorithm_kwargs) -> None:
+    def __init__(self, algorithm_class: "Algorithm" = Random_Greedy, map: str = "Holland", **algorithm_kwargs) -> None:
         """
         Initialize experiment object with given algorithm and map.
         
