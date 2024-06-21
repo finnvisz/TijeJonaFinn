@@ -59,7 +59,6 @@ def read_scores_from_csv(filename: str) -> "np.ndarray[float]":
     scores = np.loadtxt(f"{experiments_root_dir}/results/{filename}", delimiter=",")
     return scores
 
-<<<<<<< HEAD
 def read_solution_from_csv(filename: str, map="Holland") -> list[Route]:
     """
     Read solution from a CSV file
@@ -92,8 +91,6 @@ def read_solution_from_csv(filename: str, map="Holland") -> list[Route]:
                 solution.append(route)
     return solution
 
-=======
->>>>>>> fbb8629e523af528b4032b8fb107dc1a4e22d90b
 
 def append_scores_to_csv(scores: "np.ndarray", filename: str) -> None:
     """
