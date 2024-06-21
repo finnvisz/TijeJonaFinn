@@ -1,4 +1,5 @@
 train,stations
+<<<<<<< HEAD
 train_1,"[Zutphen, Apeldoorn, Amersfoort, Zwolle, Amersfoort, Utrecht Centraal, Amsterdam Centraal, Amsterdam Amstel, Amsterdam Zuid, Schiphol Airport]"
 train_2,"[Alkmaar, Den Helder, Alkmaar, Castricum, Beverwijk, Castricum, Zaandam, Beverwijk, Haarlem, Heemstede-Aerdenhout, Leiden Centraal]"
 train_3,"[Den Haag Laan v NOI, Delft, Den Haag HS, Gouda, Rotterdam Alexander, Rotterdam Centraal, Dordrecht, Rotterdam Blaak, Schiedam Centrum, Rotterdam Blaak, Rotterdam Alexander, Rotterdam Centraal, Dordrecht, Breda, Etten-Leur, Breda]"
@@ -15,3 +16,13 @@ train_13,"[Utrecht Centraal, Amsterdam Amstel, Hilversum]"
 train_14,"[Zwolle, Deventer, Apeldoorn, Deventer, Zwolle, Assen, Groningen, Assen]"
 train_15,"[Venlo, Helmond, Venlo, Helmond, Eindhoven, Tilburg, Breda, Etten-Leur, Roosendaal]"
 score,5663.483146067416
+=======
+train_1,"[Amsterdam Amstel, Amsterdam Zuid, Schiphol Airport, Leiden Centraal, Alphen a/d Rijn, Leiden Centraal, Den Haag Centraal, Leiden Centraal, Den Haag Centraal, Delft, Schiedam Centrum, Rotterdam Centraal]"
+train_2,"[Castricum, Zaandam, Castricum, Zaandam, Beverwijk, Zaandam, Hoorn]"
+train_3,"[Heemstede-Aerdenhout, Leiden Centraal, Heemstede-Aerdenhout, Haarlem, Amsterdam Sloterdijk, Haarlem, Amsterdam Sloterdijk, Amsterdam Centraal, Amsterdam Amstel, Amsterdam Zuid, Amsterdam Sloterdijk, Haarlem]"
+train_4,"[Haarlem, Beverwijk, Zaandam, Hoorn, Alkmaar, Castricum, Alkmaar, Castricum]"
+train_5,"[Amsterdam Centraal, Amsterdam Amstel, Amsterdam Centraal, Amsterdam Sloterdijk, Haarlem, Heemstede-Aerdenhout, Leiden Centraal, Alphen a/d Rijn, Gouda, Rotterdam Alexander, Rotterdam Centraal, Rotterdam Alexander, Rotterdam Centraal]"
+train_6,"[Rotterdam Centraal, Rotterdam Alexander, Rotterdam Centraal, Schiedam Centrum, Rotterdam Centraal, Dordrecht, Rotterdam Centraal, Schiedam Centrum, Delft, Den Haag Centraal, Leiden Centraal, Heemstede-Aerdenhout, Haarlem]"
+train_7,"[Schiphol Airport, Leiden Centraal, Heemstede-Aerdenhout, Haarlem, Amsterdam Sloterdijk, Zaandam, Beverwijk, Haarlem, Heemstede-Aerdenhout, Leiden Centraal]"
+score,7416.571428571429
+>>>>>>> 16dba197b9651438f3663f357d86683d35eebcfa

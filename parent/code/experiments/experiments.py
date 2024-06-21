@@ -44,7 +44,7 @@ class Experiment:
         """
         # Scores are saved in numpy array, way faster than list!
         # Space in memory is reserved and filled with zeros
-        self.scores: "np.array[float]" = np.zeros(iterations)
+        self.scores: "np.ndarray[float]" = np.zeros(iterations)
         
         for i in range(iterations):
 
@@ -100,10 +100,14 @@ class Experiment:
         `filename` is a string without extension.
         - Post: scores are written to `filename`.csv in the results subdirectory.
         """
+        # Add .csv extension if not present
+        if not filename.endswith(".csv"):
+            filename += ".csv"
+        
         # Set default export directory
         export_directory: str = "parent/code/experiments"
 
-        np.savetxt(f"{export_directory}/{filename}.csv", self.scores, delimiter = ",")
+        np.savetxt(f"{export_directory}/{filename}", self.scores, delimiter = ",")
         
 # Time experiment
 if __name__ == "__main__":
