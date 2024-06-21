@@ -5,6 +5,7 @@ from manim import YELLOW, PURPLE, ORANGE, PINK
 
 from parent.code.algorithms.random_algorithm import RandomAlgorithm
 from parent.code.algorithms.greedy import Greedy
+from parent.code.experiments.statistics import read_solution_from_csv
 
 from base_map import BaseScene
 from numpy.linalg import norm
@@ -30,7 +31,12 @@ class route_visualisation_image(BaseScene):
 
     # Run algorithm here
     def run_algorithm(self) -> None:
-        self.output = Greedy(self.data).run() # HERE
+        
+        # NOTE: instead of running an algorithm, we can now read 
+        # a solution from a csv file
+        self.output = read_solution_from_csv("test.csv", for_manim=True)
+        
+        # Greedy(self.data).run() # HERE
 
     # Find dots associated to station name
     def correspondence(self, name_start: str, name_end: str) -> tuple:
