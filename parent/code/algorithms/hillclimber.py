@@ -26,7 +26,7 @@ class Hillclimber(Algorithm):
         self.load = load
         self.start_score = 0
         self.algorithm = algorithm
-        self.routes = algorithm.routes
+        self.routes: list[Route] = algorithm.routes
         self.scores = []
         self.maprange = maprange
         self.best_score = routes_score(self.routes, self.maprange)
@@ -94,7 +94,7 @@ class Hillclimber(Algorithm):
 
     def run(self, iterations: int, simulated_annealing=False, cap=10**99,
             
-            data_csv: str | None = None) -> None:
+            data_csv: str | None = None) -> list[Route]:
         """
         Run the Hillclimber optimization for a specified number of iterations.
 
@@ -170,12 +170,15 @@ class Hillclimber(Algorithm):
 
         
         # When done:
-        # If set, write score per iteration to csv file
+        # If set, log score per iteration to csv file
         if data_csv is not None:
             append_scores_to_csv(self.scores, data_csv)
 
         # Print summary
         print(f"Start score: {self.start_score}, End score: {self.best_score}")
+
+        # And return the found solution
+        return self.routes
 
 
 # Example/test usage
