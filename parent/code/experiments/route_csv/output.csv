@@ -1,4 +1,5 @@
 train,stations
+<<<<<<< HEAD
 train_1,"[Amsterdam Centraal, Amsterdam Amstel, Amsterdam Zuid, Schiphol Airport, Leiden Centraal, Alphen a/d Rijn, Leiden Centraal, Heemstede-Aerdenhout, Haarlem, Beverwijk, Castricum]"
 train_2,"[Zaandam, Beverwijk]"
 train_3,"[Den Haag Centraal, Gouda, Alphen a/d Rijn, Gouda, Rotterdam Alexander, Rotterdam Centraal, Dordrecht, Rotterdam Centraal, Rotterdam Alexander]"
@@ -7,3 +8,35 @@ train_5,"[Rotterdam Centraal, Schiedam Centrum, Delft, Schiedam Centrum, Rotterd
 train_6,"[Den Helder, Alkmaar, Hoorn, Alkmaar]"
 train_7,"[Zaandam, Hoorn, Zaandam, Amsterdam Sloterdijk, Amsterdam Zuid, Amsterdam Sloterdijk, Zaandam]"
 score,8636.0
+=======
+<<<<<<< HEAD
+train_1,"[Almelo, Deventer, Zwolle, Assen, Groningen, Leeuwarden, Heerenveen, Steenwijk]"
+train_2,"[Weert, Roermond, Sittard, Roermond, Sittard, Heerlen, Sittard, Heerlen, Sittard, Heerlen, Sittard, Heerlen, Sittard]"
+train_3,"[Schiphol Airport, Amsterdam Zuid, Amsterdam Sloterdijk, Haarlem, Beverwijk, Haarlem, Heemstede-Aerdenhout, Haarlem, Heemstede-Aerdenhout, Haarlem, Heemstede-Aerdenhout, Leiden Centraal, Heemstede-Aerdenhout, Haarlem, Heemstede-Aerdenhout, Haarlem, Amsterdam Sloterdijk, Amsterdam Zuid, Schiphol Airport, Amsterdam Zuid]"
+train_4,"[Arnhem Centraal, Nijmegen, Oss, Nijmegen, Oss, s-Hertogenbosch, Tilburg, Eindhoven, Helmond, Eindhoven, s-Hertogenbosch, Tilburg, Breda, Etten-Leur]"
+train_5,"[Etten-Leur, Roosendaal, Dordrecht, Rotterdam Blaak, Schiedam Centrum, Delft, Den Haag HS, Leiden Centraal, Schiphol Airport, Amsterdam Zuid, Amsterdam Sloterdijk, Amsterdam Zuid, Schiphol Airport, Utrecht Centraal]"
+train_6,"[Dieren, Zutphen, Dieren, Zutphen, Dieren, Zutphen, Apeldoorn, Deventer, Zwolle, Deventer, Zutphen, Dieren, Arnhem Centraal, Ede-Wageningen, Arnhem Centraal, Ede-Wageningen]"
+train_7,"[Alkmaar, Hoorn, Zaandam, Hoorn, Zaandam, Amsterdam Sloterdijk, Zaandam, Amsterdam Sloterdijk]"
+train_8,"[Almere Centrum, Amsterdam Amstel, Amsterdam Centraal, Amsterdam Amstel, Amsterdam Centraal, Utrecht Centraal, Amsterdam Centraal, Amsterdam Sloterdijk, Amsterdam Centraal, Amsterdam Sloterdijk, Amsterdam Centraal, Utrecht Centraal]"
+train_9,"[Utrecht Centraal, Hilversum, Almere Centrum]"
+train_10,"[Alkmaar, Castricum, Beverwijk, Castricum, Zaandam]"
+train_11,"[Roosendaal, Vlissingen, Roosendaal]"
+train_12,"[Hengelo, Almelo, Hengelo, Enschede, Hengelo, Enschede, Hengelo, Almelo, Hengelo]"
+train_13,"[Leiden Centraal, Den Haag Laan v NOI, Leiden Centraal, Alphen a/d Rijn, Leiden Centraal, Alphen a/d Rijn, Gouda, Rotterdam Alexander, Rotterdam Centraal, Rotterdam Alexander, Rotterdam Blaak, Schiedam Centrum, Delft, Den Haag Laan v NOI, Gouda]"
+train_14,"[Hilversum, Amsterdam Amstel, Utrecht Centraal, Amsterdam Amstel, Almere Centrum, Lelystad Centrum, Almere Centrum, Amsterdam Centraal, Utrecht Centraal]"
+train_15,"[Weert, Eindhoven, s-Hertogenbosch, Tilburg, Breda, Etten-Leur, Breda, Dordrecht, Rotterdam Blaak, Rotterdam Alexander, Gouda, Utrecht Centraal, s-Hertogenbosch]"
+train_16,"[Gouda, Den Haag Centraal, Delft, Den Haag HS, Leiden Centraal, Alphen a/d Rijn, Gouda, Alphen a/d Rijn, Leiden Centraal, Den Haag HS, Gouda, Utrecht Centraal]"
+train_17,"[Assen, Zwolle, Amersfoort, Utrecht Centraal, Ede-Wageningen, Arnhem Centraal, Ede-Wageningen, Arnhem Centraal, Nijmegen]"
+train_18,"[Amsterdam Sloterdijk, Zaandam, Amsterdam Sloterdijk, Zaandam, Beverwijk, Castricum, Alkmaar, Castricum, Alkmaar, Den Helder, Alkmaar, Hoorn]"
+score,4441.404494382023
+=======
+train_1,"[Gouda, Rotterdam Alexander, Gouda, Den Haag Centraal, Leiden Centraal, Alphen a/d Rijn, Leiden Centraal, Heemstede-Aerdenhout, Leiden Centraal, Schiphol Airport]"
+train_2,"[Amsterdam Zuid, Schiphol Airport, Amsterdam Zuid, Amsterdam Amstel, Amsterdam Zuid, Amsterdam Amstel, Amsterdam Centraal, Amsterdam Sloterdijk, Amsterdam Zuid, Amsterdam Sloterdijk, Zaandam]"
+train_3,"[Alphen a/d Rijn, Gouda, Den Haag Centraal, Delft, Den Haag Centraal, Leiden Centraal]"
+train_4,"[Den Helder, Alkmaar, Castricum, Beverwijk, Zaandam, Castricum, Alkmaar]"
+train_5,"[Haarlem, Beverwijk, Haarlem, Heemstede-Aerdenhout, Haarlem, Amsterdam Sloterdijk, Haarlem]"
+train_6,"[Haarlem, Beverwijk, Castricum, Zaandam, Hoorn, Alkmaar]"
+train_7,"[Schiedam Centrum, Delft, Schiedam Centrum, Rotterdam Centraal, Rotterdam Alexander, Rotterdam Centraal, Dordrecht, Rotterdam Centraal, Rotterdam Alexander, Rotterdam Centraal, Schiedam Centrum, Rotterdam Centraal, Schiedam Centrum, Rotterdam Centraal, Rotterdam Alexander]"
+score,8638.0
+>>>>>>> b690ea549d36ec53c06bdefe5630acb815a09530
+>>>>>>> c2fe04db8fd0f436e4a583791d47a08cadaf37a3

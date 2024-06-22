@@ -3,9 +3,8 @@ from manim import Line, Dot, VGroup, manim_colors, Text, UP, LEFT
 from manim import PURE_RED, PURE_GREEN, PURE_BLUE
 from manim import YELLOW, PURPLE, ORANGE, PINK
 
-from parent.code.algorithms.random_algorithm import RandomAlgorithm
-from parent.code.algorithms.greedy import Greedy
 from parent.code.experiments.statistics import read_solution_from_csv
+from parent.code.algorithms.score import routes_score
 
 from base_map import BaseScene
 from numpy.linalg import norm
@@ -34,10 +33,20 @@ class route_visualisation_image(BaseScene):
         
         # NOTE: instead of running an algorithm, we can now read 
         # a solution from a csv file
-        self.output = read_solution_from_csv("test.csv", for_manim=True)
+        self.output = read_solution_from_csv("../../algorithms/autorun_hillclimber/nieuw_record_omg/solutions/Holland_9089.0_HC.csv", for_manim=True)
+        # Greedy(self.data).run() 
         
-        # Greedy(self.data).run() # HERE
+        # Save number of routes for later reference
+        self.n_routes = len(self.output)
 
+        # Set mapname based on number of routes
+        # (Could fail at some point but seems robust for now)
+        if self.n_routes <= 7:
+            self.mapname = "Holland"
+        else:  
+            self.mapname = "Nationaal"
+        
+        
     # Find dots associated to station name
     def correspondence(self, name_start: str, name_end: str) -> tuple:
             
@@ -136,8 +145,8 @@ class route_visualisation_image(BaseScene):
 
         self.setup_2()
         self.add(self.dots, self.connections, self.connection_labels)
-        label = Text("Greedy Algorithm")
-        score = Text("Score = ")
+        label = Text(f"RailNL - {self.mapname}")
+        score = Text(f"Score = {routes_score(self.output, self.mapname)}")
 
         position = self.camera.frame.get_center()
         height = self.camera.frame.get_height()
@@ -155,8 +164,8 @@ class route_visualisation_image(BaseScene):
         self.add(label)
         self.add(score)
 
-        # Using seven routes
-        for i in range(7):
+        # Using amount of routes provided
+        for i in range(self.n_routes):
 
             # Iterate over route_objects in output
             route_object = self.output[i]
