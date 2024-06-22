@@ -62,37 +62,42 @@ def autorun_hillclimber(n_runs: int,
     # For the specified number of runs, run the Hillclimber algorithm
     for i in range(n_runs):
         
-        # Set a start state based on our found heuristics
-        start_state = Random_Greedy(maprange).run(
-                        starting_stations="original_stations_only_hard",
-                        final_number_of_routes= (4,5,6,7),
-                        route_time_limit=[80,100,120])
+        try:
+            # Set a start state based on our found heuristics
+            start_state = Random_Greedy(maprange).run(
+                            starting_stations="original_stations_only_hard",
+                            final_number_of_routes= (4,5,6,7),
+                            route_time_limit=[80,100,120])
 
-        # Run the Hillclimber algorithm and save solutions
-        hillclimber_alg = Hillclimber(start_state, maprange)
-        solution = hillclimber_alg.run(iterations = 350000,
-                                       log_csv=f"{project_dir}/log.csv",
-                                       simulated_annealing=True,
-                                       cap = 10000)
+            # Run the Hillclimber algorithm and save solutions
+            hillclimber_alg = Hillclimber(start_state, maprange)
+            solution = hillclimber_alg.run(iterations = 350000,
+                                        log_csv=f"{project_dir}/log.csv",
+                                        simulated_annealing=True,
+                                        cap = 10000)
+            
+
+
+            # After a run, write the solution to a csv file in auto_run folder
+            score = routes_score(solution, maprange)
+            solution_filename = f"{maprange}_{round(score)}_HC.csv"
+
+            write_solution_to_csv(solution, 
+                                f"{project_dir}/solutions/{solution_filename}", 
+                                custom_file_path=True)
+            
+            # Append the end score of this run to the end_scores csv file
+            append_single_score_to_csv(score, 
+                                    f"{project_dir}/end_scores.csv", 
+                                    custom_file_path=True)
         
-
-
-        # After a run, write the solution to a csv file in auto_run folder
-        score = routes_score(solution, maprange)
-        solution_filename = f"{maprange}_{round(score)}_HC.csv"
-
-        write_solution_to_csv(solution, 
-                            f"{project_dir}/solutions/{solution_filename}", 
-                            custom_file_path=True)
-        
-        # Append the end score of this run to the end_scores csv file
-        append_single_score_to_csv(score, 
-                                   f"{project_dir}/end_scores.csv", 
-                                   custom_file_path=True)
+        # Als de overflow error zich voordoet, door naar de volgende run
+        except:
+            continue
 
 
 
 
 if __name__ == "__main__":
-    autorun_hillclimber(100000, "finns_weekend_run", maprange="Nationaal", allow_overwrite=False)
+    autorun_hillclimber(100000, "agile_zaterdag", maprange="Holland", allow_overwrite=True)
 
