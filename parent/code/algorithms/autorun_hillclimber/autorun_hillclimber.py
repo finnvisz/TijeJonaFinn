@@ -10,8 +10,29 @@ from parent.code.experiments.statistics import write_solution_to_csv, write_scor
 from parent.code.algorithms.score import routes_score
 
 
-def autorun_hillclimber(n_runs: int, session_name: str, allow_overwrite: bool = False):
-    
+def autorun_hillclimber(n_runs: int, 
+                        session_name: str,
+                        maprange: str = "Holland", 
+                        allow_overwrite: bool = False
+                        ):
+    """
+    Run the Hillclimber algorithm for a specified number of runs.
+
+    Args:
+        n_runs (int): The number of runs to perform.
+        session_name (str): The name of the session or project.
+        maprange (str, optional): The map range to use. Defaults to "Holland".
+        allow_overwrite (bool, optional): Whether to allow overwriting an existing project directory. Defaults to False.
+
+
+    """
+
+    # Input checks
+    assert maprange in ["Holland", "Nationaal"], "Maprange should be either 'Holland' or 'Nationaal'."
+
+
+
+
     # Set root directory (where all project directories will be created)
     root_dir = "parent/code/algorithms/autorun_hillclimber/"
     
@@ -42,32 +63,36 @@ def autorun_hillclimber(n_runs: int, session_name: str, allow_overwrite: bool = 
     for i in range(n_runs):
         
         # Set a start state based on our found heuristics
-        start_state = Random_Greedy().run(
+        start_state = Random_Greedy(maprange).run(
                         starting_stations="original_stations_only_hard",
-                        final_number_of_routes= (4,5,6,7))
+                        final_number_of_routes= (4,5,6,7),
+                        route_time_limit=[80,100,120])
 
-        # Run the Hillclimber algorithm and save solutionS
-        hillclimber_alg = Hillclimber(start_state)
+        # Run the Hillclimber algorithm and save solutions
+        hillclimber_alg = Hillclimber(start_state, maprange)
         solution = hillclimber_alg.run(iterations = 350000,
                                        log_csv=f"{project_dir}/log.csv",
                                        simulated_annealing=True,
                                        cap = 10000)
         
+
+
         # After a run, write the solution to a csv file in auto_run folder
-        mapname = hillclimber_alg.load.mapname
-        score = routes_score(solution, mapname)
-        solution_filename = f"{mapname}_{round(score)}_HC.csv"
+        score = routes_score(solution, maprange)
+        solution_filename = f"{maprange}_{round(score)}_HC.csv"
 
         write_solution_to_csv(solution, 
                             f"{project_dir}/solutions/{solution_filename}", 
                             custom_file_path=True)
         
-
         # Append the end score of this run to the end_scores csv file
         append_single_score_to_csv(score, 
                                    f"{project_dir}/end_scores.csv", 
                                    custom_file_path=True)
 
 
+
+
 if __name__ == "__main__":
-    autorun_hillclimber(100000, "agile_zaterdag", allow_overwrite=True)
+    autorun_hillclimber(100000, "finns_weekend_run", maprange="Nationaal", allow_overwrite=False)
+
