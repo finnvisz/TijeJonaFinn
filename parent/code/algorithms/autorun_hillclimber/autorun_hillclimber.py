@@ -44,14 +44,14 @@ def autorun_hillclimber(n_runs: int, session_name: str, allow_overwrite: bool = 
         # Set a start state based on our found heuristics
         start_state = Random_Greedy().run(
                         starting_stations="original_stations_only_hard",
-                        final_number_of_routes= 5)
+                        final_number_of_routes= (4,5,6,7))
 
         # Run the Hillclimber algorithm and save solutionS
         hillclimber_alg = Hillclimber(start_state)
-        solution = hillclimber_alg.run(iterations = 500000,
+        solution = hillclimber_alg.run(iterations = 350000,
                                        log_csv=f"{project_dir}/log.csv",
                                        simulated_annealing=True,
-                                       cap = 20000)
+                                       cap = 10000)
         
         # After a run, write the solution to a csv file in auto_run folder
         mapname = hillclimber_alg.load.mapname
@@ -70,4 +70,4 @@ def autorun_hillclimber(n_runs: int, session_name: str, allow_overwrite: bool = 
 
 
 if __name__ == "__main__":
-    autorun_hillclimber(1000, "nightly_22-06", allow_overwrite=True)
+    autorun_hillclimber(100000, "agile_zaterdag", allow_overwrite=True)

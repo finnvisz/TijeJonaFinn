@@ -37,7 +37,7 @@ class Random_Greedy(Algorithm):
              
             # Options for number + length of routes: 
             final_number_of_routes: int | tuple[int] | None = None, 
-            route_time_limit: int | None = None,
+            route_time_limit: int | tuple[int] | list[int] | None = None,
 
             # Options for early route end (before time limit):
             # USE AT OWN RISK, CREATES ROUTES WITH ZERO CONNECTIONS
@@ -98,13 +98,17 @@ class Random_Greedy(Algorithm):
         
         Options for number + length of routes:
 
-        - `final_number_of_routes`: Number of routes to generate. Can be 
-        either int, or tuple[int] for random choice with replacement
-        between multiple values for each route. Default is 7 for Holland
-        map, 20 for Nationaal map.
+        - `final_number_of_routes`: Number of routes to generate. Default
+          is 7 for Holland map, 20 for Nationaal map. Can be set with
+          `int` to override this. If set to `tuple[int]`, a random value
+          out of the tuple will be chosen as number of routes.
 
         - `route_time_limit`: Maximum time for each route. Default is 120 
-        minutes for Holland map, 180 minutes for Nationaal map.
+          minutes for Holland map, 180 minutes for Nationaal map. Can be set
+          with `int` to override this fixed time limit. If set to `tuple[int]`, 
+          a random value out of the tuple will be chosen as fixed time limit
+          for all routes. If set to `list[int]`, each route will have a 
+          different time limit randomly chosen from the list.
 
 
         Experimental (USE AT OWN RISK):
@@ -125,16 +129,25 @@ class Random_Greedy(Algorithm):
                 final_number_of_routes = 20
             else:
                 raise ValueError("Invalid mapname. Please use 'Holland' or 'Nationaal'.")
+        # final_number_of_routes can be set to a tuple of numbers, 
+        # if so the number of routes will be randomly chosen from this tuple
+        elif type(final_number_of_routes) is tuple:
+            final_number_of_routes = np.random.choice(final_number_of_routes)
         
+
         # For Holland map, the default time limit is 120 minutes
         # For the Netherlands map, the default time limit is 180 minutes
         if route_time_limit is None:
             if self.load.mapname == "Holland":
-                route_time_limit = 120
+                time_limit_this_route = 120
             elif self.load.mapname == "Nationaal":
-                route_time_limit = 180
+                time_limit_this_route = 180
             else:
                 raise ValueError("Invalid mapname. Please use 'Holland' or 'Nationaal'.")
+        # Else if route_time_limit is a tuple, choose a random value,
+        # all routes will have this same time limit
+        elif type(route_time_limit) is tuple:
+            time_limit_this_route = np.random.choice(route_time_limit)
 
 
         # Check for correct input:
@@ -249,10 +262,7 @@ class Random_Greedy(Algorithm):
             used_starting_stations = []
  
 
-        # final_number_of_routes can be set to a tuple of numbers, 
-        # if so the number of routes will be randomly chosen from this tuple
-        if type(final_number_of_routes) is tuple:
-            final_number_of_routes = np.random.choice(final_number_of_routes)
+        
 
         # DEBUG
         # print(final_number_of_routes)
@@ -267,7 +277,12 @@ class Random_Greedy(Algorithm):
             # DEBUG
             # print(f"Route {self.number_of_routes() + 1}")
 
+
+            # If route_time_limit is a list, pick random again for each route
+            if type(route_time_limit) == list:
+                time_limit_this_route = np.random.choice(route_time_limit)
             
+
             # And set a first station for this route 
             # (method depends on starting_stations argument; 
             # lots of options!!):
@@ -321,8 +336,8 @@ class Random_Greedy(Algorithm):
                 current_station = starting_station_list_copy.pop()
 
 
-            # While time is less than route_time_limit
-            while route.time < route_time_limit: 
+            # While time is less than time_limit_this_route
+            while route.time < time_limit_this_route: 
                 # DEBUG
                 # print(f"Current station: {current_station.name}")
                 
@@ -361,7 +376,7 @@ class Random_Greedy(Algorithm):
                         connections.pop(0)
                 
                 # If adding this connection would exceed the time limit, remove this connection
-                while len(connections) > 0 and route.time + connections[0][1] > route_time_limit:
+                while len(connections) > 0 and route.time + connections[0][1] > time_limit_this_route:
                     connections.pop(0)
 
                 # If there are no unused connections left, end this route
