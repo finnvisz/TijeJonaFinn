@@ -118,44 +118,17 @@ class Random_Greedy(Algorithm):
         Default is False.
         """
 
-        # Set default values for final_number_of_routes and route_time_limit:
-
-        # For Holland map, the default number of routes is 7
-        # For the Netherlands map, the default number of routes is 10
-        if final_number_of_routes is None:
-            if self.load.mapname == "Holland":
-                final_number_of_routes = 7
-            elif self.load.mapname == "Nationaal":
-                final_number_of_routes = 20
-            else:
-                raise ValueError("Invalid mapname. Please use 'Holland' or 'Nationaal'.")
-        # final_number_of_routes can be set to a tuple of numbers, 
-        # if so the number of routes will be randomly chosen from this tuple
-        elif type(final_number_of_routes) is tuple:
-            final_number_of_routes = np.random.choice(final_number_of_routes)
-        
-
-        # For Holland map, the default time limit is 120 minutes
-        # For the Netherlands map, the default time limit is 180 minutes
-        if route_time_limit is None:
-            if self.load.mapname == "Holland":
-                time_limit_this_route = 120
-            elif self.load.mapname == "Nationaal":
-                time_limit_this_route = 180
-            else:
-                raise ValueError("Invalid mapname. Please use 'Holland' or 'Nationaal'.")
-        # Else if route_time_limit is a tuple, choose a random value,
-        # all routes will have this same time limit
-        elif type(route_time_limit) is tuple:
-            time_limit_this_route = np.random.choice(route_time_limit)
-
-
         # Check for correct input:
 
         # final_number_of_routes must be an integer or a tuple of integers
-        assert type(final_number_of_routes) == tuple or type(
-            final_number_of_routes) == int, """
-            final_number_of_routes must be an integer or a tuple of integers."""
+        assert type(final_number_of_routes) in (None, int, tuple), """
+            final_number_of_routes must be an int or tuple of ints."""
+
+        # route_time_limit  input check
+        assert type(route_time_limit) in (None, int, tuple, list), """
+            When set, final_number_of_routes must be an int, tuple of ints
+            or list of ints (tuple and list generates different results, 
+            read the docstring)."""
 
         # Check for correct input for next_connection_choice
         assert next_connection_choice in ["random", "shortest"], """
@@ -217,6 +190,41 @@ class Random_Greedy(Algorithm):
                 assert len(starting_station_list) == max(final_number_of_routes), """
                 Starting station list must be exactly as long as the maximum 
                 number of routes."""
+
+
+
+
+        # Set values for final_number_of_routes and route_time_limit:
+
+        # For Holland map, the default number of routes is 7
+        # For the Netherlands map, the default number of routes is 10
+        if final_number_of_routes is None:
+            if self.load.mapname == "Holland":
+                final_number_of_routes = 7
+            elif self.load.mapname == "Nationaal":
+                final_number_of_routes = 20
+            else:
+                raise ValueError("Invalid mapname. Please use 'Holland' or 'Nationaal'.")
+        # final_number_of_routes can be set to a tuple of numbers, 
+        # if so the number of routes will be randomly chosen from this tuple
+        elif type(final_number_of_routes) is tuple:
+            final_number_of_routes = np.random.choice(final_number_of_routes)
+        
+
+        # For Holland map, the default time limit is 120 minutes
+        # For the Netherlands map, the default time limit is 180 minutes
+        if route_time_limit is None:
+            if self.load.mapname == "Holland":
+                time_limit_this_route = 120
+            elif self.load.mapname == "Nationaal":
+                time_limit_this_route = 180
+            else:
+                raise ValueError("Invalid mapname. Please use 'Holland' or 'Nationaal'.")
+        # Else if route_time_limit is a tuple, choose a random value,
+        # all routes will have this same time limit
+        elif type(route_time_limit) is tuple:
+            time_limit_this_route = np.random.choice(route_time_limit)
+
 
 
 
@@ -411,6 +419,9 @@ class Random_Greedy(Algorithm):
         # Return the generated routes
         return self.routes
 
+
+
+
     def set_as_used(self, current_station: "Station", next_station: "Station") -> None:
         """
         Takes two stations and moves the connection between them from unused to used connections.
@@ -423,6 +434,9 @@ class Random_Greedy(Algorithm):
         if connection_key in self.unused_connections:
             # Pop this key-value pair from unused and add to the used connections
             self.used_connections[connection_key] = self.unused_connections.pop(connection_key)
+
+
+
 
 # Run  and print results
 if __name__ == "__main__":
