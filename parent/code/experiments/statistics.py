@@ -264,14 +264,31 @@ def read_solution_from_csv(filename: str,
     """
     Read a solution for the RailNL problem from a CSV file.
 
-    - Pre: CSV file with solution created by `write_solution_to_csv()`
-      exists in the `experiments/route_csv/` directory
+    - Pre: CSV file `filename` with solution created by 
+    `write_solution_to_csv()` exists in the directory chosen by 
+    `file_path` argument.
     - Post: return a list of Route objects
+
+    Args:
+    - `filename`: name of the file to read from, extension is optional.
+    
+    - `map`: name of the map used in the algorithm 
+    (Holland or Nationaal; default is Holland).
+    
+    - `file_path`: choose between "default", "for_manim" or 
+    "custom_file_path":
+    
+        - default: read from `experiments/route_csv/`
+    
+        - for_manim: read from `experiments/route_csv/` with relative path from manim script
+        
+        - custom_file_path: read from root of git repository, so user can specify path manually
     """
     # Set directory for reading the CSV file:
-
+    
     # Default directory is experiments/route_csv/
     if file_path == "default":
+        global experiments_root_dir
         csv_results_dir = f"{experiments_root_dir}/route_csv/"
 
     # Manim needs relative path from it's script to the default directory
@@ -285,7 +302,8 @@ def read_solution_from_csv(filename: str,
     
     # Else raise error
     else:
-        raise ValueError("Invalid file_path argument, choose 'default', 'for_manim' or 'custom_file_path'")
+        raise ValueError("Invalid file_path argument, choose 'default',"
+                         " 'for_manim' or 'custom_file_path'")
 
 
     # Add .csv extension if not present
