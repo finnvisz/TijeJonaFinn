@@ -50,17 +50,19 @@ def autorun_hillclimber(n_runs: int,
     # But if project was already created (project is re-run)
     except FileExistsError:
         if not allow_overwrite:
+            print("")
             print(f"Error: Directory {session_name} already exists. If appending to existing project is deliberate, set 'allow_overwrite' to True.")
             return
 
+        print("")
         print(f"Warning: Directory {session_name} already exists. Appending to that project.")
-        
+        print("")        
 
     
 
 
     # For the specified number of runs, run the Hillclimber algorithm
-    for i in range(n_runs):
+    for run_number in range(1, n_runs + 1):
         
         try:
 
@@ -75,7 +77,7 @@ def autorun_hillclimber(n_runs: int,
             solution = hillclimber_alg.run(iterations = 350000,
                                         log_csv=f"{project_dir}/log.csv",
                                         simulated_annealing=True,
-                                        cap = 10000)
+                                        cap = 15000)
             
 
 
@@ -94,10 +96,21 @@ def autorun_hillclimber(n_runs: int,
                                     f"{project_dir}/end_scores.csv", 
                                     custom_file_path=True)
             
+            # Print succes message seperated by empty lines
+            print("")
+            print(f"Run {run_number} of {n_runs} succesfully completed.",
+                    "Proceeding to next run.")
+            print("")
         
+
+
+
         # If an error occurs, log run number and on to the next run
         except:
-            run_number = i + 1
+            print("")
+            print(f"Error occurred in run {run_number}. Proceeding to next run.")
+            print("")
+            
             append_single_score_to_csv(run_number, 
                                        f"{project_dir}/runs_with_error.csv", 
                                        custom_file_path=True)
