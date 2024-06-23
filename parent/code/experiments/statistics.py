@@ -91,41 +91,6 @@ def read_scores_from_csv(filename: str,
     return scores
 
 
-def read_solution_from_csv(filename: str, 
-                           map="Holland",
-                           custom_file_path: bool = False) -> list[Route]:
-    """
-    Read solution from a CSV file
-
-    - Post: return a list of Route objects
-    """
-
-    # Add .csv extension if not present
-    if not filename.endswith(".csv"):
-        filename += ".csv"
-
-    # Initialize the RailNL object once
-    rail_network = RailNL(map)
-
-    # Read the solution from the CSV file
-    solution = []
-    with open(f"{experiments_root_dir}/route_csv/{filename}", 'r') as file:
-        reader = csv.reader(file)
-        next(reader)  # Skip header
-        for row in reader:
-            if row[0] != "score":
-                route = Route()
-                station_names = row[1].strip("[]").split(", ")
-                stations = []
-                for station_name in station_names:
-                    stations.append(rail_network.stations_dict()[station_name])
-                for i in range(len(stations)-1):
-                    connection_duration = stations[i].connections[stations[i + 1]]
-                    route.add_connection(stations[i], stations[i+1], connection_duration)
-                solution.append(route)
-    return solution
-
-
 def append_scores_to_csv(scores: "np.ndarray", 
                          filename: str,
                          custom_file_path: bool = False) -> None:
