@@ -293,7 +293,7 @@ def read_solution_from_csv(filename: str,
 
     # Manim needs relative path from it's script to the default directory
     elif file_path == "for_manim":
-        experiments_root_dir = "../experiments/route_csv/"
+        csv_results_dir = "../experiments/route_csv/"
 
     # If custom file path, override default directory so user can specify
     # path from parent directory
