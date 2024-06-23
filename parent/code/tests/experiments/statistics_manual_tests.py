@@ -1,3 +1,5 @@
+import pandas as pd
+
 from parent.code.experiments.statistics import write_scores_to_csv, read_scores_from_csv, append_scores_to_csv, write_solution_to_csv, read_solution_from_csv, calculate_p_value, plot_scores_fancy, plot_hillclimber, append_single_score_to_csv
 from parent.code.experiments.experiments import Experiment
 from parent.code.algorithms.random_greedy import Random_Greedy
@@ -11,4 +13,24 @@ if __name__ == "__main__":
     # plot_hillclimber("parent/code/algorithms/autorun_hillclimber/cap_50000/log.csv", title = "Hillclimber: cap_50000", custom_file_path=True)
 
     solution = read_solution_from_csv("../../algorithms/autorun_hillclimber/agile_zaterdag/solutions/Holland_9188_HC.csv")
+
+    i = 1
+    for route in solution:
+        print(f"Route {i}: {route.time} minuten")
+        i += 1
+
+
+
+
+
+
+
+    # ConnectiesHolland = pd.read_csv("parent/data/ConnectiesHolland.csv", 
+    #                     header=None)
+    
+    # ConnectiesHolland.columns = ["Station1", "Station2", "Afstand"]
+
+    # ConnectiesHolland["Afstand"] = ConnectiesHolland["Afstand"].astype(int)
+
+    # print(sum(ConnectiesHolland["Afstand"])/ 120)
 

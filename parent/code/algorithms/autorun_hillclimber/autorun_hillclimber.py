@@ -65,8 +65,8 @@ def autorun_hillclimber(n_runs: int,
             # Set a start state based on our found heuristics
             start_state = Random_Greedy(maprange).run(
                             starting_stations="original_stations_only_hard",
-                            final_number_of_routes= (4,5,6,7),
-                            route_time_limit=[80,100,120])
+                            final_number_of_routes = 4,
+                            route_time_limit = 100)
 
             # Run the Hillclimber algorithm and save solutions
             hillclimber_alg = Hillclimber(start_state, maprange)
@@ -114,5 +114,5 @@ def autorun_hillclimber(n_runs: int,
 
 
 if __name__ == "__main__":
-    autorun_hillclimber(100000, "agile_zaterdag", maprange="Holland", allow_overwrite=True)
+    autorun_hillclimber(100000, "4_routes_zondag", maprange="Holland", allow_overwrite=True)
 
