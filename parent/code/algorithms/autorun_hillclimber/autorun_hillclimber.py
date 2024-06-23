@@ -60,8 +60,10 @@ def autorun_hillclimber(n_runs: int,
 
 
     # For the specified number of runs, run the Hillclimber algorithm
-    for _ in range(n_runs):
+    for i in range(n_runs):
+        
         try:
+
             # Set a start state based on our found heuristics
             start_state = Random_Greedy(maprange).run(
                             starting_stations="original_stations_only_hard",
@@ -76,20 +78,6 @@ def autorun_hillclimber(n_runs: int,
                                         cap = 10000)
             
 
-
-            # After a run, write the solution to a csv file in auto_run folder
-            score = routes_score(solution, maprange)
-            solution_filename = f"{maprange}_{round(score)}_HC.csv"
-
-            write_solution_to_csv(solution, 
-                                f"{project_dir}/solutions/{solution_filename}", 
-                                custom_file_path=True)
-            
-            # Append the end score of this run to the end_scores csv file
-            append_single_score_to_csv(score, 
-                                    f"{project_dir}/end_scores.csv", 
-                                    custom_file_path=True)
-        
 
 
             # After a run, write the solution to a csv file in auto_run folder
@@ -106,13 +94,19 @@ def autorun_hillclimber(n_runs: int,
                                     f"{project_dir}/end_scores.csv", 
                                     custom_file_path=True)
             
-            # Als de overflow error zich voordoet, door naar de volgende run
+        
+        # If an error occurs, log run number and on to the next run
         except:
+            run_number = i + 1
+            append_single_score_to_csv(run_number, 
+                                       f"{project_dir}/runs_with_error.csv", 
+                                       custom_file_path=True)
+
             continue
 
 
 
 
 if __name__ == "__main__":
-    autorun_hillclimber(100000, "4_routes_zondag", maprange="Holland", allow_overwrite=True)
+    autorun_hillclimber(1000, "4_routes_zondag", maprange="Holland", allow_overwrite=True)
 
