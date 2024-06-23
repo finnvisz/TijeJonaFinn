@@ -664,7 +664,7 @@ def plot_autorun_hillclimber(project_name: str | None = None,
                             header=None)
         
         print("Read-in of raw CSV log data successful.")
-        print("Aggregating data...")
+        print("Aggregating data. This might take a while...")
 
         # Create a new dataframe with the mean, max and min
         df_data_aggregated = df_data.agg(['mean', 'max', 'min'], axis=1).reset_index()

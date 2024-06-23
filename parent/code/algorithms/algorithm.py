@@ -3,7 +3,7 @@ from parent.code.classes.route import Route
 import matplotlib.pyplot as plt 
 
 class Algorithm:
-    """Base algorithm script.
+    """Base algorithm class.
     """
 
     def __init__(self, load: RailNL) -> None:

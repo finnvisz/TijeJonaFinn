@@ -19,10 +19,10 @@ def autorun_hillclimber(n_runs: int,
     Run the Hillclimber algorithm for a specified number of runs.
 
     Args:
-        n_runs (int): The number of runs to perform.
-        session_name (str): The name of the session or project.
-        maprange (str, optional): The map range to use. Defaults to "Holland".
-        allow_overwrite (bool, optional): Whether to allow overwriting an existing project directory. Defaults to False.
+        - n_runs (int): The number of runs to perform.
+        - session_name (str): The name of the session or project.
+        - maprange (str, optional): The map range to use. Defaults to "Holland".
+        - allow_overwrite (bool, optional): Whether to allow overwriting an existing project directory. Defaults to False.
 
 
     """
@@ -66,7 +66,7 @@ def autorun_hillclimber(n_runs: int,
 
     
 
-    
+
     # Print message that the autorun is starting
     print(f"Starting {n_runs} runs of Hillclimber algorithm on {maprange} map.")
     print("")
@@ -87,7 +87,7 @@ def autorun_hillclimber(n_runs: int,
             solution = hillclimber_alg.run(iterations = 350000,
                                         log_csv=f"{project_dir}/log.csv",
                                         simulated_annealing=True,
-                                        cap = 15000)
+                                        cap = 30000)
             
 
 
@@ -131,5 +131,5 @@ def autorun_hillclimber(n_runs: int,
 
 
 if __name__ == "__main__":
-    autorun_hillclimber(1000, "4_routes_zondag", maprange="Holland", allow_overwrite=True)
+    autorun_hillclimber(1000, "zondagnacht_cap_30000", maprange="Holland", allow_overwrite=False)
 
