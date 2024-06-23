@@ -40,26 +40,36 @@ def autorun_hillclimber(n_runs: int,
     project_dir = f"{root_dir}{session_name}"
     
     # Create project directory
-    # If directory already exists, print error message and return
+    # If directory already exists, handle that
     try:
         os.mkdir(project_dir)
 
         # Create subdirectory to store solution of each run
         os.mkdir(f"{project_dir}/solutions")
+
+        print("")
+        print(f"New project {session_name} succesfully created.")
+        print("") 
     
     # But if project was already created (project is re-run)
     except FileExistsError:
+        # If overwriting is not allowed, print error message and return
         if not allow_overwrite:
             print("")
             print(f"Error: Directory {session_name} already exists. If appending to existing project is deliberate, set 'allow_overwrite' to True.")
             return
 
+        # If overwriting is allowed, print warning message
         print("")
         print(f"Warning: Directory {session_name} already exists. Appending to that project.")
         print("")        
 
     
 
+    
+    # Print message that the autorun is starting
+    print(f"Starting {n_runs} runs of Hillclimber algorithm on {maprange} map.")
+    print("")
 
     # For the specified number of runs, run the Hillclimber algorithm
     for run_number in range(1, n_runs + 1):
@@ -70,7 +80,7 @@ def autorun_hillclimber(n_runs: int,
             start_state = Random_Greedy(maprange).run(
                             starting_stations="original_stations_only_hard",
                             final_number_of_routes = 4,
-                            route_time_limit = 100)
+                            route_time_limit = [100, 120, 120, 120])
 
             # Run the Hillclimber algorithm and save solutions
             hillclimber_alg = Hillclimber(start_state, maprange)
