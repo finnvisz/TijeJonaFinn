@@ -258,7 +258,9 @@ def write_solution_to_csv(routes: list[Route],
         writer.writerow(["score", f"{score}"])
 
 
-def read_solution_from_csv(filename: str, map="Holland", for_manim = False) -> list[Route]:
+def read_solution_from_csv(filename: str, 
+                           map="Holland", 
+                           file_path = "default") -> list[Route]:
     """
     Read a solution for the RailNL problem from a CSV file.
 
@@ -266,21 +268,39 @@ def read_solution_from_csv(filename: str, map="Holland", for_manim = False) -> l
       exists in the `experiments/route_csv/` directory
     - Post: return a list of Route objects
     """
+    # Set directory for reading the CSV file:
+
+    # Default directory is experiments/route_csv/
+    if file_path == "default":
+        csv_results_dir = f"{experiments_root_dir}/route_csv/"
+
+    # Manim needs relative path from it's script to the default directory
+    elif file_path == "for_manim":
+        experiments_root_dir = "../experiments/route_csv/"
+
+    # If custom file path, override default directory so user can specify
+    # path from parent directory
+    elif file_path == "custom_file_path":
+        csv_results_dir = ""
     
-    # Manim needs relative path
-    if for_manim:
-        experiments_root_dir = "../experiments"
+    # Else raise error
+    else:
+        raise ValueError("Invalid file_path argument, choose 'default', 'for_manim' or 'custom_file_path'")
+
 
     # Add .csv extension if not present
     if not filename.endswith(".csv"):
         filename += ".csv"
+
+
+
 
     # Initialize the RailNL object once
     rail_network = RailNL(map)
 
     # Read the solution from the CSV file
     solution = []
-    with open(f"{experiments_root_dir}/route_csv/{filename}", 'r') as file:
+    with open(f"{csv_results_dir}{filename}", 'r') as file:
         reader = csv.reader(file)
         next(reader)  # Skip header
         for row in reader:

@@ -1,1 +1,3 @@
+# Log files tend to becomed larger than 50 mb, therefore we don't track them in git
+# Make sure to make a manual backup of your log files
 log.csv
