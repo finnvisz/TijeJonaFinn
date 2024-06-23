@@ -4,28 +4,11 @@ from parent.code.algorithms.random_greedy import Random_Greedy
 from parent.code.algorithms.hillclimber import Hillclimber
 from parent.code.classes.railnl import RailNL
 
-# if __name__ == "__main__":
-    
-#     # for i in range(20):
-#         data = RailNL()
 
-#         # Test Hillclimber algorithm with RandomAlgorithm as starting state
-#         random_alg = Random_Greedy()
-#         random_alg.run()
-#         hillclimber_alg = Hillclimber(data, random_alg, "Holland")
-#         solution = hillclimber_alg.run(1000, data_csv = "test_jona.csv")
-
-#         print(solution)
-
-#     # plot_hillclimber("test_jona.csv", title = "Hillclimber: progressie over iteraties")
         
 if __name__ == "__main__":
     # append_single_score_to_csv(300.0, "test_jona_3.csv")
-    plot_hillclimber("parent/code/algorithms/autorun_hillclimber/cap_50000/log.csv", title = "Hillclimber: cap_50000", custom_file_path=True)
+    # plot_hillclimber("parent/code/algorithms/autorun_hillclimber/cap_50000/log.csv", title = "Hillclimber: cap_50000", custom_file_path=True)
 
-# if __name__ == '__main__':
-#     write_solution_to_csv(Random_Greedy().run(), "test_jona.csv")
+    solution = read_solution_from_csv("../../algorithms/autorun_hillclimber/agile_zaterdag/solutions/Holland_9188_HC.csv")
 
-#     solution = read_solution_from_csv("test_jona.csv")
-
-#     print(solution)
