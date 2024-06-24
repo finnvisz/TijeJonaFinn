@@ -7,8 +7,9 @@ from parent.code.algorithms.random_greedy import Random_Greedy
 from parent.code.algorithms.score import routes_score
 from parent.code.classes.railnl import RailNL
 from parent.code.classes.route import Route
-from parent.code.experiments.statistics import append_scores_to_csv
+from parent.code.experiments.statistics import append_scores_to_csv, write_solution_to_csv, read_solution_from_csv
 from parent.code.algorithms.tot_con_used import get_total_connections_used
+from parent.code.algorithms.finnsroutes import Finn
 
 class Hillclimber(Algorithm):
     """Hillclimber algorithm to optimize train routes.
@@ -148,7 +149,7 @@ class Hillclimber(Algorithm):
             while len(route.connections_used) > 2 and i <= len(route.stations) - 4:
                 if (route.stations[i], route.stations[i+1]) == (route.stations[i+2], route.stations[i+3]):
                     route.stations.pop(i+2)
-                    route.stations.pop(i+3)
+                    route.stations.pop(i+2)
                     route.connections_used.pop(i+1)
                     i -= 1
                 else:
@@ -160,8 +161,6 @@ class Hillclimber(Algorithm):
 
         return updated_routes
 
-
-        
 
     def run(self, iterations: int, 
             simulated_annealing: bool = False, 
@@ -199,6 +198,9 @@ class Hillclimber(Algorithm):
         count_no_change = 0
         self.simulated_annealing = simulated_annealing
         self.cap = cap
+
+        if improve_routes:
+            self.routes = self.improve_routes(self.routes)
 
         for i in range(self.iterations):
             # each iteration, remove a random route and add another
@@ -262,8 +264,6 @@ class Hillclimber(Algorithm):
 if __name__ == "__main__":
     maprange = "Nationaal"
     # Test Hillclimber algorithm with RandomAlgorithm as starting state
-    random_alg = Random_Greedy(maprange).run(
-                            final_number_of_routes=(14),
-                            route_time_limit=[180],
-                            starting_stations = 'original_stations_only_hard')
-    hillclimber_alg = Hillclimber(random_alg, maprange).run(1)
+    algorithm = read_solution_from_csv('/home/finnvisz/TijeJonaFinn/parent/code/algorithms/autorun_hillclimber/test_nationaal/solutions/Nationaal_6359_HC.csv', map="Nationaal", file_path= "custom_file_path")
+    solution = Hillclimber(algorithm, maprange).run(10, improve_routes=True)
+    write_solution_to_csv(solution, "chechcheckdubbelcheck.csv", map="Nationaal")
