@@ -201,6 +201,8 @@ class Hillclimber(Algorithm):
 
         if improve_routes:
             self.routes = self.improve_routes(self.routes)
+            self.best_score = routes_score(self.routes, self.maprange)
+            print(f"improved start score: {self.best_score}")
 
         for i in range(self.iterations):
             # each iteration, remove a random route and add another
