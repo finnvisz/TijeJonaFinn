@@ -87,7 +87,8 @@ def autorun_hillclimber(n_runs: int,
             solution = hillclimber_alg.run(iterations = 350000,
                                         log_csv=f"{project_dir}/log.csv",
                                         simulated_annealing=True,
-                                        cap = 30000)
+                                        cap = 30000,
+                                        improve_routes = True)
             
 
 
@@ -131,5 +132,5 @@ def autorun_hillclimber(n_runs: int,
 
 
 if __name__ == "__main__":
-    autorun_hillclimber(1000, "zondagnacht_cap_30000", maprange="Holland", allow_overwrite=False)
+    autorun_hillclimber(1000, "improve_routes_test_maandag", maprange="Holland", allow_overwrite=False)
 
