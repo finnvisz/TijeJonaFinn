@@ -373,7 +373,9 @@ def plot_scores_fancy(sample1: "np.ndarray[float]",
                       sample4: "np.ndarray[float]" = None, 
                       
                       # save settings
-                      save_to_pdf: bool = False, preview: bool = True, 
+                      save_to_pdf: bool = False,
+                      plot_dir: str | None = None, 
+                      preview: bool = True, 
                       filename: str | None = None,
                       
                       # plot settings
@@ -397,23 +399,25 @@ def plot_scores_fancy(sample1: "np.ndarray[float]",
     args:
 
     Save settings:
-    - `save_to_pdf`: save plot to pdf file in directory `plot_dir` 
-    (which is defined right after the imports of this script).
-    - `preview`: show preview of plot.
-    - `filename`: (optional) custom filename for the plot. When not 
+    - save_to_pdf: save plot to pdf file in directory `plot_dir`.
+    - plot_dir: (optional) custom directory to save the plot to. 
+    Default is `parent/code/experiments/plots`.
+    - preview: show preview of plot.
+    - filename: (optional) custom filename for the plot. When not 
     provided, user-provided `title` is used or else a default name with 
     timestamp.
     
+
     Plot settings:
-    - `title`: title of the plot, also used as filename if saved to pdf.
+    - title: title of the plot, also used as filename if saved to pdf.
     When not provided, a default name with timestamp is used.
-    - `legend_title`: title of the legend in the plot. Default is "Groep".
-    - `legend_labels`: custom labels for the legend. Should be a tuple
+    - legend_title: title of the legend in the plot. Default is "Groep".
+    - legend_labels: custom labels for the legend. Should be a tuple
     of strings with the same length as the number of samples.
     
-    - `binwidth`: width of the bins in the histogram (default is 400, 
+    - binwidth: width of the bins in the histogram (default is 400, 
     seems a sweet spot).
-    - `alpha`: (optional) set custom transparency of the bars in the 
+    - alpha: (optional) set custom transparency of the bars in the 
     histogram. Value between 0 and 1. Default is 0.85 for single sample 
     and 0.7 for multiple samples.
     """
@@ -582,7 +586,10 @@ def plot_scores_fancy(sample1: "np.ndarray[float]",
 
     # Save to pdf if specified
     if save_to_pdf:
-        plot.save(filename = filename, path=f"{experiments_root_dir}/plots")
+        if plot_dir is None:
+            plot_dir = f"{experiments_root_dir}/plots"
+        
+        plot.save(filename = filename, path = plot_dir)
     
     # Show preview of plot if specified
     if preview:
@@ -779,20 +786,40 @@ def plot_autorun_hillclimber(project_name: str | None = None,
         plot.show()
     
 
-def plot_scores(filename: str, scores: list[float]):
-    # Plotting the frequency distribution of scores
-    plt.figure(figsize=(10, 6))
-    plt.hist(scores, bins=50, edgecolor='black', alpha=0.7)
-    plt.title(f"{filename}")
-    plt.xlabel('Score')
-    plt.xlim(0, 10000)
-    plt.ylabel('Frequency')
-    plt.grid(True)
-    plt.tight_layout()
+def plot_endscores_autorun_hillclimber(project_name: str, 
+                                       title: str | None = None
+                                       ) -> None:
+    """
     
-    plt.savefig(f"{experiments_root_dir}/plots/{filename}.png")
+    """
+    
+    # Set project directory
+    project_dir = f"parent/code/algorithms/autorun_hillclimber/{project_name}"
+    # Set plot directory to root of project (may become subdir in future)
+    plot_dir = project_dir
+    
 
+    # Read the end_scores from the autorun_hillclimber project directory
+    end_scores = read_scores_from_csv(f"{project_dir}/end_scores.csv", 
+                                      custom_file_path = True)
 
+    # Set title
+    if title is None:
+        title = f"Hillclimber '{project_name}': verdeling van eindscores"
+
+    # Plot the end_scores
+    plot_scores_fancy(end_scores, 
+                      title = title, 
+                      binwidth=10, 
+                      xlim=(min(end_scores), max(end_scores)), 
+                      preview = False,
+                      save_to_pdf=True,
+                      filename = f"end_scores_plot_{project_name}",
+                      plot_dir = plot_dir)
+    
+    print()
+    print(f"End scores plot for '{project_name}' created successfully and saved to {plot_dir}")
+    
 
 
 
@@ -877,7 +904,6 @@ if __name__ == "__main__":
 #     randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
 #     randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
 
-#     plot_scores(randomv2_least_connections, randomv2_most_connections)
 
 
 # """Example usage plot_scores_fancy"""
