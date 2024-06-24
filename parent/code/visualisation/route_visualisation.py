@@ -1,11 +1,11 @@
-from manim import ApplyMethod, Line, Transform, Dot, VGroup
+from manim import ApplyMethod, Line, Transform, Dot, VGroup, Text, UP, LEFT
 from manim import manim_colors, smooth
 
 from manim import PURE_RED, PURE_GREEN, PURE_BLUE
 from manim import YELLOW, PURPLE, ORANGE, PINK
 
-from parent.code.algorithms.random_algorithm import RandomAlgorithm
-from parent.code.algorithms.greedy import Greedy
+from parent.code.experiments.statistics import read_solution_from_csv
+from parent.code.algorithms.score import routes_score
 
 from base_map import BaseScene
 from numpy.linalg import norm
@@ -35,9 +35,21 @@ class route_visualisation(BaseScene):
 
     # Run algorithm here
     def run_algorithm(self) -> None:
-        algorithm = RandomAlgorithm(self.data)
-        algorithm.run()
-        self.output = algorithm.output()
+        
+        # NOTE: instead of running an algorithm, we can now read 
+        # a solution from a csv file
+        self.output = read_solution_from_csv("../../algorithms/autorun_hillclimber/maandag_na_bugfix_improve_routes/solutions/Holland_9210_HC", file_path = "for_manim")
+        # Greedy(self.data).run() 
+        
+        # Save number of routes for later reference
+        self.n_routes = len(self.output)
+
+        # Set mapname based on number of routes
+        # (Could fail at some point but seems robust for now)
+        if self.n_routes <= 7:
+            self.mapname = "Holland"
+        else:  
+            self.mapname = "Nationaal"
 
     # Find dots associated to station name
     def correspondence(self, name_start: str, name_end: str) -> tuple:
@@ -144,10 +156,30 @@ class route_visualisation(BaseScene):
 
         self.setup_2()
         self.add(self.dots, self.connections, self.connection_labels)
+        
+        label = Text(f"RailNL - {self.mapname}")
+        score = Text(f"Score = {routes_score(self.output, self.mapname)}")
+
+        position = self.camera.frame.get_center()
+        height = self.camera.frame.get_height()
+        width = self.camera.frame.get_width()
+
+        label.move_to(position)
+        score.move_to(position)
+
+        label.scale(0.05)
+        score.scale(0.05)
+
+        label.shift(LEFT * width * 0.25 - UP * height * 0.25)
+        score.shift(LEFT * width * 0.25 - UP * height * 0.3)
+
+        self.add(label)
+        self.add(score)
+        
         self.wait(2)
 
         # Using seven routes
-        for i in range(7):
+        for i in range(self.n_routes):
 
             # Iterate over route_objects in output
             route_object = self.output[i]

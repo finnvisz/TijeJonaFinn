@@ -8,7 +8,6 @@ from code.algorithms.algorithm import Algorithm
 from code.algorithms.random_algorithm import RandomAlgorithm
 from code.algorithms.greedy import Greedy
 from code.algorithms.hillclimber import Hillclimber
-from code.algorithms.score import Score
 from parent.code.experiments.experiments import Experiment
 
 if __name__ == "__main__":

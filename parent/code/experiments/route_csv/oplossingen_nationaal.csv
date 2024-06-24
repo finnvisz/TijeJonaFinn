@@ -1,0 +1,17 @@
+train,stations
+train_1,"[Helmond, Eindhoven, Weert, Roermond, Weert, Roermond, Weert, Roermond, Sittard, Maastricht, Sittard, Heerlen, Sittard]"
+train_2,"[Den Helder, Alkmaar, Hoorn, Zaandam, Amsterdam Sloterdijk, Amsterdam Centraal, Almere Centrum, Amsterdam Amstel, Utrecht Centraal, Hilversum]"
+train_3,"[Oss, s-Hertogenbosch, Utrecht Centraal, Hilversum, Amsterdam Amstel, Almere Centrum, Lelystad Centrum, Almere Centrum, Hilversum]"
+train_4,"[Delft, Den Haag HS, Delft, Schiedam Centrum, Rotterdam Centraal, Rotterdam Alexander, Rotterdam Blaak, Dordrecht, Roosendaal, Dordrecht]"
+train_5,"[Almere Centrum, Amsterdam Amstel, Amsterdam Centraal, Utrecht Centraal, Alphen a/d Rijn, Leiden Centraal, Heemstede-Aerdenhout, Leiden Centraal, Schiphol Airport, Utrecht Centraal]"
+train_6,"[Schiedam Centrum, Delft, Den Haag Centraal, Leiden Centraal, Heemstede-Aerdenhout, Leiden Centraal, Den Haag Laan v NOI, Delft, Schiedam Centrum, Delft, Schiedam Centrum, Rotterdam Blaak, Rotterdam Alexander, Gouda, Utrecht Centraal]"
+train_7,"[Hengelo, Enschede, Hengelo, Almelo, Zwolle, Deventer, Zutphen, Apeldoorn, Deventer, Zwolle]"
+train_8,"[Den Haag Centraal, Leiden Centraal, Den Haag HS, Gouda, Den Haag Laan v NOI, Gouda, Rotterdam Alexander, Gouda, Den Haag Centraal, Leiden Centraal, Den Haag HS, Leiden Centraal]"
+train_9,"[Haarlem, Beverwijk, Castricum, Zaandam, Beverwijk, Haarlem, Heemstede-Aerdenhout, Haarlem, Amsterdam Sloterdijk, Amsterdam Zuid, Amsterdam Amstel, Amsterdam Zuid, Schiphol Airport]"
+train_10,"[Amersfoort, Utrecht Centraal, Amersfoort, Zwolle, Steenwijk, Heerenveen, Leeuwarden, Groningen, Assen]"
+train_11,"[Arnhem Centraal, Dieren, Zutphen, Dieren, Arnhem Centraal, Nijmegen, Oss, s-Hertogenbosch, Oss, s-Hertogenbosch, Utrecht Centraal, Ede-Wageningen, Arnhem Centraal, Ede-Wageningen]"
+train_12,"[Den Haag HS, Gouda, Alphen a/d Rijn, Utrecht Centraal, Amersfoort, Apeldoorn, Zutphen, Deventer]"
+train_13,"[Dordrecht, Breda, Etten-Leur, Roosendaal, Dordrecht, Breda, Tilburg, s-Hertogenbosch, Eindhoven, Tilburg, Eindhoven]"
+train_14,"[Venlo, Helmond]"
+score,5946.202247191011
+
