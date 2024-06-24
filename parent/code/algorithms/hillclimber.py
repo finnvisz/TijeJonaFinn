@@ -70,6 +70,28 @@ class Hillclimber(Algorithm):
                 break
             connections = list(current_station.connections_dict().keys())
             connection = random.choice(connections)
+
+
+            # If original_connections_only is set, keep trying until a 
+            # connection is found that hasn't been used yet
+            if self.original_connections_only:
+                
+                # If this connection is already used, try another one
+                while route.is_connection_used(current_station, connection):
+                    connections.remove(connection)
+
+                    # If no connections left, break
+                    if len(connections) == 0:
+                        break
+
+                    connection = random.choice(connections)
+
+                # If no connections left from current station, end this 
+                # route
+                if len(connections) == 0:
+                    break
+
+
             duration = int(current_station.connection_duration(connection))
             total = time_used + duration
             if total < max_time:
@@ -170,16 +192,16 @@ class Hillclimber(Algorithm):
             simulated_annealing: bool = False, 
             cap=10**99,
             improve_routes: bool = True,
+            original_connections_only: bool = False,
             
             log_csv: str | None = None) -> list[Route]:
         """
         Run the Hillclimber optimization for a specified number of iterations.
 
-        Pre: 
+        - Pre: 
 
-
-        Post: The Hillclimber algorithm runs for the specified number
-          of iterations, optimizing the routes.
+        - Post: The Hillclimber algorithm runs for the specified number
+          of iterations, and returns a list of routes (the solution).
 
         Args:
         
@@ -190,6 +212,12 @@ class Hillclimber(Algorithm):
         - improve_routes (bool): if True, Hillclimber tries to remove redundant
           connections from routes each iteration (head, tail, middle). 
           Default True.
+        
+        Experimental:
+        - original_connections_only (bool): if True, each generated route
+          will only use connections that haven't been used yet in that 
+          route. This means a train can never ga "back" within a route. 
+          Use with caution! May generate weird results. Default is False.
 
         Data collection settings:
         - log_csv: if not None, append score per iteration to specified 
@@ -202,6 +230,7 @@ class Hillclimber(Algorithm):
         count_no_change = 0
         self.simulated_annealing = simulated_annealing
         self.cap = cap
+        self.original_connections_only = original_connections_only
 
         if improve_routes:
             self.routes = self.improve_routes(self.routes)
@@ -268,8 +297,12 @@ class Hillclimber(Algorithm):
 
 # Example/test usage
 if __name__ == "__main__":
-    maprange = "Nationaal"
+    # maprange = "Nationaal"
+    # # Test Hillclimber algorithm with RandomAlgorithm as starting state
+    # algorithm = read_solution_from_csv('/home/finnvisz/TijeJonaFinn/parent/code/algorithms/autorun_hillclimber/test_nationaal/solutions/Nationaal_6359_HC.csv', map="Nationaal", file_path= "custom_file_path")
+    # solution = Hillclimber(algorithm, maprange).run(10, improve_routes=True)
+    # write_solution_to_csv(solution, "chechcheckdubbelcheck.csv", map="Nationaal")
+
     # Test Hillclimber algorithm with RandomAlgorithm as starting state
-    algorithm = read_solution_from_csv('/home/finnvisz/TijeJonaFinn/parent/code/algorithms/autorun_hillclimber/test_nationaal/solutions/Nationaal_6359_HC.csv', map="Nationaal", file_path= "custom_file_path")
-    solution = Hillclimber(algorithm, maprange).run(10, improve_routes=True)
-    write_solution_to_csv(solution, "chechcheckdubbelcheck.csv", map="Nationaal")
+    start_state = Random_Greedy("Holland").run()
+    solution = Hillclimber(start_state, "Holland").run(1000, simulated_annealing= True, cap = 30000, improve_routes=True, original_connections_only=True)

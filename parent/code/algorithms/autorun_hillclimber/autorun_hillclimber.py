@@ -84,11 +84,12 @@ def autorun_hillclimber(n_runs: int,
 
             # Run the Hillclimber algorithm and save solutions
             hillclimber_alg = Hillclimber(start_state, maprange)
-            solution = hillclimber_alg.run(iterations = 350000,
+            solution = hillclimber_alg.run(iterations = 450000,
                                         log_csv=f"{project_dir}/log.csv",
                                         simulated_annealing=True,
                                         cap = 30000,
-                                        improve_routes = True)
+                                        improve_routes = True,
+                                        original_connections_only = True)
             
 
 
@@ -132,5 +133,5 @@ def autorun_hillclimber(n_runs: int,
 
 
 if __name__ == "__main__":
-    autorun_hillclimber(1000, "maandag_na_bugfix_improve_routes", maprange="Holland", allow_overwrite=False)
+    autorun_hillclimber(1000, "maandag_original_connections_only", maprange="Holland", allow_overwrite=False)
 

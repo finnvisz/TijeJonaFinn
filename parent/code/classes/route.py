@@ -40,7 +40,9 @@ class Route:
     
     def is_connection_used(self, station1: "Station", station2: "Station") -> bool:
         """
-        Check if a connection between station1 and station2 is already used in this route.
+        Check if a connection between station1 and station2 is already 
+        used in this route. Order of station1 and station2 does not 
+        matter(!), as the connection is bidirectional.
         """
         for connection in self.connections_used:
             if station1.name in connection and station2.name in connection:
