@@ -1,6 +1,5 @@
 from parent.code.classes.station_class import Station
 from typing import Tuple
-import random
 
 class Route:
     """Object class of train routes between stations."""

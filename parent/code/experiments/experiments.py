@@ -3,7 +3,6 @@ import numpy as np
 
 # Local imports
 from parent.code.algorithms.algorithm import Algorithm
-from parent.code.classes.station_class import Station
 from parent.code.classes.railnl import RailNL
 from parent.code.algorithms.score import routes_score
 from parent.code.algorithms.random_greedy import Random_Greedy
