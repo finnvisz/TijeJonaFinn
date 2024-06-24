@@ -59,11 +59,11 @@ class Random_Greedy(Algorithm):
         Options per connection (How to pick the next connection in the
         route):
         
-        - `next_connection_choice`: Specify how to pick the next connection 
+        - next_connection_choice: Specify how to pick the next connection 
         in the route. Options: "random" (default), or "shortest" for a
         greedy approach to connections.
         
-        - `original_connections_only`: (NOTE: leave on False when 
+        - original_connections_only: (NOTE: leave on False when 
         `next_connection_choice = "random", creates solutions with very
         short connections) When True, each route uses only unused
         connections. i.e.: within a route, no connection is used more
@@ -72,23 +72,23 @@ class Random_Greedy(Algorithm):
 
         Options for starting station per route:
 
-        - `starting_stations`: Specify how to pick the starting station for 
+        - starting_stations: Specify how to pick the starting station for 
         each route. Options: 
-        1. `fully_random`: pick random with replacement from all stations.
-        2. `original_stations_only_soft`: (Tije version) pick random
+        1. fully_random: pick random with replacement from all stations.
+        2. original_stations_only_soft: (Tije version) pick random
         with replacement, but if another route starts at this station, 
         pick another.
-        3. `original_stations_only_hard`: (Jona version) pick 
+        3. original_stations_only_hard: (Jona version) pick 
         random station with 0 connections, or else random station with
         unused connections.
         
-        4. `custom_list_with_replacement`: pick random from custom list
+        4. custom_list_with_replacement: pick random from custom list
         (with replacement)
         5. `custom_list_without_replacement`: pick random from custom list
         (without replacement; NOTE: make sure the list length is equal to
         the number of routes generated.)
         
-        - `starting_station_list`: list of stations to pick from,
+        - starting_station_list: list of stations to pick from,
         OR list with multiple station lists is also possible 
         (in that case one of the station lists will be chosen randomly).
         Only used when starting_stations is set to
@@ -98,12 +98,12 @@ class Random_Greedy(Algorithm):
         
         Options for number + length of routes:
 
-        - `final_number_of_routes`: Number of routes to generate. Default
+        - final_number_of_routes: Number of routes to generate. Default
           is 7 for Holland map, 20 for Nationaal map. Can be set with
           `int` to override this. If set to `tuple[int]`, a random value
           out of the tuple will be chosen as number of routes.
 
-        - `route_time_limit`: Maximum time for each route. Default is 120 
+        - route_time_limit: Maximum time for each route. Default is 120 
           minutes for Holland map, 180 minutes for Nationaal map. Can be set
           with `int` to override this fixed time limit. If set to `tuple[int]`, 
           a random value out of the tuple will be chosen as fixed time limit
@@ -113,7 +113,7 @@ class Random_Greedy(Algorithm):
 
         Experimental (USE AT OWN RISK):
         
-        - `chance_of_early_route_end`: (CREATE ROUTES WITH 0 CONNECTIONS)
+        - chance_of_early_route_end (bool): (CREATE ROUTES WITH 0 CONNECTIONS)
         If set to True, routes can end before `route_time_limit` minutes.
         Default is False.
         """
@@ -124,239 +124,34 @@ class Random_Greedy(Algorithm):
                         original_connections_only, starting_stations, 
                         starting_station_list)
 
-        # DEBUG
-        # print(starting_station_list)
 
         # Set values for final_number_of_routes and route_time_limit:
+        final_number_of_routes = self.set_final_number_of_routes(
+                                        final_number_of_routes)
 
-        # For Holland map, the default number of routes is 7
-        # For the Netherlands map, the default number of routes is 20
-        if final_number_of_routes is None:
-            if self.load.mapname == "Holland":
-                final_number_of_routes = 7
-            elif self.load.mapname == "Nationaal":
-                final_number_of_routes = 20
-            else:
-                raise ValueError("Invalid mapname. Please use 'Holland' or 'Nationaal'.")
-        # final_number_of_routes can be set to a tuple of numbers, 
-        # if so the number of routes will be randomly chosen from this tuple
-        elif type(final_number_of_routes) is tuple:
-            final_number_of_routes = np.random.choice(final_number_of_routes)
+        # NOTE: time_limit_this_route is different from route_time_limit
+        time_limit_this_route = self.set_time_limit_this_route(
+                                        route_time_limit)
+
+
+        # Load data and set up tracking of used connections and stations
+        self.setup_used_connection_and_station_tracking(
+            starting_stations = starting_stations,
+            starting_station_list = starting_station_list)
+
+
+        # Generate a solution with the given parameters
+        solution = self.generate_solution(final_number_of_routes,
+                                        route_time_limit,
+                                        time_limit_this_route,
+                                        starting_stations,
+                                        starting_station_list,
+                                        next_connection_choice,
+                                        original_connections_only,
+                                        chance_of_early_route_end)
         
-
-        # For Holland map, the default time limit is 120 minutes
-        # For the Netherlands map, the default time limit is 180 minutes
-        if route_time_limit is None:
-            if self.load.mapname == "Holland":
-                time_limit_this_route = 120
-            elif self.load.mapname == "Nationaal":
-                time_limit_this_route = 180
-            else:
-                raise ValueError("Invalid mapname. Please use 'Holland' or 'Nationaal'.")
-        
-        # If an int is provided, just pass it on
-        elif type(route_time_limit) is int:
-            time_limit_this_route = route_time_limit
-        
-        # Else if route_time_limit is a tuple, choose a random value,
-        # all routes will have this same time limit
-        elif type(route_time_limit) is tuple:
-            time_limit_this_route = np.random.choice(route_time_limit)
-
-
-
-
-        # If starting_station_list is provided and we draw without replacement,
-        # randomize it's order
-        if starting_stations == "custom_list_without_replacement":
- 
-            # Make a copy of the list to avoid changing the original list
-            starting_station_list_copy = copy.deepcopy(starting_station_list)
-            
-            random.shuffle(starting_station_list_copy)
-
-        # List to store the various routes
-        self.routes: list[Route] = []
-        
-        """ Unused_connections starts off with all connections. Unused 
-        connections will be moved to used connections when they are used """
-        self.used_connections: dict = dict()
-        
-        self.unused_connections: dict = dict()
-        for connection in self.load.connections:
-
-            # Save the names of the stations in this connection in a tuple
-            station_names_as_tuple = tuple(sorted([connection[0].name, connection[1].name]))
-
-            # Add the connection to the dict with the station name tuple as key
-            self.unused_connections[station_names_as_tuple] = connection
-
-
-        # Unused stations starts off with all stations
-        # Unused stations will be moved to used stations when they are used
-        # Internal list of stations
-        self.unused_stations: list = list(self.load.stations.values()) 
-        self.used_stations: list = list()
-
-        # DEBUG
-        # print(self.unused_stations)
-
-
-        # If starting_stations is set to "original_stations_only_soft",
-        # create list to keep track of used starting stations
-        if starting_stations == "original_stations_only_soft":
-            used_starting_stations = []
- 
-
-        
-
-        # DEBUG
-        # print(final_number_of_routes)
-
-        # While there are less than <final_number_of_routes> routes and 
-        # there are still unused connections
-        # i.e. for each route
-        while(self.number_of_routes() < final_number_of_routes
-               and len(self.unused_connections) > 0):
-            # Create a new route
-            route = Route()
-            # DEBUG
-            # print(f"Route {self.number_of_routes() + 1}")
-
-
-            # If route_time_limit is a list, pick random again for each route
-            if type(route_time_limit) == list:
-                time_limit_this_route = np.random.choice(route_time_limit)
-            
-
-            # And set a first station for this route 
-            # (method depends on starting_stations argument; 
-            # lots of options!!):
-
-            # If flag set to "fully_random", pick random from all stations
-            if starting_stations == "fully_random":
-                current_station = self.load.get_random_station()
-            
-            # If flag set to "original_stations_only_soft:
-            # Pick random, but if another route starts at this station,
-            # pick another
-            elif starting_stations == "original_stations_only_soft":
-                # Random pick ("do while" loop)
-                current_station = self.load.get_random_station()
-                
-                # Pick again until a station is found that has not been 
-                # used as a starting station in another route
-                while current_station in used_starting_stations:
-                    current_station = self.load.get_random_station()
-
-                # Add this station to the list of used starting stations
-                used_starting_stations.append(current_station)
-
-            # If "starting_stations" is set to "original_stations_only_hard", 
-            # try to pick unused stations
-            elif starting_stations == "original_stations_only_hard":
-
-                # Plan A: pick a random unused station
-                if len(self.unused_stations) > 0:
-                    current_station = random.choice(self.unused_stations)
-                
-                # Plan B: pick station with an unused connection
-                else:
-                    random_unused_connection = random.choice(list(self.unused_connections.values()))
-                    random_index = random.choice([0, 1])
-                    
-                    current_station = random_unused_connection[random_index]   
-
-            # If flag set to "custom_list_with_replacement", pick from the custom list
-            elif starting_stations == "custom_list_with_replacement":
-                current_station = random.choice(starting_station_list)
-
-            # If flag set to "custom_list_without_replacement", 
-            # pop from randomized version of custom list
-            elif starting_stations == "custom_list_without_replacement":
-
-                # Shuffle
-                random.shuffle(starting_station_list_copy)
-                
-                # Pop the last station from the list
-                current_station = starting_station_list_copy.pop()
-
-
-            # While time is less than time_limit_this_route
-            while route.time < time_limit_this_route: 
-                # DEBUG
-                # print(f"Current station: {current_station.name}")
-                
-                # First: move this station to used stations
-                # (if already moved do nothing)
-                try:
-                    index = self.unused_stations.index(current_station)
-                    self.used_stations.append(self.unused_stations.pop(index))
-                except ValueError:
-                    pass
-                
-                # Get connections of current station, sorted by duration
-                # This is a queue of possible connections, with the shortest connection first
-                connections = current_station.get_connections()
-
-                # If chance_of_early_route_end is set to True, add a chance to end the route early
-                # This is done by adding a connection to the current station with a duration of 0
-                # which when found will end the route. 
-                # connections must only contain tuples with station and duration, otherwise bugs.
-                if chance_of_early_route_end:
-                    connections.append(tuple([current_station, 0]))
-
-                # Randomize the order of the connections (to add random choice next connection)
-                # Only if the next_connection_choice is set to "random"
-                if next_connection_choice == "random":
-                    random.shuffle(connections)
-                # If set to "shortest", sort by duration
-                else:
-                    # Sort list by duration
-                    connections.sort(key=lambda x: x[1])
-
-                # If arg. original_connections_only set to True
-                if original_connections_only:
-                    # Pop used connections from queue (until unused connection is found)
-                    while len(connections) > 0 and route.is_connection_used(current_station, connections[0][0]):
-                        connections.pop(0)
-                
-                # If adding this connection would exceed the time limit, remove this connection
-                while len(connections) > 0 and route.time + connections[0][1] > time_limit_this_route:
-                    connections.pop(0)
-
-                # If there are no unused connections left, end this route
-                if len(connections) == 0:
-                    break
-
-                # For chance_of_early_route_end, check if connection with duration of 0 is next
-                # This means the route will end here
-                if chance_of_early_route_end:
-                    # If the connection has a duration of 0, end the route
-                    if connections[0][1] == 0:
-                        break
-
-                # First connection in queue is the next station
-                next_station = connections[0][0]
-
-                # DEBUG
-                # print(f"Current station: {current_station.name}")
-                # print(f"Next station: {next_station.name}")
-
-                # Add the connection to the route
-                route.add_connection(current_station, next_station, current_station.get_connection_time(next_station))
-
-                # Move the connection to used connections
-                self.set_as_used(current_station, next_station)
-
-                # Set the next station as the current station
-                current_station = next_station
-                
-            self.routes.append(route)
-        
-        # Return the generated routes
-        return self.routes
-
+        # And return the solution
+        return solution
 
 
     def check_input(self, 
@@ -369,10 +164,12 @@ class Random_Greedy(Algorithm):
         """
         Check if the input for the run method is correct.
         
-        Returns only the starting_station_list, because when user 
+        Returns only the `starting_station_list`, because when user 
         provides list of lists for it, it must be changed during the 
-        input checks.
+        input checks: one of the lists is chosen randomly to be used as
+        `starting_station_list`, and after that a final check is done.
         """
+        
         # Check for correct input:
 
         # final_number_of_routes must be an integer or a tuple of integers
@@ -440,9 +237,6 @@ class Random_Greedy(Algorithm):
                 # And choose a random list from the list of lists
                 starting_station_list = random.choice(starting_station_list)
 
-                # DEBUG
-                # print(starting_station_list)
-
 
         # For custom list without replacement, list must be long enough
         if starting_stations == "custom_list_without_replacement":
@@ -464,14 +258,347 @@ class Random_Greedy(Algorithm):
         return starting_station_list
 
 
+    def set_final_number_of_routes(self, 
+                                   final_number_of_routes: int | tuple[int] | None) -> int:
+        """
+        Set the final number of routes to generate, depending on user 
+        input and the map.
+        """
+        
+        # For Holland map, the default number of routes is 7
+        # For the Netherlands map, the default number of routes is 20
+        if final_number_of_routes is None:
+            if self.load.mapname == "Holland":
+                final_number_of_routes = 7
+            elif self.load.mapname == "Nationaal":
+                final_number_of_routes = 20
+            else:
+                raise ValueError("Invalid mapname. Please use 'Holland' or 'Nationaal'.")
+        
+        # final_number_of_routes can be set to a tuple of numbers, 
+        # if so the number of routes will be randomly chosen from this tuple
+        elif type(final_number_of_routes) is tuple:
+            final_number_of_routes = np.random.choice(final_number_of_routes)
+
+        
+        # (If it is an int, do nothing, just pass it on)
+
+        return final_number_of_routes
+    
+
+    def set_time_limit_this_route(self, 
+                                  route_time_limit: int | tuple[int] | list[int]) -> int:
+        """
+        Set the time limit for each route, depending on user input and 
+        the map. 
+        
+        NOTE: output var is different from input var. This is because if 
+        user provides a list for route_time_limit, assignment of 
+        time_limit_this_route will be different for each route and 
+        handled later in the code (i.e not in this function).
+        """
+        
+        # For Holland map, the default time limit is 120 minutes
+        # For the Netherlands map, the default time limit is 180 minutes
+        if route_time_limit is None:
+            if self.load.mapname == "Holland":
+                time_limit_this_route = 120
+            elif self.load.mapname == "Nationaal":
+                time_limit_this_route = 180
+            else:
+                raise ValueError("Invalid mapname. Please use 'Holland' or 'Nationaal'.")
+        
+        # If an int is provided, just pass it on
+        elif type(route_time_limit) is int:
+            time_limit_this_route = route_time_limit
+        
+        # Else if route_time_limit is a tuple, choose a random value,
+        # all routes will have this same time limit
+        elif type(route_time_limit) is tuple:
+            time_limit_this_route = np.random.choice(route_time_limit)
+
+        # If a list was provided, assignment will be different for each 
+        # route and handled later in the code
+        else:
+            time_limit_this_route = None
 
 
+        return time_limit_this_route
 
-    def set_as_used(self, current_station: "Station", next_station: "Station") -> None:
+
+    def setup_used_connection_and_station_tracking(self, 
+                                                   starting_stations: str,
+                                                   starting_station_list: None | list["Station"]
+                                                   ) -> None:
+        """ 
+        Unused_connections starts off with all connections. Unused 
+        connections will be moved to used connections when they are used.
+        
+        Unused stations starts off with all stations. Unused stations
+        will be moved to used stations when they are used.
+
+        In the case of "original_stations_only_soft", a list of used
+        starting stations will be kept track of as well.
+        """
+        
+        # 1. Setup tracking of used connections:
+        self.used_connections: dict = dict()
+        
+        self.unused_connections: dict = dict()
+        for connection in self.load.connections:
+
+            # Save the names of the stations in this connection in a tuple
+            station_names_as_tuple = tuple(sorted([connection[0].name, 
+                                                   connection[1].name]))
+
+            # Add the connection to the dict with the station name tuple as key
+            self.unused_connections[station_names_as_tuple] = connection
+
+
+        # 2. Setup tracking of used stations:
+
+        # Internal list of stations
+        self.unused_stations: list = list(self.load.stations.values()) 
+        self.used_stations: list = list()
+
+
+        # 3. If starting_stations is set to "original_stations_only_soft",
+        # create list to keep track of used starting stations
+        if starting_stations == "original_stations_only_soft":
+            self.used_starting_stations = []
+
+
+        # 4. If starting_station_list is provided and we draw without
+        # replacement, make a deepcopy
+        if starting_stations == "custom_list_without_replacement":
+ 
+            # Make a copy of the list to avoid changing the original list
+            self.starting_station_list_copy = copy.deepcopy(starting_station_list)
+
+
+    def generate_solution(self,
+                            final_number_of_routes: int,
+                            route_time_limit: int,
+                            time_limit_this_route: int,
+                            starting_stations: str,
+                            starting_station_list: list["Station"],
+                            next_connection_choice: str,
+                            original_connections_only: bool,
+                            chance_of_early_route_end: bool
+                          ) -> list[Route]:
+        """
+        Generate a solution with the given parameters.
+        """
+        
+        # Solution is a list to store the various routes
+        solution: list[Route] = []
+
+        # While there are less than <final_number_of_routes> routes and 
+        # there are still unused connections
+        # i.e. for each route
+        while(len(solution) < final_number_of_routes
+               and len(self.unused_connections) > 0):
+            
+            # If route_time_limit is a list, pick random again for each route
+            if type(route_time_limit) == list:
+                time_limit_this_route = np.random.choice(route_time_limit)
+            
+            # Set the first station for this route (method depends on 
+            # starting_stations argument)
+            current_station = self.set_starting_station(starting_stations,
+                                                    starting_station_list)
+
+            # Create a new route with the given parameters
+            new_route = self.create_a_route(current_station,
+                                            time_limit_this_route,
+                                            next_connection_choice,
+                                            original_connections_only,
+                                            chance_of_early_route_end)
+            
+            # And add it to the list of routes
+            solution.append(new_route)
+
+
+        # Return the generated routes
+        return solution
+
+
+    def set_starting_station(self, 
+                             starting_stations: str, 
+                             starting_station_list: list["Station"]
+                             ) -> "Station":
+        """
+        Set a first station for this route (method depends on 
+        starting_stations argument; lots of options!)
+        """
+
+        # If flag set to "fully_random", pick random from all stations
+        if starting_stations == "fully_random":
+            current_station = self.load.get_random_station()
+        
+        # If flag set to "original_stations_only_soft:
+        # Pick random, but if another route starts at this station,
+        # pick another
+        elif starting_stations == "original_stations_only_soft":
+            # Random pick ("do while" loop)
+            current_station = self.load.get_random_station()
+            
+            # Pick again until a station is found that has not been 
+            # used as a starting station in another route
+            while current_station in self.used_starting_stations:
+                current_station = self.load.get_random_station()
+
+            # Add this station to the list of used starting stations
+            self.used_starting_stations.append(current_station)
+
+        # If "starting_stations" is set to "original_stations_only_hard", 
+        # try to pick unused stations
+        elif starting_stations == "original_stations_only_hard":
+
+            # Plan A: pick a random unused station
+            if len(self.unused_stations) > 0:
+                current_station = random.choice(self.unused_stations)
+            
+            # Plan B: pick station with an unused connection
+            else:
+                random_unused_connection = random.choice(list(self.unused_connections.values()))
+                random_index = random.choice([0, 1])
+                
+                current_station = random_unused_connection[random_index]   
+
+        # If flag set to "custom_list_with_replacement", pick from the custom list
+        elif starting_stations == "custom_list_with_replacement":
+            current_station = random.choice(starting_station_list)
+
+        # If flag set to "custom_list_without_replacement", 
+        # pop from randomized version of custom list
+        elif starting_stations == "custom_list_without_replacement":
+
+            # Shuffle before each pop, just in case
+            random.shuffle(self.starting_station_list_copy)
+            
+            # Pop the last station from the list
+            current_station = self.starting_station_list_copy.pop()
+
+
+        return current_station
+    
+
+    def create_a_route(self, current_station: "Station",
+                       time_limit_this_route: int,
+                       next_connection_choice: str,
+                       original_connections_only: bool,
+                       chance_of_early_route_end: bool    
+                       ) -> Route:
+        """
+        Create a route with the given parameters.
+        """
+            
+        # Create a new route
+        route = Route()
+        
+        # While time is less than time_limit_this_route
+        # i.e. for each connection in this route
+        while route.time < time_limit_this_route: 
+            
+            # First: move this station to used stations
+            # (if already moved do nothing)
+            try:
+                index = self.unused_stations.index(current_station)
+                self.used_stations.append(self.unused_stations.pop(index))
+            except ValueError:
+                pass
+            
+
+            # Set next station (method depends on many parameters)
+            # Function returns "break" if no next station is possible
+            next_station: "Station" | str = self.set_next_station(
+                                            current_station,
+                                            route,
+                                            next_connection_choice,
+                                            original_connections_only,
+                                            chance_of_early_route_end,
+                                            time_limit_this_route)
+            if next_station == "break":
+                break
+            
+
+            # Add the connection to the route
+            route.add_connection(current_station, 
+                                    next_station, 
+                                    current_station.get_connection_time(next_station))
+
+            # Move the connection to used connections
+            self.set_as_used(current_station, next_station)
+
+            # Set the next station as the current station
+            current_station = next_station
+
+
+        return route
+
+
+    def set_next_station(self, current_station: "Station",
+                         route: Route,
+                         next_connection_choice: str, 
+                         original_connections_only: bool,
+                         chance_of_early_route_end: bool,
+                         time_limit_this_route: int) -> "Station":
+        # Get connections of current station, sorted by duration
+        # This is a queue of possible connections, with the shortest connection first
+        connections = current_station.get_connections()
+
+        # If chance_of_early_route_end is set to True, add a chance to 
+        # end the route early. This is done by adding a connection to the
+        # current station with a duration of 0 which when found will end 
+        # the route. connections must only contain tuples with station 
+        # and duration, otherwise bugs.
+        if chance_of_early_route_end:
+            connections.append(tuple([current_station, 0]))
+
+        # Randomize the order of the connections (to add random choice next connection)
+        # Only if the next_connection_choice is set to "random"
+        if next_connection_choice == "random":
+            random.shuffle(connections)
+        # If set to "shortest", sort by duration
+        else:
+            # Sort list by duration
+            connections.sort(key=lambda x: x[1])
+
+        # If arg. original_connections_only set to True
+        if original_connections_only:
+            # Pop used connections from queue (until unused connection is found)
+            while len(connections) > 0 and route.is_connection_used(current_station, connections[0][0]):
+                connections.pop(0)
+        
+        # If adding this connection would exceed the time limit, remove this connection
+        while len(connections) > 0 and route.time + connections[0][1] > time_limit_this_route:
+            connections.pop(0)
+
+        # If there are no unused connections left, end this route
+        if len(connections) == 0:
+            return "break"
+
+        # For chance_of_early_route_end, check if connection with duration of 0 is next
+        # This means the route will end here
+        if chance_of_early_route_end:
+            # If the connection has a duration of 0, end the route
+            if connections[0][1] == 0:
+                return "break"
+
+
+        # First connection in queue is the next station
+        next_station = connections[0][0]
+        return next_station
+
+
+    def set_as_used(self, current_station: "Station", 
+                    next_station: "Station") -> None:
         """
         Takes two stations and moves the connection between them from unused to used connections.
         Order of the stations does not matter, connections are handled alphabetically.
         """
+        
         # Extract dictionary key for the connection
         connection_key = tuple(sorted([current_station.name, next_station.name]))
 
@@ -483,7 +610,7 @@ class Random_Greedy(Algorithm):
 
 
 
-# Run  and print results
+# Run and print results
 if __name__ == "__main__":
     # Run the Random_Greedy algorithm on the Holland map
     # with default settings
@@ -498,4 +625,8 @@ if __name__ == "__main__":
     #                             starting_station_list = custom_starting_stations, 
     #                             final_number_of_routes=2)
     
-    results = random_greedy.run()
+    results = random_greedy.run(route_time_limit = 40, final_number_of_routes= 3, starting_stations="original_stations_only_soft")
+
+    for route in results:
+        print(f"Route time: {route.time} minutes")
+    # print(f"Number of routes: {len(results)}")

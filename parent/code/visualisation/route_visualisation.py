@@ -1,4 +1,4 @@
-from manim import ApplyMethod, Line, Transform, Dot, VGroup
+from manim import ApplyMethod, Line, Transform, Dot, VGroup, Text, UP, LEFT
 from manim import manim_colors, smooth
 
 from manim import PURE_RED, PURE_GREEN, PURE_BLUE
@@ -38,7 +38,7 @@ class route_visualisation(BaseScene):
         
         # NOTE: instead of running an algorithm, we can now read 
         # a solution from a csv file
-        self.output = read_solution_from_csv("../../algorithms/autorun_hillclimber/4_routes_zondag/solutions/Holland_9192_HC", file_path = "for_manim")
+        self.output = read_solution_from_csv("../../algorithms/autorun_hillclimber/maandag_na_bugfix_improve_routes/solutions/Holland_9210_HC", file_path = "for_manim")
         # Greedy(self.data).run() 
         
         # Save number of routes for later reference
@@ -156,6 +156,26 @@ class route_visualisation(BaseScene):
 
         self.setup_2()
         self.add(self.dots, self.connections, self.connection_labels)
+        
+        label = Text(f"RailNL - {self.mapname}")
+        score = Text(f"Score = {routes_score(self.output, self.mapname)}")
+
+        position = self.camera.frame.get_center()
+        height = self.camera.frame.get_height()
+        width = self.camera.frame.get_width()
+
+        label.move_to(position)
+        score.move_to(position)
+
+        label.scale(0.05)
+        score.scale(0.05)
+
+        label.shift(LEFT * width * 0.25 - UP * height * 0.25)
+        score.shift(LEFT * width * 0.25 - UP * height * 0.3)
+
+        self.add(label)
+        self.add(score)
+        
         self.wait(2)
 
         # Using seven routes

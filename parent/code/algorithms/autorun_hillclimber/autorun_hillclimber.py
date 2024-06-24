@@ -6,7 +6,7 @@ import numpy as np
 
 from parent.code.algorithms.random_greedy import Random_Greedy
 from parent.code.algorithms.hillclimber import Hillclimber
-from parent.code.experiments.statistics import write_solution_to_csv, write_scores_to_csv, append_single_score_to_csv
+from parent.code.experiments.statistics import write_solution_to_csv, append_single_score_to_csv
 from parent.code.algorithms.score import routes_score
 
 
@@ -84,10 +84,12 @@ def autorun_hillclimber(n_runs: int,
 
             # Run the Hillclimber algorithm and save solutions
             hillclimber_alg = Hillclimber(start_state, maprange)
-            solution = hillclimber_alg.run(iterations = 350000,
+            solution = hillclimber_alg.run(iterations = 450000,
                                         log_csv=f"{project_dir}/log.csv",
                                         simulated_annealing=True,
-                                        cap = 30000)
+                                        cap = 30000,
+                                        improve_routes = True,
+                                        original_connections_only = True)
             
 
 
@@ -131,5 +133,5 @@ def autorun_hillclimber(n_runs: int,
 
 
 if __name__ == "__main__":
-    autorun_hillclimber(1000, "zondagnacht_cap_30000", maprange="Holland", allow_overwrite=False)
+    autorun_hillclimber(1000, "maandag_original_connections_only", maprange="Holland", allow_overwrite=False)
 

@@ -33,7 +33,7 @@ class route_visualisation_image(BaseScene):
         
         # NOTE: instead of running an algorithm, we can now read 
         # a solution from a csv file
-        self.output = read_solution_from_csv("../../algorithms/autorun_hillclimber/4_routes_zondag/solutions/Holland_9192_HC", file_path = "for_manim")
+        self.output = read_solution_from_csv("../../algorithms/autorun_hillclimber/maandag_original_connections_only/solutions/Holland_9210_HC", file_path = "for_manim")
         # Greedy(self.data).run() 
         
         # Save number of routes for later reference
