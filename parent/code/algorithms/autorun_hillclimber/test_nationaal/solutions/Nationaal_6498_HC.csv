@@ -1,0 +1,14 @@
+train,stations
+train_1,"[Rotterdam Alexander, Gouda, Den Haag Centraal, Delft, Den Haag HS, Leiden Centraal, Den Haag Laan v NOI, Leiden Centraal, Schiphol Airport, Utrecht Centraal, Amsterdam Amstel, Amsterdam Centraal, Amsterdam Amstel]"
+train_2,"[Zutphen, Dieren, Arnhem Centraal, Ede-Wageningen, Utrecht Centraal, Hilversum, Almere Centrum, Amsterdam Centraal, Utrecht Centraal, Amsterdam Centraal]"
+train_3,"[Alphen a/d Rijn, Utrecht Centraal, Amersfoort, Apeldoorn, Zutphen, Deventer, Almelo, Hengelo, Enschede, Hengelo, Almelo]"
+train_4,"[Groningen, Leeuwarden, Heerenveen, Steenwijk, Heerenveen, Steenwijk, Zwolle, Almelo]"
+train_5,"[Breda, Dordrecht, Rotterdam Blaak, Schiedam Centrum, Delft, Den Haag Laan v NOI, Delft, Den Haag Centraal, Leiden Centraal, Den Haag Laan v NOI, Gouda, Rotterdam Alexander, Rotterdam Blaak, Rotterdam Alexander, Rotterdam Centraal]"
+train_6,"[Rotterdam Centraal, Rotterdam Alexander, Rotterdam Centraal, Schiedam Centrum, Rotterdam Centraal, Schiedam Centrum, Rotterdam Blaak, Rotterdam Alexander, Rotterdam Centraal, Rotterdam Alexander, Rotterdam Centraal, Dordrecht, Roosendaal, Etten-Leur, Breda, Tilburg, Eindhoven]"
+train_7,"[Haarlem, Amsterdam Sloterdijk, Amsterdam Centraal, Amsterdam Sloterdijk, Amsterdam Zuid, Amsterdam Amstel, Hilversum, Amsterdam Amstel, Almere Centrum, Lelystad Centrum, Almere Centrum]"
+train_8,"[Venlo, Helmond, Eindhoven, s-Hertogenbosch, Oss, s-Hertogenbosch, Utrecht Centraal, s-Hertogenbosch, Oss, Nijmegen, Arnhem Centraal]"
+train_9,"[Schiphol Airport, Amsterdam Zuid, Amsterdam Sloterdijk, Zaandam, Beverwijk, Castricum, Zaandam, Hoorn, Alkmaar, Den Helder]"
+train_10,"[Beverwijk, Haarlem, Heemstede-Aerdenhout, Leiden Centraal, Alphen a/d Rijn, Gouda, Utrecht Centraal, Alphen a/d Rijn, Gouda, Alphen a/d Rijn, Leiden Centraal]"
+train_11,"[Tilburg, s-Hertogenbosch, Eindhoven, Weert, Roermond, Sittard, Heerlen, Sittard, Maastricht, Sittard, Maastricht, Sittard]"
+train_12,"[Groningen, Assen, Zwolle, Deventer, Apeldoorn, Amersfoort, Zwolle]"
+score,6497.921348314607

@@ -1,0 +1,17 @@
+train,stations
+train_1,"[Enschede, Hengelo, Enschede, Hengelo, Enschede, Hengelo, Almelo, Deventer, Apeldoorn, Deventer, Zutphen, Deventer]"
+train_2,"[Den Haag HS, Leiden Centraal, Alphen a/d Rijn, Leiden Centraal, Den Haag Laan v NOI, Delft, Den Haag HS, Leiden Centraal, Heemstede-Aerdenhout, Haarlem, Beverwijk, Zaandam, Castricum, Beverwijk]"
+train_3,"[Roosendaal, Dordrecht, Rotterdam Blaak, Rotterdam Alexander, Gouda, Den Haag HS, Leiden Centraal, Alphen a/d Rijn, Utrecht Centraal, Amsterdam Amstel, Hilversum]"
+train_4,"[Gouda, Utrecht Centraal, Ede-Wageningen, Arnhem Centraal, Dieren, Zutphen, Apeldoorn, Amersfoort, Utrecht Centraal, Amsterdam Amstel, Amsterdam Zuid, Amsterdam Sloterdijk]"
+train_5,"[Alphen a/d Rijn, Gouda, Den Haag Centraal, Leiden Centraal, Schiphol Airport, Amsterdam Zuid, Amsterdam Sloterdijk, Zaandam]"
+train_6,"[Vlissingen, Roosendaal, Etten-Leur, Breda, Tilburg, Eindhoven, Helmond, Venlo]"
+train_7,"[Amsterdam Zuid, Amsterdam Sloterdijk, Zaandam, Amsterdam Sloterdijk, Amsterdam Centraal, Amsterdam Amstel, Almere Centrum, Amsterdam Centraal, Utrecht Centraal, Schiphol Airport]"
+train_8,"[Lelystad Centrum, Almere Centrum, Amsterdam Amstel, Almere Centrum, Hilversum, Utrecht Centraal, Gouda, Den Haag Laan v NOI]"
+train_9,"[Rotterdam Centraal, Dordrecht, Breda, Dordrecht, Rotterdam Centraal, Rotterdam Alexander, Rotterdam Blaak, Schiedam Centrum, Rotterdam Centraal, Rotterdam Alexander, Rotterdam Centraal, Schiedam Centrum, Delft, Den Haag Centraal, Gouda]"
+train_10,"[Arnhem Centraal, Nijmegen, Oss, Nijmegen, Oss, s-Hertogenbosch, Utrecht Centraal, Amersfoort, Zwolle]"
+train_11,"[Den Helder, Alkmaar, Castricum, Alkmaar, Hoorn, Zaandam, Beverwijk, Haarlem, Amsterdam Sloterdijk, Zaandam, Castricum]"
+train_12,"[Etten-Leur, Breda, Tilburg, Eindhoven, s-Hertogenbosch, Tilburg]"
+train_13,"[Maastricht, Sittard, Heerlen, Sittard, Heerlen, Sittard, Roermond, Weert, Eindhoven, Helmond, Eindhoven]"
+train_14,"[Assen, Zwolle, Steenwijk, Heerenveen, Leeuwarden, Groningen, Assen]"
+train_15,"[Almelo, Zwolle, Deventer]"
+score,6411.0

@@ -197,7 +197,7 @@ class Random_Greedy(Algorithm):
         # Set values for final_number_of_routes and route_time_limit:
 
         # For Holland map, the default number of routes is 7
-        # For the Netherlands map, the default number of routes is 10
+        # For the Netherlands map, the default number of routes is 20
         if final_number_of_routes is None:
             if self.load.mapname == "Holland":
                 final_number_of_routes = 7

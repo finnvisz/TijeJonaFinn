@@ -108,7 +108,46 @@ class Hillclimber(Algorithm):
             new_routes.pop(random.randint(0, len(new_routes) - 1))
             return new_routes
         return routes
+    
+    def improve_routes(self, routes: list[Route]) -> list[Route]:
+        """Removes the first/last connection (head/tail) of a route if
+        it is already used somewhere else
+        
+        Post: Returns an updated list of Route object, hopefully with 
+        less stupid extra connections
+        """
+        updated_routes = []
 
+        for route in routes:
+            # Check head
+            if len(route.connections_used) > 0:
+                first_conn = route.connections_used[0]
+                first_conn_reverse = (first_conn[1], first_conn[0], first_conn[2])
+
+                total_conn = self.get_total_connections_used()
+
+                if first_conn not in total_conn and first_conn_reverse not in total_conn:
+                    route.connections_used.pop(0)
+                    route.stations.pop(0)
+
+            # Check tail
+            if len(route.connections_used) > 0:
+                last_conn = route.connections_used[-1]
+                last_conn_reverse = (last_conn[1], last_conn[0], last_conn[2])
+
+                total_conn = self.get_total_connections_used()
+
+                if last_conn not in total_conn and last_conn_reverse not in total_conn:
+                    route.connections_used.pop(-1)
+                    route.stations.pop(-1)
+
+            # Append route if it still has connections
+            if route.get_connections_used():
+                updated_routes.append(route)
+
+        return updated_routes
+
+        
 
     def run(self, iterations: int, simulated_annealing=False, cap=10**99,
             
@@ -148,7 +187,10 @@ class Hillclimber(Algorithm):
             new_routes = self.remove_random_route(new_routes)
             new_routes = self.add_random_route(new_routes)
 
+            new_routes = self.improve_routes(new_routes)
+
             new_score = routes_score(new_routes, self.maprange)
+
 
             accept_new = False
             if self.simulated_annealing == True:
@@ -167,11 +209,6 @@ class Hillclimber(Algorithm):
                 self.routes = new_routes
                 self.best_score = new_score
                 self.scores.append(new_score)
-
-                # if there is an empty route, remove it
-                for route in self.routes:
-                    if route.get_connections_used() == []:
-                        self.routes.pop(self.routes.index(route))
                 
                 count_no_change = 0
                 print(f"iteratie {i}, score {new_score}")
@@ -201,22 +238,10 @@ class Hillclimber(Algorithm):
 
 # Example/test usage
 if __name__ == "__main__":
-    data = RailNL("Nationaal")
-
+    maprange = "Nationaal"
     # Test Hillclimber algorithm with RandomAlgorithm as starting state
-    random_alg = Random_Greedy(data)
-    random_alg.run()
-    hillclimber_alg = Hillclimber(data, random_alg, "Nationaal")
-    hillclimber_alg.run(10000)
-
-    # Show routes
-    for i, route in enumerate(hillclimber_alg.routes):
-        print(f"route {i+1} (Time: {route.time} minutes):,")
-        print(route.stations) 
-
-    # Plot iteration vs. score
-    plt.plot(hillclimber_alg.scores)
-    plt.xlabel('Iteration')
-    plt.ylabel('Score')
-    plt.title('Start: Random prefer unused, Hillclimber Algorithm Holland')
-    plt.savefig("/home/finnvisz/TijeJonaFinn/parent/code/experiments/plots/score_vs_iteration.png")
+    random_alg = Random_Greedy(maprange).run(
+                            final_number_of_routes=(14),
+                            route_time_limit=[180],
+                            starting_stations = 'original_stations_only_hard')
+    hillclimber_alg = Hillclimber(random_alg, maprange).run(100)
