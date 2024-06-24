@@ -163,7 +163,10 @@ class Hillclimber(Algorithm):
 
         
 
-    def run(self, iterations: int, simulated_annealing=False, cap=10**99,
+    def run(self, iterations: int, 
+            simulated_annealing: bool = False, 
+            cap=10**99,
+            improve_routes: bool = True,
             
             log_csv: str | None = None) -> list[Route]:
         """
@@ -181,6 +184,9 @@ class Hillclimber(Algorithm):
         - iterations: max number of iterations to run the algorithm.
         - simulated_annealing: if True, accept worse scores sometimes
         - cap: if True, stop running when there hasn't been a change in a while
+        - improve_routes (bool): if True, Hillclimber tries to remove redundant
+          connections from routes each iteration (head, tail, middle). 
+          Default True.
 
         Data collection settings:
         - log_csv: if not None, append score per iteration to specified 
@@ -201,7 +207,9 @@ class Hillclimber(Algorithm):
             new_routes = self.remove_random_route(new_routes)
             new_routes = self.add_random_route(new_routes)
 
-            new_routes = self.improve_routes(new_routes)
+            # If set, improve routes by removing redundant connections
+            if improve_routes:
+                new_routes = self.improve_routes(new_routes)
 
             new_score = routes_score(new_routes, self.maprange)
 
