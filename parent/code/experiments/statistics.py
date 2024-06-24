@@ -380,7 +380,7 @@ def plot_scores_fancy(sample1: "np.ndarray[float]",
                       legend_title: str = "Groep",
                       legend_labels: tuple[str] | None = None,
                       binwidth: int = 400, 
-                      xlim: tuple[int] = (5000, 10000),
+                      xlim: tuple[int] | None = None,
                       alpha: float | None = None) -> None:
     """
     Plot the scores of 1 to 4 samples in a histogram.
@@ -414,6 +414,7 @@ def plot_scores_fancy(sample1: "np.ndarray[float]",
     
     - binwidth: width of the bins in the histogram (default is 400, 
     seems a sweet spot).
+    - xlim: (optional) set custom x-axis limits for the plot.
     - alpha: (optional) set custom transparency of the bars in the 
     histogram. Value between 0 and 1. Default is 0.85 for single sample 
     and 0.7 for multiple samples.
@@ -468,6 +469,9 @@ def plot_scores_fancy(sample1: "np.ndarray[float]",
                                                     sample4 is not None])]
 
         
+    if xlim is None:
+        lower_bound_xlim = min(sample1)
+        xlim = (lower_bound_xlim, 10000)
 
     # If sample2 is not provided, create plot for single sample
     if sample2 is None:

@@ -44,7 +44,7 @@ Random_Greedy().run(1)
 
 # This one takes a bit longer, but it's worth it!
 
-# Choose a name for your new Autorun Hillclimber project (I bet you can do better than "my_first_project"!):
+# Choose a name for your new Autorun Hillclimber project (I bet you can do better than "my_first_project"):
 project_name = "my_first_project"
 
 # Run the autorun_hillclimber program with the chosen project name

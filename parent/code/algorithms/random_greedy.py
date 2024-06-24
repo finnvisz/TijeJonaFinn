@@ -28,8 +28,7 @@ class Random_Greedy(Algorithm):
     def run(self,
             # Options per connection:
             # How to pick the next connection in the route
-            next_connection_choice: str = "random",
-            original_connections_only: bool = False, 
+            next_connection_choice: str = "random", 
             
             # Options for starting station per route:
             starting_stations: str = "fully_random", 
@@ -63,13 +62,7 @@ class Random_Greedy(Algorithm):
         in the route. Options: "random" (default), or "shortest" for a
         greedy approach to connections.
         
-        - original_connections_only: (NOTE: leave on False when 
-        `next_connection_choice = "random", creates solutions with very
-        short connections) When True, each route uses only unused
-        connections. i.e.: within a route, no connection is used more
-        than once. When False, connections are fully random and can be
-        used multiple times within a route.
-
+        
         Options for starting station per route:
 
         - starting_stations: Specify how to pick the starting station for 
@@ -117,6 +110,14 @@ class Random_Greedy(Algorithm):
         If set to True, routes can end before `route_time_limit` minutes.
         Default is False.
         """
+
+        # We removed original_connections_only as argument, because 
+        # choosing anything other than below results in broken solutions
+        if next_connection_choice == "random":
+            original_connections_only = False
+        else:
+            original_connections_only = True
+
 
         # Check for correct input
         starting_station_list = self.check_input(final_number_of_routes, 
