@@ -531,13 +531,6 @@ def plot_scores(filename: str, scores: list[float]):
     
     plt.savefig(f"{experiments_root_dir}/plots/{filename}.png")
 
-<<<<<<< HEAD
-=======
-
-
-
-
->>>>>>> b690ea549d36ec53c06bdefe5630acb815a09530
 # #example/test usage
 # if __name__ == "__main__":
 #     map = "Nationaal"
@@ -550,10 +543,6 @@ def plot_scores(filename: str, scores: list[float]):
 #     write_solution_to_csv(routes, "output", map=map)
 #     solution = read_solution_from_csv("output.csv", map=map)
 #     print(solution)
-<<<<<<< HEAD
-=======
-
->>>>>>> b690ea549d36ec53c06bdefe5630acb815a09530
 
 # if __name__ == "__main__":
 #     map = "Holland"
@@ -589,24 +578,24 @@ def plot_scores(filename: str, scores: list[float]):
 #     plot_scores_fancy(scores1, scores2, title="1-7 routes end scores", save_to_pdf=True, binwidth=50, legend_labels=("original stations only hard", "random"))
 #     plot_scores_fancy(startscores1, startscores2, title="1-7 routes start scores, 6 routes max", save_to_pdf=True, binwidth=50, legend_labels=("original stations only hard", "random"))
 
-if __name__ == "__main__":
-    map = "Nationaal"
-    data = RailNL(map)
-    scores1 = []
-    for i in range(100):
-        print(f"1. iteratie {i}")
-        algorithm = Random_Greedy(data)
-        algorithm.run(starting_stations="original_stations_only_hard", final_number_of_routes=20)
-        hillclimber_alg = Hillclimber(data, algorithm, map)
-        hillclimber_alg.run(2000, cap=500)
-        routes = hillclimber_alg.output()
-        write_solution_to_csv(routes, "Nationaal_output", map=map)
-        score = routes_score(routes, map)
-        if score > 6000:
-            write_solution_to_csv(routes, f"Nationaal_output_score{score}.csv", map=map)
-        scores1.append(score)
-    append_scores_to_csv(scores1, "Scores_Hillclimer.csv")
-    plot_scores_fancy(scores1, title="Nationaal scores", save_to_pdf=True, binwidth=50)
+# if __name__ == "__main__":
+#     map = "Nationaal"
+#     data = RailNL(map)
+#     scores1 = []
+#     for i in range(100):
+#         print(f"1. iteratie {i}")
+#         algorithm = Random_Greedy(data)
+#         algorithm.run(starting_stations="original_stations_only_hard", final_number_of_routes=20)
+#         hillclimber_alg = Hillclimber(data, algorithm, map)
+#         hillclimber_alg.run(2000, cap=500)
+#         routes = hillclimber_alg.output()
+#         write_solution_to_csv(routes, "Nationaal_output", map=map)
+#         score = routes_score(routes, map)
+#         if score > 6000:
+#             write_solution_to_csv(routes, f"Nationaal_output_score{score}.csv", map=map)
+#         scores1.append(score)
+#     append_scores_to_csv(scores1, "Scores_Hillclimer.csv")
+#     plot_scores_fancy(scores1, title="Nationaal scores", save_to_pdf=True, binwidth=50)
 
 
 # if __name__ == "__main__":
@@ -635,24 +624,9 @@ if __name__ == "__main__":
 #     # randomv2_3_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_3_connections_100000.csv")
 #     # randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
 
-<<<<<<< HEAD
-    plot_scores_fancy(Experiment(Random_Greedy).run_experiment(10000, final_number_of_routes = (1, 2, 3, 4, 5, 6, 7), route_time_limit = 90),
-                      Experiment(Random_Greedy).run_experiment(10000, final_number_of_routes = (1, 2, 3, 4, 5, 6, 7), route_time_limit = 100),
-                      Experiment(Random_Greedy).run_experiment(10000, final_number_of_routes = (1, 2, 3, 4, 5, 6, 7), route_time_limit = 110),
-                      Experiment(Random_Greedy).run_experiment(10000, final_number_of_routes = (1, 2, 3, 4, 5, 6, 7)),
-                      filename = "Random_Holland_time_90_100_110_120",
-                      title = "Random Holland varying uniform time limit.",
-                      save_to_pdf = True,
-                      legend_labels = ("90 minutes", "100 minutes", "110 minutes", "120 minutes"),
+    plot_scores_fancy(Experiment(Random_Greedy).run_experiment(10000, final_number_of_routes = 7, route_time_limit = 45),
+                      filename = "Random_National_time_45_90_135_180",
+                      title = "Random National varying uniform time limit.",
+                    #   save_to_pdf = True,
+                    # legend_labels = ("45 minutes", "90 minutes", "135 minutes", "180 minutes"),
                       legend_title = "Time")
-=======
-#     plot_scores_fancy(  Experiment(Random_Greedy).run_experiment(10000),
-#                         Experiment(Random_Greedy).run_experiment(10000,
-#                                                                starting_stations = "original_stations_only_soft"), 
-#                         Experiment(Random_Greedy).run_experiment(10000,
-#                                                                starting_stations = "original_stations_only_hard"),                                       
-#                     title = "Starting station random, soft and hard pick.",
-#                     legend_labels = ("Fully random", "Soft", "Hard"),
-#                     save_to_pdf = True,
-#                     filename = "Starting_station_pick_random_soft_hard")
->>>>>>> b690ea549d36ec53c06bdefe5630acb815a09530
