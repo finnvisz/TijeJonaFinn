@@ -129,7 +129,9 @@ class Hillclimber(Algorithm):
                     route.connections_used.insert(0, first_conn)
                     break  # Exit loop if no more redundant connections
                 else:
-                    route.stations.pop(0)
+                    if len(route.stations) > 0:
+                        route.stations.pop(0)
+                        route.time -= first_conn[2]
 
             # Remove redundant connections from the tail
             while len(route.connections_used) > 0:
@@ -142,7 +144,9 @@ class Hillclimber(Algorithm):
                     route.connections_used.append(last_conn)
                     break  # Exit loop if no more redundant connections
                 else:
-                    route.stations.pop()
+                    if len(route.stations) > 0:
+                        route.stations.pop(-1)
+                        route.time -= last_conn[2]
 
             # Remove redundant stations in the middle
             i = 0
