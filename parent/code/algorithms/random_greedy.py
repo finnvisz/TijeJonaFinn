@@ -220,6 +220,11 @@ class Random_Greedy(Algorithm):
                 time_limit_this_route = 180
             else:
                 raise ValueError("Invalid mapname. Please use 'Holland' or 'Nationaal'.")
+        
+        # If an int is provided, just pass it on
+        elif type(route_time_limit) is int:
+            time_limit_this_route = route_time_limit
+        
         # Else if route_time_limit is a tuple, choose a random value,
         # all routes will have this same time limit
         elif type(route_time_limit) is tuple:

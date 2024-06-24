@@ -91,41 +91,6 @@ def read_scores_from_csv(filename: str,
     return scores
 
 
-def read_solution_from_csv(filename: str, 
-                           map="Holland",
-                           custom_file_path: bool = False) -> list[Route]:
-    """
-    Read solution from a CSV file
-
-    - Post: return a list of Route objects
-    """
-
-    # Add .csv extension if not present
-    if not filename.endswith(".csv"):
-        filename += ".csv"
-
-    # Initialize the RailNL object once
-    rail_network = RailNL(map)
-
-    # Read the solution from the CSV file
-    solution = []
-    with open(f"{experiments_root_dir}/route_csv/{filename}", 'r') as file:
-        reader = csv.reader(file)
-        next(reader)  # Skip header
-        for row in reader:
-            if row[0] != "score":
-                route = Route()
-                station_names = row[1].strip("[]").split(", ")
-                stations = []
-                for station_name in station_names:
-                    stations.append(rail_network.stations_dict()[station_name])
-                for i in range(len(stations)-1):
-                    connection_duration = stations[i].connections[stations[i + 1]]
-                    route.add_connection(stations[i], stations[i+1], connection_duration)
-                solution.append(route)
-    return solution
-
-
 def append_scores_to_csv(scores: "np.ndarray", 
                          filename: str,
                          custom_file_path: bool = False) -> None:
@@ -293,29 +258,67 @@ def write_solution_to_csv(routes: list[Route],
         writer.writerow(["score", f"{score}"])
 
 
-def read_solution_from_csv(filename: str, map="Holland", for_manim = False) -> list[Route]:
+def read_solution_from_csv(filename: str, 
+                           map="Holland", 
+                           file_path = "default") -> list[Route]:
     """
     Read a solution for the RailNL problem from a CSV file.
 
-    - Pre: CSV file with solution created by `write_solution_to_csv()`
-      exists in the `experiments/route_csv/` directory
+    - Pre: CSV file `filename` with solution created by 
+    `write_solution_to_csv()` exists in the directory chosen by 
+    `file_path` argument.
     - Post: return a list of Route objects
-    """
+
+    Args:
+    - `filename`: name of the file to read from, extension is optional.
     
-    # Manim needs relative path
-    if for_manim:
-        experiments_root_dir = "../experiments"
+    - `map`: name of the map used in the algorithm 
+    (Holland or Nationaal; default is Holland).
+    
+    - `file_path`: choose between "default", "for_manim" or 
+    "custom_file_path":
+    
+        - default: read from `experiments/route_csv/`
+    
+        - for_manim: read from `experiments/route_csv/` with relative path from manim script
+        
+        - custom_file_path: read from root of git repository, so user can specify path manually
+    """
+    # Set directory for reading the CSV file:
+    
+    # Default directory is experiments/route_csv/
+    if file_path == "default":
+        global experiments_root_dir
+        csv_results_dir = f"{experiments_root_dir}/route_csv/"
+
+    # Manim needs relative path from it's script to the default directory
+    elif file_path == "for_manim":
+        csv_results_dir = "../experiments/route_csv/"
+
+    # If custom file path, override default directory so user can specify
+    # path from parent directory
+    elif file_path == "custom_file_path":
+        csv_results_dir = ""
+    
+    # Else raise error
+    else:
+        raise ValueError("Invalid file_path argument, choose 'default',"
+                         " 'for_manim' or 'custom_file_path'")
+
 
     # Add .csv extension if not present
     if not filename.endswith(".csv"):
         filename += ".csv"
+
+
+
 
     # Initialize the RailNL object once
     rail_network = RailNL(map)
 
     # Read the solution from the CSV file
     solution = []
-    with open(f"{experiments_root_dir}/route_csv/{filename}", 'r') as file:
+    with open(f"{csv_results_dir}{filename}", 'r') as file:
         reader = csv.reader(file)
         next(reader)  # Skip header
         for row in reader:
@@ -378,6 +381,7 @@ def plot_scores_fancy(sample1: "np.ndarray[float]",
                       legend_title: str = "Groep",
                       legend_labels: tuple[str] | None = None,
                       binwidth: int = 400, 
+                      xlim: tuple[int] = (5000, 10000),
                       alpha: float | None = None) -> None:
     """
     Plot the scores of 1 to 4 samples in a histogram.
@@ -561,7 +565,7 @@ def plot_scores_fancy(sample1: "np.ndarray[float]",
     
     # Add labels, title, theme and limits
     # The same for all plots
-    plot += p9.xlim(5000,10000)
+    plot += p9.xlim(xlim)
     plot += p9.scale_fill_manual(name = legend_title,
                                 values = 
                                 color_palette[:sum([sample1 is not None,
@@ -571,7 +575,7 @@ def plot_scores_fancy(sample1: "np.ndarray[float]",
                                 labels = legend_labels)
     plot += p9.theme_minimal() 
     plot += p9.labs(title = title, 
-                    subtitle= f"Iteraties = {len(sample1)}", 
+                    subtitle= f"Runs = {len(sample1)}", 
                     y = "Aantal waarnemingen")
 
 
@@ -586,26 +590,120 @@ def plot_scores_fancy(sample1: "np.ndarray[float]",
         plot.show()
 
 
-def plot_hillclimber(csv_file: str, 
-                    
-                    # save settings
-                    save_to_pdf: bool = False, preview: bool = True,
-                    custom_file_path: bool = False,
+def plot_autorun_hillclimber(project_name: str | None = None,
+                             use_aggregated: bool = False, 
                     
                     # plot settings
-                    title: str | None = None
+                    title: str | None = None,
 
+                    # save settings
+                    save_to_pdf: bool = True, 
+                    preview: bool = False,
+                    custom_file_path: str | None = None
                     ) -> None:
     """
+    Create a plot to summarize an autorun_hillclimber log file. 
+    (Note: may take a while when run on raw log file, 
+    set `use_aggregated` when re-running.)
+
+    - Pre: Project `project_name` with log data created by 
+    autorun_hillclimber exists.
+    - Post: plot is created and saved to the project directory
+    (default: only save to pdf, preview also possible).
+
+    Args:
+    - `project_name` (str): name of the project in
+    `parent/code/algorithms/autorun_hillclimber/` with log data.
+    - `use_aggregated` (bool): if True, use the aggregated log data 
+    produced as byproduct of this function. If you rerun this function 
+    on an unchanged project, setting this to True will greatly increase 
+    speed.
+    
+    Plot settings:
+    - `title` (str): title of the plot, shown in plot and becomes filename
+      for pdf file. If not provided, title is set to project name.
+
+    Save settings:
+    - `save_to_pdf` (bool): save plot to pdf file in directory
+      `pdf_save_dir`. Default is True.
+    
+    - `preview` (bool): show preview of plot. Default is False.
+    
+    - `custom_file_path` (str): if provided, override `project_name` and
+        set custom file path to read log data from. Plot is saved to
+        the directory of the custom file path.
     """
+    # Input checks
+    if project_name is None and custom_file_path is None:
+        raise ValueError("Please provide a project name or custom file path.")
+
+
+    # If custom file path is set, override default directory and project 
+    # name so user can specify path from parent directory
+    if custom_file_path is not None:
+        log_file_path = custom_file_path
+
+        # Add .csv extension if not present
+        if not log_file_path.endswith(".csv"):
+            log_file_path += ".csv"
+
+        log_file_dir = custom_file_path.rsplit("/", 1)[0]
     
-    # If custom file path is True, override default directory so
-    # user can specify path from parent directory
-    if custom_file_path:
-        csv_file_dir = ""
+    # Else fill in project name for autorun_hillclimber
     else:
-        csv_file_dir = f"{experiments_root_dir}/results/"
+        log_file_dir = f"parent/code/algorithms/autorun_hillclimber/{project_name}"
+        log_file_path = f"{log_file_dir}/log.csv"
     
+
+    # If use_aggregated is False, create aggregated log data first
+    if not use_aggregated:
+        print("Reading raw CSV log data...")
+
+        # Read the existing CSV file into a DataFrame 
+        df_data = pd.read_csv(f"{log_file_path}", 
+                            header=None)
+        
+        print("Read-in of raw CSV log data successful.")
+        print("Aggregating data. This might take a while...")
+
+        # Create a new dataframe with the mean, max and min
+        df_data_aggregated = df_data.agg(['mean', 'max', 'min'], axis=1).reset_index()
+        
+        print("Aggregation of data successful.")
+        print("Melting aggregated data...")
+
+        # Melt dataframe to long format for plotnine
+        df_data_aggregated = df_data_aggregated.melt(id_vars='index', 
+                                                    var_name="Statistiek", 
+                                                    value_name=f"Score (n_runs={len(df_data.columns)})")
+        
+        # Rename column 0 to "Iteraties"
+        df_data_aggregated.rename(columns = {"index": "Iteraties (0 indexed)"},
+                                  inplace = True)
+
+        # Save the aggregated data disk for future use
+        df_data_aggregated.to_csv(f"{log_file_dir}/log_aggregated.csv",
+                                header=True, 
+                                index=True)
+
+        print("Melting of aggregated data successful. Saved to log_aggregated.csv.")
+        
+
+    # If use_aggregated is True, read the aggregated log data
+    else:
+        print("Reading aggregated CSV log data...")
+        
+        # Read the existing CSV file into a DataFrame 
+        df_data_aggregated = pd.read_csv(f"{log_file_dir}/log_aggregated.csv", 
+                             header = 0, 
+                             index_col = 0)
+
+        print("Read-in of aggregated CSV log data successful.")
+
+
+
+
+    print("Creating plot...")
 
     # Settings for plot
     color_palette = ("lightblue", "darkgrey", "lightsalmon")
@@ -615,56 +713,65 @@ def plot_hillclimber(csv_file: str,
     p9.geoms.geom_line.DEFAULT_AES['size'] = 2
 
 
-    # Add .csv extension if not present
-    if not csv_file.endswith(".csv"):
-        csv_file += ".csv"
-
-
-    # Set default title and filename if not provided
+    # Set default title if not provided
     if title is None:
-        # Set title to input filename
-        title = f"Hillclimber: {csv_file}"
-        filename = f"Plot_{csv_file}"
-    else:
-        filename = title
+        if project_name is not None:
+            # Set title to input filename
+            title = f"Hillclimber: {project_name}"
+            
+        else:
+            # Set title to default
+            title = "Hillclimber log"
 
+    # Save column names
+    column_names = df_data_aggregated.columns
 
-    # Read the existing CSV file into a DataFrame 
-    df_data = pd.read_csv(f"{csv_file_dir}{csv_file}", 
-                        header=None)
+    # Get number of runs from last column name
+    n_runs = column_names[-1].split("=")[1].split(")")[0]
 
-    # Create a new dataframe with the mean, max and min
-    df_data_aggregated = df_data.agg(['mean', 'max', 'min'], axis=1).reset_index()
-    
-    # Melt dataframe to long format for plotnine
-    df_data_aggregated = df_data_aggregated.melt(id_vars='index', 
-                                                 var_name="Statistiek", 
-                                                 value_name="Score")
+    # Infer max iterations from the last row of the first column
+    max_iterations = (df_data_aggregated.iloc[:, 0].values[-1]) + 1
+
+    # Get ylim lower bound from df_data_aggregated
+    ylim_min = round(df_data_aggregated.iloc[:, -1].values[0])
 
 
     # Create plotnine plot with the mean, max and min per iteration
     plot = (
         p9.ggplot(df_data_aggregated) +
-        p9.aes(x = "index", y = "Score", color = "Statistiek") +
+        p9.aes(x = column_names[0], 
+               y = column_names[2], 
+               color = column_names[1]) +
         
         p9.geom_line() +
+
+        p9.ylim(ylim_min, 10000) +
         
         p9.scale_color_manual(name = "Per iteratie",
                             values = color_palette, 
                             labels = legend_labels) +
         
         p9.labs(title = title,
-                subtitle = f"Aantal runs: {len(df_data.columns)}",
+                subtitle = f"Aantal runs = {n_runs}, max. iteraties = {max_iterations}",
                 x = "Iteraties", 
                 y = "Score") +
         
         p9.theme_minimal()
     )
 
+    print("Plot created successfully.")
+
 
     # Save to pdf if specified
     if save_to_pdf:
-        plot.save(filename = filename, path=f"{experiments_root_dir}/plots")
+        # Set filename
+        if project_name is not None:
+            pdf_filename = f"logplot_{project_name}.pdf"
+        else:
+            pdf_filename = "logplot.pdf"
+        
+        plot.save(filename = pdf_filename, path = log_file_dir)
+        print(f"Plot saved to {log_file_dir}/{pdf_filename}")
 
     # Show preview of plot if specified
     if preview:
