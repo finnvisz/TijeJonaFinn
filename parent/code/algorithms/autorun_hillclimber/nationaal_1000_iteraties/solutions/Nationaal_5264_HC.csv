@@ -1,0 +1,11 @@
+train,stations
+train_1,"[Schiedam Centrum, Delft, Den Haag HS, Gouda, Den Haag Centraal, Leiden Centraal, Heemstede-Aerdenhout, Haarlem, Beverwijk]"
+train_2,"[Apeldoorn, Deventer, Zwolle, Deventer, Zutphen, Dieren, Zutphen, Deventer, Almelo, Hengelo, Enschede]"
+train_3,"[Schiphol Airport, Utrecht Centraal, Amsterdam Amstel, Amsterdam Zuid, Schiphol Airport, Leiden Centraal, Den Haag Laan v NOI, Gouda]"
+train_4,"[Rotterdam Alexander, Rotterdam Centraal, Dordrecht, Rotterdam Blaak, Rotterdam Alexander, Gouda, Den Haag HS, Leiden Centraal, Alphen a/d Rijn, Utrecht Centraal, Gouda]"
+train_5,"[Maastricht, Sittard, Heerlen, Sittard, Roermond, Weert, Eindhoven, Tilburg]"
+train_6,"[Zwolle, Steenwijk, Heerenveen, Leeuwarden, Groningen, Assen, Zwolle]"
+train_7,"[Amsterdam Zuid, Amsterdam Sloterdijk, Zaandam, Castricum, Zaandam, Beverwijk, Castricum, Alkmaar, Castricum, Zaandam, Amsterdam Sloterdijk, Amsterdam Centraal, Amsterdam Amstel, Almere Centrum]"
+train_8,"[Rotterdam Blaak, Schiedam Centrum, Rotterdam Centraal, Dordrecht, Roosendaal, Etten-Leur, Breda, Tilburg, s-Hertogenbosch, Tilburg, Breda, Dordrecht]"
+train_9,"[Lelystad Centrum, Almere Centrum, Hilversum, Utrecht Centraal, Ede-Wageningen, Arnhem Centraal, Dieren]"
+score,5263.730337078652
