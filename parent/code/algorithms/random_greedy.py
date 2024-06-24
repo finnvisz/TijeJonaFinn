@@ -128,18 +128,18 @@ class Random_Greedy(Algorithm):
         # Set values for final_number_of_routes and route_time_limit:
         final_number_of_routes = self.set_final_number_of_routes(
                                         final_number_of_routes)
-        
+
         # NOTE: time_limit_this_route is different from route_time_limit
         time_limit_this_route = self.set_time_limit_this_route(
                                         route_time_limit)
 
-        
+
         # Load data and set up tracking of used connections and stations
         self.setup_used_connection_and_station_tracking(
             starting_stations = starting_stations,
             starting_station_list = starting_station_list)
 
- 
+
         # Generate a solution with the given parameters
         solution = self.generate_solution(final_number_of_routes,
                                         route_time_limit,
@@ -149,6 +149,7 @@ class Random_Greedy(Algorithm):
                                         next_connection_choice,
                                         original_connections_only,
                                         chance_of_early_route_end)
+        
         # And return the solution
         return solution
 
@@ -235,9 +236,6 @@ class Random_Greedy(Algorithm):
 
                 # And choose a random list from the list of lists
                 starting_station_list = random.choice(starting_station_list)
-
-                # DEBUG
-                # print(starting_station_list)
 
 
         # For custom list without replacement, list must be long enough
@@ -398,14 +396,13 @@ class Random_Greedy(Algorithm):
         # While there are less than <final_number_of_routes> routes and 
         # there are still unused connections
         # i.e. for each route
-        while(self.number_of_routes() < final_number_of_routes
+        while(len(solution) < final_number_of_routes
                and len(self.unused_connections) > 0):
             
             # If route_time_limit is a list, pick random again for each route
             if type(route_time_limit) == list:
                 time_limit_this_route = np.random.choice(route_time_limit)
             
-
             # Set the first station for this route (method depends on 
             # starting_stations argument)
             current_station = self.set_starting_station(starting_stations,
@@ -420,9 +417,9 @@ class Random_Greedy(Algorithm):
             
             # And add it to the list of routes
             solution.append(new_route)
-        
 
-        # Return the generated solution
+
+        # Return the generated routes
         return solution
 
 
