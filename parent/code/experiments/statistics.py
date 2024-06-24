@@ -10,13 +10,10 @@ from datetime import datetime
 
 # Internal imports
 # from parent.code.algorithms.hillclimber import Hillclimber
-from parent.code.experiments.experiments import Experiment
 from parent.code.classes.route import Route
 from parent.code.classes.railnl import RailNL
-from parent.code.classes.station_class import Station
 from parent.code.algorithms.score import routes_score
 from parent.code.algorithms.random_greedy import Random_Greedy
-from parent.code.experiments.starting_bins import Sort_Starting
 
 
 # Default directory for all functions in this file, can be changed if needed
@@ -791,110 +788,3 @@ def plot_scores(filename: str, scores: list[float]):
     plt.tight_layout()
     
     plt.savefig(f"{experiments_root_dir}/plots/{filename}.png")
-
-
-
-
-
-# #example/test usage
-# if __name__ == "__main__":
-#     map = "Nationaal"
-#     data = RailNL(map)
-#     algorithm = Random_Greedy(data)
-#     algorithm.run(final_number_of_routes=20)
-#     hillclimber_alg = Hillclimber(data, algorithm, map)
-#     hillclimber_alg.run(100, simulated_annealing=True)
-#     routes = hillclimber_alg.output()
-#     write_solution_to_csv(routes, "output", map=map)
-#     solution = read_solution_from_csv("output.csv", map=map)
-#     print(solution)
-
-# if __name__ == "__main__":
-#     map = "Holland"
-#     data = RailNL(map)
-#     scores1 = []
-#     startscores1 = []
-#     for i in range(2):
-#         print(f"1. iteratie {i}")
-#         algorithm = Random_Greedy(data)
-#         algorithm.run(starting_stations="original_stations_only_hard", final_number_of_routes=(1,2,3,4,5,6,7))
-#         hillclimber_alg = Hillclimber(data, algorithm, map)
-#         hillclimber_alg.run(10000, cap=500)
-#         startscores1.append(hillclimber_alg.start_score)
-#         routes = hillclimber_alg.output()
-#         write_solution_to_csv(routes, "output")
-#         score = routes_score(routes, map)
-#         if score > 9000:
-#             write_scores_to_csv(routes, f"output_score{score}.csv")
-#         scores1.append(score)
-#     # append_scores_to_csv(scores1, "Scores_Hillclimer.csv")
-#     scores2 = []
-#     startscores2 = []
-#     for i in range(100):
-#         print(f"2. iteratie {i}")
-#         algorithm = Random_Greedy(data)
-#         algorithm.run(final_number_of_routes=(1,2,3,4,5,6,7))
-#         hillclimber_alg = Hillclimber(data, algorithm, map)
-#         hillclimber_alg.run(10000, cap=1000)
-#         startscores2.append(hillclimber_alg.start_score)
-#         routes = hillclimber_alg.output()
-#         write_solution_to_csv(routes, "output")
-#         scores2.append(routes_score(routes, map))
-#     plot_scores_fancy(scores1, scores2, title="1-7 routes end scores", save_to_pdf=True, binwidth=50, legend_labels=("original stations only hard", "random"))
-#     plot_scores_fancy(startscores1, startscores2, title="1-7 routes start scores, 6 routes max", save_to_pdf=True, binwidth=50, legend_labels=("original stations only hard", "random"))
-
-if __name__ == "__main__":
-    map = "Nationaal"
-    data = RailNL(map)
-    scores1 = []
-    for i in range(100):
-        print(f"1. iteratie {i}")
-        algorithm = Random_Greedy(data)
-        algorithm.run(starting_stations="original_stations_only_hard", final_number_of_routes=20)
-        hillclimber_alg = Hillclimber(data, algorithm, map)
-        hillclimber_alg.run(2000, cap=500)
-        routes = hillclimber_alg.output()
-        write_solution_to_csv(routes, "Nationaal_output", map=map)
-        score = routes_score(routes, map)
-        if score > 6000:
-            write_solution_to_csv(routes, f"Nationaal_output_score{score}.csv", map=map)
-        scores1.append(score)
-    append_scores_to_csv(scores1, "Scores_Hillclimer.csv")
-    plot_scores_fancy(scores1, title="Nationaal scores", save_to_pdf=True, binwidth=50)
-
-
-# if __name__ == "__main__":
-#     result_90 = read_scores_from_csv("time_experiment_results/90.csv")
-#     result_100 = read_scores_from_csv("time_experiment_results/100.csv")
-#     result_110 = read_scores_from_csv("time_experiment_results/110.csv")
-#     result_120 = read_scores_from_csv("time_experiment_results/120.csv")
-#     plot_scores_fancy(result_120, result_110, result_100, result_90, 
-#                       title = "Random scores given different uniform route time limit.")
-
-# """Example usage plot_scores"""
-# if __name__ == "__main__":
-
-#     randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
-#     randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
-
-#     plot_scores(randomv2_least_connections, randomv2_most_connections)
-
-
-# """Example usage plot_scores_fancy"""
-# if __name__ == "__main__":
-#     # write_solution_to_csv(Random_Greedy(RailNL("Holland")).run(), "output2")
-    
-#     # randomv2_least_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_least_connections_100000.csv")
-#     # randomv2_2_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_2_connections_100000.csv")
-#     # randomv2_3_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_3_connections_100000.csv")
-#     # randomv2_most_connections = read_scores_from_csv("best_starting_stations/results/with_replacement/randomv2_most_connections_100000.csv")
-
-#     plot_scores_fancy(  Experiment(Random_Greedy).run_experiment(10000),
-#                         Experiment(Random_Greedy).run_experiment(10000,
-#                                                                starting_stations = "original_stations_only_soft"), 
-#                         Experiment(Random_Greedy).run_experiment(10000,
-#                                                                starting_stations = "original_stations_only_hard"),                                       
-#                     title = "Starting station random, soft and hard pick.",
-#                     legend_labels = ("Fully random", "Soft", "Hard"),
-#                     save_to_pdf = True,
-#                     filename = "Starting_station_pick_random_soft_hard")

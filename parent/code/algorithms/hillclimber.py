@@ -265,11 +265,3 @@ class Hillclimber(Algorithm):
         # And return the found solution
         return self.routes
 
-
-# Example/test usage
-if __name__ == "__main__":
-    maprange = "Nationaal"
-    # Test Hillclimber algorithm with RandomAlgorithm as starting state
-    algorithm = read_solution_from_csv('/home/finnvisz/TijeJonaFinn/parent/code/algorithms/autorun_hillclimber/test_nationaal/solutions/Nationaal_6359_HC.csv', map="Nationaal", file_path= "custom_file_path")
-    solution = Hillclimber(algorithm, maprange).run(10, improve_routes=True)
-    write_solution_to_csv(solution, "chechcheckdubbelcheck.csv", map="Nationaal")
