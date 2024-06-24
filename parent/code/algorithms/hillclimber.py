@@ -8,6 +8,7 @@ from parent.code.algorithms.score import routes_score
 from parent.code.classes.railnl import RailNL
 from parent.code.classes.route import Route
 from parent.code.experiments.statistics import append_scores_to_csv
+from parent.code.algorithms.tot_con_used import get_total_connections_used
 
 class Hillclimber(Algorithm):
     """Hillclimber algorithm to optimize train routes.
@@ -110,42 +111,55 @@ class Hillclimber(Algorithm):
         return routes
     
     def improve_routes(self, routes: list[Route]) -> list[Route]:
-        """Removes the first/last connection (head/tail) of a route if
-        it is already used somewhere else
-        
-        Post: Returns an updated list of Route object, hopefully with 
-        less stupid extra connections
-        """
+        """Removes redundant connections from the head, tail, and middle of routes."""
+
         updated_routes = []
 
         for route in routes:
-            # Check head
-            if len(route.connections_used) > 0:
-                first_conn = route.connections_used[0]
+
+            # Remove redundant connections from the head
+            while len(route.connections_used) > 0:
+                first_conn = route.connections_used.pop(0)
                 first_conn_reverse = (first_conn[1], first_conn[0], first_conn[2])
 
-                total_conn = self.get_total_connections_used()
+                total_conn_used = get_total_connections_used(routes)  # Refresh total connections used for each route
 
-                if first_conn not in total_conn and first_conn_reverse not in total_conn:
-                    route.connections_used.pop(0)
+                if first_conn not in total_conn_used and first_conn_reverse not in total_conn_used:
+                    route.connections_used.insert(0, first_conn)
+                    break  # Exit loop if no more redundant connections
+                else:
                     route.stations.pop(0)
 
-            # Check tail
-            if len(route.connections_used) > 0:
-                last_conn = route.connections_used[-1]
+            # Remove redundant connections from the tail
+            while len(route.connections_used) > 0:
+                last_conn = route.connections_used.pop()
                 last_conn_reverse = (last_conn[1], last_conn[0], last_conn[2])
 
-                total_conn = self.get_total_connections_used()
+                total_conn_used = get_total_connections_used(routes)  # Refresh total connections used for each route
 
-                if last_conn not in total_conn and last_conn_reverse not in total_conn:
-                    route.connections_used.pop(-1)
-                    route.stations.pop(-1)
+                if last_conn not in total_conn_used and last_conn_reverse not in total_conn_used:
+                    route.connections_used.append(last_conn)
+                    break  # Exit loop if no more redundant connections
+                else:
+                    route.stations.pop()
+
+            # Remove redundant stations in the middle
+            i = 0
+            while len(route.connections_used) > 2 and i <= len(route.stations) - 4:
+                if (route.stations[i], route.stations[i+1]) == (route.stations[i+2], route.stations[i+3]):
+                    route.stations.pop(i+2)
+                    route.stations.pop(i+3)
+                    route.connections_used.pop(i+1)
+                    i -= 1
+                else:
+                    i += 1
 
             # Append route if it still has connections
             if route.get_connections_used():
                 updated_routes.append(route)
 
         return updated_routes
+
 
         
 
@@ -244,4 +258,4 @@ if __name__ == "__main__":
                             final_number_of_routes=(14),
                             route_time_limit=[180],
                             starting_stations = 'original_stations_only_hard')
-    hillclimber_alg = Hillclimber(random_alg, maprange).run(100)
+    hillclimber_alg = Hillclimber(random_alg, maprange).run(1)
