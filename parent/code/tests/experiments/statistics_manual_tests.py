@@ -10,9 +10,6 @@ from parent.code.classes.railnl import RailNL
 
         
 if __name__ == "__main__":
-    # append_single_score_to_csv(300.0, "test_jona_3.csv")
-    # plot_autorun_hillclimber("parent/code/algorithms/autorun_hillclimber/cap_50000/log.csv", title = "Hillclimber: cap_50000", custom_file_path=True)
-
     # solution = read_solution_from_csv("../../algorithms/autorun_hillclimber/4_routes_zondag/solutions/Holland_9192_HC")
 
     # i = 1
@@ -20,12 +17,12 @@ if __name__ == "__main__":
     #     print(f"Route {i}: {route.time} minuten")
     #     i += 1
 
-    # plot_autorun_hillclimber(project_name="4_routes_zondag", title="Hillclimber: enkel 4 routes (zondag)", use_aggregated=False)
+    plot_autorun_hillclimber(project_name="zondagnacht_cap_30000", title="Hillclimber: zondagnacht_cap_30000", use_aggregated=False)
 
     # end_scores_zaterdag = read_scores_from_csv("parent/code/algorithms/autorun_hillclimber/agile_zaterdag/end_scores.csv", custom_file_path=True)
-    end_scores_zondag = read_scores_from_csv("parent/code/algorithms/autorun_hillclimber/4_routes_zondag/end_scores.csv", custom_file_path=True)
+    # end_scores_zondag = read_scores_from_csv("parent/code/algorithms/autorun_hillclimber/4_routes_zondag/end_scores.csv", custom_file_path=True)
 
-    plot_scores_fancy(end_scores_zondag, title="Hillclimber '4_routes_zondag': verdeling van eindscores", binwidth=10, xlim=(min(end_scores_zondag), max(end_scores_zondag)), save_to_pdf=True)
+    # plot_scores_fancy(end_scores_zondag, title="Hillclimber '4_routes_zondag': verdeling van eindscores", binwidth=10, xlim=(min(end_scores_zondag), max(end_scores_zondag)), save_to_pdf=True)
 
 
 
