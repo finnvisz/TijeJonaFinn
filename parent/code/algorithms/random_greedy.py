@@ -118,81 +118,14 @@ class Random_Greedy(Algorithm):
         Default is False.
         """
 
-        # Check for correct input:
+        # Check for correct input
+        starting_station_list = self.check_input(final_number_of_routes, 
+                        route_time_limit, next_connection_choice, 
+                        original_connections_only, starting_stations, 
+                        starting_station_list)
 
-        # final_number_of_routes must be an integer or a tuple of integers
-        assert type(final_number_of_routes) in (None, int, tuple), """
-            final_number_of_routes must be an int or tuple of ints."""
-
-        # route_time_limit  input check
-        assert type(route_time_limit) in (None, int, tuple, list), """
-            When set, final_number_of_routes must be an int, tuple of ints
-            or list of ints (tuple and list generates different results, 
-            read the docstring)."""
-
-        # Check for correct input for next_connection_choice
-        assert next_connection_choice in ["random", "shortest"], """
-        next_connection_choice must be set to 'random' or 'shortest'."""
-
-        # Check for correct input for starting_stations
-        assert starting_stations in ["fully_random",
-                                    "original_stations_only_soft", 
-                                    "original_stations_only_hard",
-                                    "custom_list_with_replacement", 
-                                    "custom_list_without_replacement"], """
-        starting_stations must be set to 'fully_random', 
-        'original_stations_only_hard', 'custom_list_with_replacement', or 
-        'custom_list_without_replacement'."""
-
-
-        # With greedy approach, original connections only is required for correct functioning
-        if next_connection_choice == "shortest" and original_connections_only == False:
-            raise ValueError("""You are about to run an algorithm 
-                             greedy on connections. Set 
-                             original_connections_only to True. 
-                             If not your algorithm 
-                             will get stuck going back and forth between 
-                             two stations.""")
-        
-        # With custom list, list must be provided
-        if (starting_stations == "custom_list_with_replacement" or 
-            starting_stations == "custom_list_without_replacement"):
-            assert starting_station_list is not None, """Starting station list 
-                must be provided when starting_stations is set to 
-                'custom_list_with_replacement' or 'custom_list_without_replacement'."""
-
-            # If list of lists is provided, check if all elements are lists
-            # And afterwords randomly select a list from the list of lists.
-            # (For the TA reading this, I'm a bit confused as well.) 
-            if type(starting_station_list[0]) is list:
-                # Assert all elements are lists
-                assert all(
-                isinstance(element, list) 
-                for element in starting_station_list), """
-                Provide either a single list of stations,
-                or a list of lists of stations. Don't mix the two!"""
-
-                # And choose a random list from the list of lists
-                starting_station_list = random.choice(starting_station_list)
-
-                # DEBUG
-                # print(starting_station_list)
-        
-        # For custom list without replacement, list must be long enough
-        if starting_stations == "custom_list_without_replacement":
-            
-            if type(final_number_of_routes) == int:
-                assert len(starting_station_list) == final_number_of_routes, """
-                Starting station list must be exactly as long as the number 
-                of routes."""
-
-            if type(final_number_of_routes) == tuple:
-                assert len(starting_station_list) == max(final_number_of_routes), """
-                Starting station list must be exactly as long as the maximum 
-                number of routes."""
-
-
-
+        # DEBUG
+        # print(starting_station_list)
 
         # Set values for final_number_of_routes and route_time_limit:
 
@@ -426,6 +359,113 @@ class Random_Greedy(Algorithm):
 
 
 
+    def check_input(self, 
+                    final_number_of_routes: int | tuple[int] | None, 
+                    route_time_limit: int | tuple[int] | list[int] | None,
+                    next_connection_choice: str,
+                    original_connections_only: bool,
+                    starting_stations: str,
+                    starting_station_list: None | list["Station"]) -> None:
+        """
+        Check if the input for the run method is correct.
+        
+        Returns only the starting_station_list, because when user 
+        provides list of lists for it, it must be changed during the 
+        input checks.
+        """
+        # Check for correct input:
+
+        # final_number_of_routes must be an integer or a tuple of integers
+        assert final_number_of_routes is None or type(
+            final_number_of_routes) in (int, tuple), """
+            final_number_of_routes must be an int or tuple of ints."""
+
+        # route_time_limit  input check
+        assert route_time_limit is None or type(
+            route_time_limit) in (int, tuple, list), """
+            When set, route_time_limit must be an int, tuple of ints
+            or list of ints (tuple and list generates different results, 
+            read the docstring)."""
+
+
+        # Check for correct input for next_connection_choice
+        assert next_connection_choice in ["random", "shortest"], """
+        next_connection_choice must be set to 'random' or 'shortest'."""
+
+        # Check for correct input for starting_stations
+        assert starting_stations in ["fully_random",
+                                    "original_stations_only_soft", 
+                                    "original_stations_only_hard",
+                                    "custom_list_with_replacement", 
+                                    "custom_list_without_replacement"], """
+        starting_stations must be set to 'fully_random', 
+        'original_stations_only_soft', 'original_stations_only_hard', 
+        'custom_list_with_replacement' or 'custom_list_without_replacement'."""
+
+
+        # With greedy approach, original connections only is required 
+        # for correct functioning
+        if next_connection_choice == "shortest" and original_connections_only == False:
+            raise ValueError("""You are about to run an algorithm 
+                             greedy on connections. Set 
+                             original_connections_only to True. 
+                             If not your algorithm 
+                             will get stuck going back and forth between 
+                             two stations.""")
+        
+
+        # With custom list, list must be provided
+        if (starting_stations == "custom_list_with_replacement" or 
+            starting_stations == "custom_list_without_replacement"):
+            assert starting_station_list is not None, """Starting station list 
+                must be provided when starting_stations is set to 
+                'custom_list_with_replacement' or 'custom_list_without_replacement'."""
+
+            assert type(starting_station_list) == list, """Starting station""" 
+            """list must be provided as either a list with stations, or"""
+            """a list containing multiple lists of stations'."""
+
+
+            # If list of lists is provided, check if all elements are lists
+            # And afterwords randomly select a list from the list of lists.
+            # (For the TA reading this, I'm a bit confused as well.) 
+            if type(starting_station_list[0]) is list:
+                # Assert all elements are lists
+                assert all(
+                isinstance(element, list) 
+                for element in starting_station_list), """
+                Provide either a single list of stations,
+                or a list of lists of stations. Don't mix the two!"""
+
+                # And choose a random list from the list of lists
+                starting_station_list = random.choice(starting_station_list)
+
+                # DEBUG
+                # print(starting_station_list)
+
+
+        # For custom list without replacement, list must be long enough
+        if starting_stations == "custom_list_without_replacement":
+            
+            if type(final_number_of_routes) == int:
+                assert len(starting_station_list) == final_number_of_routes, """
+                Starting station list must be exactly as long as the number 
+                of routes."""
+
+            if type(final_number_of_routes) == tuple:
+                assert len(starting_station_list) == max(final_number_of_routes), """
+                Starting station list must be exactly as long as the maximum 
+                number of routes."""
+
+
+        # Function returns starting_station_list because when 
+        # provided by user it must be changed during the input checks 
+        # (so one final check can be done after changing it)
+        return starting_station_list
+
+
+
+
 
     def set_as_used(self, current_station: "Station", next_station: "Station") -> None:
         """
@@ -445,31 +485,17 @@ class Random_Greedy(Algorithm):
 
 # Run  and print results
 if __name__ == "__main__":
+    # Run the Random_Greedy algorithm on the Holland map
+    # with default settings
+    random_greedy = Random_Greedy("Holland")
+    # list consisting of 4 lists with 2 stations each
+    custom_starting_stations = [[random_greedy.load.stations["Alkmaar"], random_greedy.load.stations["Amsterdam Amstel"]], 
+                                [random_greedy.load.stations["Rotterdam Alexander"], random_greedy.load.stations["Rotterdam Centraal"]], 
+                                [random_greedy.load.stations["Castricum"], random_greedy.load.stations["Beverwijk"]], 
+                                [random_greedy.load.stations["Schiphol Airport"], random_greedy.load.stations["Zaandam"]]]
     
+    # results = random_greedy.run(starting_stations="custom_list_without_replacement", 
+    #                             starting_station_list = custom_starting_stations, 
+    #                             final_number_of_routes=2)
     
-
-    random_greedy = Random_Greedy(RailNL("Holland"))
-    
-    starting_stations_1 = [random_greedy.load.stations["Rotterdam Centraal"], random_greedy.load.stations["Amsterdam Centraal"]]
-    starting_stations_2 = [random_greedy.load.stations["Dordrecht"], random_greedy.load.stations["Gouda"]]
-    
-    list_of_lists = [starting_stations_1, starting_stations_2, random_greedy.load.stations["Den Helder"]]
-    # print(list_of_lists)
-
-    # Run algorithm with desired settings 
-    output = random_greedy.run(
-            final_number_of_routes = 2, 
-            starting_stations="custom_list_without_replacement", starting_station_list=list_of_lists)
-    
-    # # print(len(output))
-    # # Print results + extra info
-    # for route in output:
-    #     for connection in route.get_connections_used():
-    #         print(connection[0], " - ", connection[1], connection[2], end=" -> ")
-        
-    #     print("")
-    #     print(f"Total time: {route.time}")
-    #     print("")
-
-    print(f"Unused stations: {len(random_greedy.unused_stations)}")
-    # print(f"Unused connections: {len(random_greedy.unused_connections)}")
+    results = random_greedy.run()
