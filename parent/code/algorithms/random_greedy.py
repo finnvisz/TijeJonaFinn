@@ -136,50 +136,21 @@ class Random_Greedy(Algorithm):
         
         # Load data and set up tracking of used connections and stations
         self.setup_used_connection_and_station_tracking(
-            starting_stations = starting_stations)
+            starting_stations = starting_stations,
+            starting_station_list = starting_station_list)
 
  
-        # If starting_station_list is provided and we draw without replacement,
-        # make a deepcopy
-        if starting_stations == "custom_list_without_replacement":
- 
-            # Make a copy of the list to avoid changing the original list
-            self.starting_station_list_copy = copy.deepcopy(starting_station_list)
-        
-
-        # List to store the various routes
-        self.routes: list[Route] = []
-
-        # While there are less than <final_number_of_routes> routes and 
-        # there are still unused connections
-        # i.e. for each route
-        while(self.number_of_routes() < final_number_of_routes
-               and len(self.unused_connections) > 0):
-            
-            # If route_time_limit is a list, pick random again for each route
-            if type(route_time_limit) == list:
-                time_limit_this_route = np.random.choice(route_time_limit)
-            
-
-            # Set the first station for this route (method depends on 
-            # starting_stations argument)
-            current_station = self.set_starting_station(starting_stations,
-                                                    starting_station_list)
-
-            # Create a new route with the given parameters
-            new_route = self.create_a_route(current_station,
-                                            time_limit_this_route,
-                                            next_connection_choice,
-                                            original_connections_only,
-                                            chance_of_early_route_end)
-            
-            # And add it to the list of routes
-            self.routes.append(new_route)
-        
-
-        # Return the generated routes
-        return self.routes
-
+        # Generate a solution with the given parameters
+        solution = self.generate_solution(final_number_of_routes,
+                                        route_time_limit,
+                                        time_limit_this_route,
+                                        starting_stations,
+                                        starting_station_list,
+                                        next_connection_choice,
+                                        original_connections_only,
+                                        chance_of_early_route_end)
+        # And return the solution
+        return solution
 
 
     def check_input(self, 
@@ -192,10 +163,12 @@ class Random_Greedy(Algorithm):
         """
         Check if the input for the run method is correct.
         
-        Returns only the starting_station_list, because when user 
+        Returns only the `starting_station_list`, because when user 
         provides list of lists for it, it must be changed during the 
-        input checks.
+        input checks: one of the lists is chosen randomly to be used as
+        `starting_station_list`, and after that a final check is done.
         """
+        
         # Check for correct input:
 
         # final_number_of_routes must be an integer or a tuple of integers
@@ -356,7 +329,9 @@ class Random_Greedy(Algorithm):
 
 
     def setup_used_connection_and_station_tracking(self, 
-                                                   starting_stations: str) -> None:
+                                                   starting_stations: str,
+                                                   starting_station_list: None | list["Station"]
+                                                   ) -> None:
         """ 
         Unused_connections starts off with all connections. Unused 
         connections will be moved to used connections when they are used.
@@ -395,65 +370,121 @@ class Random_Greedy(Algorithm):
             self.used_starting_stations = []
 
 
+        # 4. If starting_station_list is provided and we draw without
+        # replacement, make a deepcopy
+        if starting_stations == "custom_list_without_replacement":
+ 
+            # Make a copy of the list to avoid changing the original list
+            self.starting_station_list_copy = copy.deepcopy(starting_station_list)
+
+
+    def generate_solution(self,
+                            final_number_of_routes: int,
+                            route_time_limit: int,
+                            time_limit_this_route: int,
+                            starting_stations: str,
+                            starting_station_list: list["Station"],
+                            next_connection_choice: str,
+                            original_connections_only: bool,
+                            chance_of_early_route_end: bool
+                          ) -> list[Route]:
+        """
+        Generate a solution with the given parameters.
+        """
+        
+        # Solution is a list to store the various routes
+        solution: list[Route] = []
+
+        # While there are less than <final_number_of_routes> routes and 
+        # there are still unused connections
+        # i.e. for each route
+        while(self.number_of_routes() < final_number_of_routes
+               and len(self.unused_connections) > 0):
+            
+            # If route_time_limit is a list, pick random again for each route
+            if type(route_time_limit) == list:
+                time_limit_this_route = np.random.choice(route_time_limit)
+            
+
+            # Set the first station for this route (method depends on 
+            # starting_stations argument)
+            current_station = self.set_starting_station(starting_stations,
+                                                    starting_station_list)
+
+            # Create a new route with the given parameters
+            new_route = self.create_a_route(current_station,
+                                            time_limit_this_route,
+                                            next_connection_choice,
+                                            original_connections_only,
+                                            chance_of_early_route_end)
+            
+            # And add it to the list of routes
+            solution.append(new_route)
+        
+
+        # Return the generated solution
+        return solution
+
+
     def set_starting_station(self, 
                              starting_stations: str, 
                              starting_station_list: list["Station"]
                              ) -> "Station":
-            """
-            Set a first station for this route (method depends on 
-            starting_stations argument; lots of options!)
-            """
+        """
+        Set a first station for this route (method depends on 
+        starting_stations argument; lots of options!)
+        """
 
-            # If flag set to "fully_random", pick random from all stations
-            if starting_stations == "fully_random":
-                current_station = self.load.get_random_station()
+        # If flag set to "fully_random", pick random from all stations
+        if starting_stations == "fully_random":
+            current_station = self.load.get_random_station()
+        
+        # If flag set to "original_stations_only_soft:
+        # Pick random, but if another route starts at this station,
+        # pick another
+        elif starting_stations == "original_stations_only_soft":
+            # Random pick ("do while" loop)
+            current_station = self.load.get_random_station()
             
-            # If flag set to "original_stations_only_soft:
-            # Pick random, but if another route starts at this station,
-            # pick another
-            elif starting_stations == "original_stations_only_soft":
-                # Random pick ("do while" loop)
+            # Pick again until a station is found that has not been 
+            # used as a starting station in another route
+            while current_station in self.used_starting_stations:
                 current_station = self.load.get_random_station()
+
+            # Add this station to the list of used starting stations
+            self.used_starting_stations.append(current_station)
+
+        # If "starting_stations" is set to "original_stations_only_hard", 
+        # try to pick unused stations
+        elif starting_stations == "original_stations_only_hard":
+
+            # Plan A: pick a random unused station
+            if len(self.unused_stations) > 0:
+                current_station = random.choice(self.unused_stations)
+            
+            # Plan B: pick station with an unused connection
+            else:
+                random_unused_connection = random.choice(list(self.unused_connections.values()))
+                random_index = random.choice([0, 1])
                 
-                # Pick again until a station is found that has not been 
-                # used as a starting station in another route
-                while current_station in self.used_starting_stations:
-                    current_station = self.load.get_random_station()
+                current_station = random_unused_connection[random_index]   
 
-                # Add this station to the list of used starting stations
-                self.used_starting_stations.append(current_station)
+        # If flag set to "custom_list_with_replacement", pick from the custom list
+        elif starting_stations == "custom_list_with_replacement":
+            current_station = random.choice(starting_station_list)
 
-            # If "starting_stations" is set to "original_stations_only_hard", 
-            # try to pick unused stations
-            elif starting_stations == "original_stations_only_hard":
+        # If flag set to "custom_list_without_replacement", 
+        # pop from randomized version of custom list
+        elif starting_stations == "custom_list_without_replacement":
 
-                # Plan A: pick a random unused station
-                if len(self.unused_stations) > 0:
-                    current_station = random.choice(self.unused_stations)
-                
-                # Plan B: pick station with an unused connection
-                else:
-                    random_unused_connection = random.choice(list(self.unused_connections.values()))
-                    random_index = random.choice([0, 1])
-                    
-                    current_station = random_unused_connection[random_index]   
-
-            # If flag set to "custom_list_with_replacement", pick from the custom list
-            elif starting_stations == "custom_list_with_replacement":
-                current_station = random.choice(starting_station_list)
-
-            # If flag set to "custom_list_without_replacement", 
-            # pop from randomized version of custom list
-            elif starting_stations == "custom_list_without_replacement":
-
-                # Shuffle before each pop, just in case
-                random.shuffle(self.starting_station_list_copy)
-                
-                # Pop the last station from the list
-                current_station = self.starting_station_list_copy.pop()
+            # Shuffle before each pop, just in case
+            random.shuffle(self.starting_station_list_copy)
+            
+            # Pop the last station from the list
+            current_station = self.starting_station_list_copy.pop()
 
 
-            return current_station
+        return current_station
     
 
     def create_a_route(self, current_station: "Station",
