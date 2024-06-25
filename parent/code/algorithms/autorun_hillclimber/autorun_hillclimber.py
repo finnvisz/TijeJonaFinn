@@ -7,7 +7,7 @@ import numpy as np
 from parent.code.algorithms.random_greedy import Random_Greedy
 from parent.code.algorithms.hillclimber import Hillclimber
 from parent.code.experiments.statistics import write_solution_to_csv, append_single_score_to_csv
-from parent.code.algorithms.score import routes_score
+from parent.code.algorithms.score import calculate_score
 
 
 def autorun_hillclimber(n_runs: int, 
@@ -79,7 +79,7 @@ def autorun_hillclimber(n_runs: int,
             # Set a start state based on our found heuristics
             start_state = Random_Greedy(maprange).run(
                             starting_stations="original_stations_only_hard",
-                            final_number_of_routes = 9,
+                            final_number_of_routes = (10, 11, 12),
                             route_time_limit = [180, 140, 160])
 
             # Run the Hillclimber algorithm and save solutions
@@ -87,13 +87,13 @@ def autorun_hillclimber(n_runs: int,
             solution = hillclimber_alg.run(iterations = 600000,
                                         log_csv=f"{project_dir}/log.csv",
                                         simulated_annealing=True,
-                                        cap = 30000,
-                                        improve_routes = True)
-                                        # original_connections_only = True)
+                                        cap = 60000,
+                                        improve_routes = True,
+                                        original_connections_only = False)
             
 
             # After a run, write the solution to a csv file in auto_run folder
-            score = routes_score(solution, maprange)
+            score = calculate_score(solution, maprange)
             solution_filename = f"{maprange}_{round(score)}_HC.csv"
 
             write_solution_to_csv(solution, 
@@ -108,7 +108,7 @@ def autorun_hillclimber(n_runs: int,
             
             # Print succes message seperated by empty lines
             print("")
-            print(f"Run {run_number} of {n_runs} succesfully completed.",
+            print(f"Run {run_number} of {n_runs} of project {session_name} succesfully completed.",
                     "Proceeding to next run.")
             print("")
         
@@ -131,7 +131,7 @@ def autorun_hillclimber(n_runs: int,
 
 
 if __name__ == "__main__":
-    autorun_hillclimber(1000, "maandagnacht_Nationaal_Jona_3", maprange="Nationaal", allow_overwrite=False)
+    autorun_hillclimber(100, "Jona_cap_vinden_60k", maprange="Nationaal", allow_overwrite=False)
     # maprange = "Nationaal"
 
     # Set a start state based on our found heuristics

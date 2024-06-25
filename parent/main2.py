@@ -1,6 +1,5 @@
 from parent.code.algorithms.autorun_hillclimber import autorun_hillclimber
-from parent.code.experiments.statistics import plot_autorun_hillclimber, plot_endscores_autorun_hillclimber, plot_scores_fancy
-
+from parent.code.experiments.statistics import plot_autorun_hillclimber, plot_endscores_autorun_hillclimber
 
 ### 2. AUTORUN HILLCLIMBER ###
 

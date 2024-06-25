@@ -1,5 +1,5 @@
 from parent.code.experiments.statistics import read_solution_from_csv
-from parent.code.algorithms.score import routes_score
+from parent.code.algorithms.score import calculate_score
 from parent.code.visualisation.base_map import BaseScene
 
 from numpy.linalg import norm
@@ -32,7 +32,7 @@ class route_visualisation_Scene(BaseScene):
         
         """NOTE: instead of running an algorithm, we can now read 
         a solution from a csv file"""
-        file_path = "../../algorithms/autorun_hillclimber/maandag_na_bugfix_improve_routes/solutions/Holland_9210_HC"
+        file_path = "../../algorithms/autorun_hillclimber/maandagnacht_Nationaal_Jona/solutions/Nationaal_6592_HC"
         
         self.output = read_solution_from_csv(file_path, file_path = "for_manim")
         
@@ -156,7 +156,7 @@ class route_visualisation_Scene(BaseScene):
         self.add(self.dots, self.connections, self.connection_labels)
         
         label = m.Text(f"RailNL - {self.mapname}")
-        score = m.Text(f"Score = {routes_score(self.output, self.mapname)}")
+        score = m.Text(f"Score = {calculate_score(self.output, self.mapname)}")
 
         position = self.camera.frame.get_center()
         height = self.camera.frame.get_height()

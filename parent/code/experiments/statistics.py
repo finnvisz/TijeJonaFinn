@@ -12,7 +12,7 @@ from datetime import datetime
 # from parent.code.algorithms.hillclimber import Hillclimber
 from parent.code.classes.route import Route
 from parent.code.classes.railnl import RailNL
-from parent.code.algorithms.score import routes_score
+from parent.code.algorithms.score import calculate_score
 from parent.code.algorithms.random_greedy import Random_Greedy
 
 
@@ -251,7 +251,7 @@ def write_solution_to_csv(routes: list[Route],
         for i in range(len(routes)):
             writer.writerow([f"train_{i+1}", routes[i].stations_list()])
 
-        score = routes_score(routes, map)
+        score = calculate_score(routes, map)
         writer.writerow(["score", f"{score}"])
 
 

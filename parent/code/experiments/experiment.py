@@ -3,7 +3,7 @@ import numpy as np
 
 # Local imports
 from parent.code.algorithms.algorithm import Algorithm
-from parent.code.algorithms.score import routes_score
+from parent.code.algorithms.score import calculate_score
 from parent.code.algorithms.random_greedy import Random_Greedy
 
 class Experiment:
@@ -50,7 +50,7 @@ class Experiment:
 
             # Run and calculate score
             solution = algorithm_instance.run(**algorithm_kwargs)
-            score = routes_score(solution, self.maprange)
+            score = calculate_score(solution, self.maprange)
 
             # Add score to array at correct positions
             self.scores[i] = score
