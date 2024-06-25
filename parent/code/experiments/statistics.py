@@ -657,6 +657,7 @@ def logplot_autorun_hillclimber(project_name: str | None = None,
     (default: only save to pdf, preview also possible).
 
     Args:
+    
     - project_name (str): name of the project in
     `parent/code/algorithms/autorun_hillclimber/` with log data.
     
@@ -666,10 +667,12 @@ def logplot_autorun_hillclimber(project_name: str | None = None,
     speed.
     
     Plot settings:
+    
     - title (str): title of the plot, shown in plot and becomes filename
       for pdf file. If not provided, title is set to project name.
 
     Save settings:
+    
     - save_to_pdf (bool): save plot to pdf file in directory
       `pdf_save_dir`. Default is True.
     
@@ -679,7 +682,8 @@ def logplot_autorun_hillclimber(project_name: str | None = None,
         set custom file path to read log data from. Plot is saved to
         the directory of the custom file path.
     """
-    # Input checks
+    
+    # Input check
     if project_name is None and custom_file_path is None:
         raise ValueError("Please provide a project name or custom file path.")
 
@@ -700,6 +704,8 @@ def logplot_autorun_hillclimber(project_name: str | None = None,
         log_file_dir = f"parent/code/algorithms/autorun_hillclimber/{project_name}"
         log_file_path = f"{log_file_dir}/log.csv"
     
+    # Prepare the data:
+
     # If use_aggregated is False, create aggregated log data first
     if not use_aggregated:
         print("Reading raw CSV log data...")
@@ -743,6 +749,7 @@ def logplot_autorun_hillclimber(project_name: str | None = None,
                              index_col = 0)
 
         print("Read-in of aggregated CSV log data successful.")
+
 
     print("Creating plot...")
 
@@ -824,7 +831,20 @@ def plot_endscores_autorun_hillclimber(project_name: str,
                                        title: str | None = None
                                        ) -> None:
     """
-    
+    Plot the end scores of an autorun_hillclimber project.
+
+    Pre: Project `project_name` with `end_scores.csv` exists in
+    `parent/code/algorithms/autorun_hillclimber/`.
+
+    Post: plot is created and saved to the project directory.
+
+    Args:
+
+    - project_name: name of autorun_hillclimber project
+    (without path or extension).
+
+    - title (optional): title of the plot. Default is 
+    "Hillclimber 'project_name': verdeling van eindscores".
     """
     
     # Set project directory
@@ -832,7 +852,6 @@ def plot_endscores_autorun_hillclimber(project_name: str,
     # Set plot directory to root of project (may become subdir in future)
     plot_dir = project_dir
     
-
     # Read the end_scores from the autorun_hillclimber project directory
     end_scores = read_scores_from_csv(f"{project_dir}/end_scores.csv", 
                                       custom_file_path = True)
@@ -851,5 +870,5 @@ def plot_endscores_autorun_hillclimber(project_name: str,
                       filename = f"end_scores_plot_{project_name}",
                       plot_dir = plot_dir)
     
-    print()
-    print(f"End scores plot for '{project_name}' created successfully and saved to {plot_dir}")
+    print(f"\nEnd scores plot for '{project_name}'", 
+          "created successfully and saved to {plot_dir}")
