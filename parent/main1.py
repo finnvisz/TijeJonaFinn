@@ -1,8 +1,5 @@
-from parent.code.algorithms.autorun_hillclimber import autorun_hillclimber
 from parent.code.algorithms.random_greedy import Random_Greedy
 from parent.code.experiments.experiment import Experiment
-from parent.code.experiments.statistics import plot_autorun_hillclimber, plot_endscores_autorun_hillclimber, plot_scores_fancy
-
 ### 1. EXPERIMENTATION ###
 # If you want to get a feel for what the samplespace of this problem looks like,
 # you can use our experiment-focused algorithm for that.
