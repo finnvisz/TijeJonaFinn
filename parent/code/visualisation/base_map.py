@@ -2,18 +2,31 @@ from parent.code.classes.railnl import RailNL
 from parent.code.classes.station_class import Station
 
 from typing import Tuple
+from manim import MovingCameraScene
 
 import manim as m
-import argparse as ap
+import csv as c
 
-class BaseScene(m.MovingCameraScene):
+class BaseScene(MovingCameraScene):
     """A class creating dots, lines and labels from RailNL load."""
 
     # Setup VGroups, dictionaries and camera
     def setup(self) -> None:
 
-        # SET MAP TO VISUALIZE HERE
-        self.map = "Nationaal"
+        # Get visualisation settings
+        with open('visualisation_settings.csv', newline = '') as file:
+            csvreader = c.reader(file, delimiter = ',')
+            body = next(csvreader)
+
+            # Map to visualize
+            self.map = body[0]
+
+            # Relative path to list of route objects to visualise 
+            self.filepath = body[1]
+
+        # Get railwaynetwork data 
+        self.data: "RailNL" = RailNL(self.map)
+        self.name_station_dict: dict[str, Station] = self.data.stations_dict()
 
         # Set scales for different maps
         if self.map == "Holland":
@@ -23,9 +36,15 @@ class BaseScene(m.MovingCameraScene):
             self.time_label_shift = 0.015
             self.zoom_scale = 1.1
 
-        # Get railwaynetwork data 
-        self.data: "RailNL" = RailNL(self.map)
-        self.name_station_dict: dict[str, Station] = self.data.stations_dict()
+        elif self.map == "Nationaal":
+            self.radius = 0.0075
+            self.label_scale = 0.04
+            self.line_width = 0.7
+            self.time_label_shift = 0.015
+            self.zoom_scale = 1.1
+
+        else:
+            raise ValueError("Map in visualisation_settings.csv must be Holland or Nationaal.")
 
         # Create VGroups 
         self.create_dots()
@@ -129,3 +148,11 @@ class BaseScene(m.MovingCameraScene):
             # Add connection to VGroup and dictionary
             self.connection_labels.add(label)
             self.connection_label_dict[tuple] = label
+
+    # Play scene showing labels, points and connections
+    def construct(self):
+        self.play(m.FadeIn(self.dot_labels), run_time = 2)
+        self.play(m.Transform(self.dot_labels, self.dots), run_time = 2)
+        self.play(m.FadeIn(self.connections), run_time = 2)
+        self.play(m.FadeIn(self.connection_labels), run_time = 2)
+        self.wait(2)

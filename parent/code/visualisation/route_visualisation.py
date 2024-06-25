@@ -2,13 +2,16 @@ from parent.code.experiments.statistics import read_solution_from_csv
 from parent.code.algorithms.score import calculate_score
 from parent.code.visualisation.base_map import BaseScene
 
-from numpy.linalg import norm
+import numpy as np
 import manim as m
 
 class route_visualisation_Scene(BaseScene):
     """Show trainroutes on map."""
 
-    def setup_2(self) -> None:
+    def setup(self) -> None:
+
+        # Inherit setup
+        super().setup()
 
         # Run a specific algorithm
         self.run_algorithm()
@@ -25,26 +28,14 @@ class route_visualisation_Scene(BaseScene):
 
     # Make train to ride tracks
     def setup_train(self, dot_start: m.Dot) -> None:
-        self.train = m.Dot(point = dot_start.get_center(), radius = 0.0075)
+        self.train = m.Dot(point = dot_start.get_center(), radius = self.radius)
 
     # Run algorithm here
     def run_algorithm(self) -> None:
-        
-        """NOTE: instead of running an algorithm, we can now read 
-        a solution from a csv file"""
-        file_path = "../../algorithms/autorun_hillclimber/maandagnacht_Nationaal_Jona/solutions/Nationaal_6592_HC"
-        
-        self.output = read_solution_from_csv(file_path, file_path = "for_manim")
+        self.output = read_solution_from_csv("../../algorithms/autorun_hillclimber/maandagnacht_Nationaal_Jona/solutions/Nationaal_6592_HC", file_path = "for_manim")
         
         # Save number of routes for later reference
         self.n_routes = len(self.output)
-
-        # Set mapname based on number of routes
-        # (Could fail at some point but seems robust for now)
-        if self.n_routes <= 7:
-            self.mapname = "Holland"
-        else:  
-            self.mapname = "Nationaal"
 
     # Find dots associated to station name
     def correspondence(self, name_start: str, name_end: str) -> tuple:
@@ -120,7 +111,7 @@ class route_visualisation_Scene(BaseScene):
         ending_point = line.end
 
         # Get direction and length 
-        length = norm(ending_point - starting_point)
+        length = np.norm(ending_point - starting_point)
         direction = (ending_point - starting_point) / length
 
         # Get length of each segment
