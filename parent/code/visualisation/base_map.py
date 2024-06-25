@@ -13,7 +13,7 @@ class BaseScene(m.MovingCameraScene):
     def setup(self) -> None:
 
         # SET MAP TO VISUALIZE HERE
-        self.map = map
+        self.map = "Nationaal"
 
         # Set scales for different maps
         if self.map == "Holland":

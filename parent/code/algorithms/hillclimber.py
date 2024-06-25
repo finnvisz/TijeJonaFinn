@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 from parent.code.algorithms.algorithm import Algorithm
 from parent.code.algorithms.random_greedy import Random_Greedy
-from parent.code.algorithms.score import routes_score
+from parent.code.algorithms.score import calculate_score
 from parent.code.classes.railnl import RailNL
 from parent.code.classes.route import Route
 from parent.code.experiments.statistics import append_scores_to_csv, write_solution_to_csv, read_solution_from_csv
@@ -48,7 +48,7 @@ class Hillclimber(Algorithm):
         self.routes: list[Route] = start_position
         self.scores = []
         self.maprange = self.load.mapname
-        self.best_score = routes_score(self.routes, self.maprange)
+        self.best_score = calculate_score(self.routes, self.maprange)
         
 
     def generate_random_route(self) -> Route:
@@ -193,7 +193,8 @@ class Hillclimber(Algorithm):
             improve_routes: bool = True,
             original_connections_only: bool = False,
             
-            log_csv: str | None = None) -> list[Route]:
+            log_csv: str | None = None,
+            print_every_improvement: bool = True) -> list[Route]:
         """
         Run the Hillclimber optimization for a specified number of iterations.
 
@@ -220,6 +221,8 @@ class Hillclimber(Algorithm):
         - log_csv: if not None, append score per iteration to specified 
         csv file (`hillclimber_data.csv`). Default dir is `parent`, so 
         set a full path yourself.
+        - print_every_improvement: if True, print the score each time
+        a new best score is found. Default True.
         """
         self.iterations = iterations
         self.start_score = self.best_score
@@ -231,7 +234,7 @@ class Hillclimber(Algorithm):
 
         if improve_routes:
             self.routes = self.improve_routes(self.routes)
-            self.best_score = routes_score(self.routes, self.maprange)
+            self.best_score = calculate_score(self.routes, self.maprange)
             print(f"improved start score: {self.best_score}")
 
         for i in range(self.iterations):
@@ -245,7 +248,7 @@ class Hillclimber(Algorithm):
             if improve_routes:
                 new_routes = self.improve_routes(new_routes)
 
-            new_score = routes_score(new_routes, self.maprange)
+            new_score = calculate_score(new_routes, self.maprange)
 
 
             accept_new = False
@@ -267,7 +270,8 @@ class Hillclimber(Algorithm):
                 self.scores.append(new_score)
                 
                 count_no_change = 0
-                print(f"iteratie {i}, score {new_score}")
+                if print_every_improvement:
+                    print(f"iteratie {i}, score {new_score}")
 
             else:
                 # use the old routes next iteration

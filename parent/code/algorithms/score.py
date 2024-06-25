@@ -2,7 +2,7 @@ from parent.code.classes.route import Route
 
 
 # Calculate score from list of routes
-def routes_score(routes: list[Route], map: str):
+def calculate_score(routes: list[Route], map: str):
     """
     Calculate the score for a given solution on a given map.
 
