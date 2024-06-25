@@ -21,8 +21,7 @@ class RailNL:
         self.connections = set()
         self.load_stations(f"{parent_path}/data/Stations{maprange}.csv")
         self.load_connections(f"{parent_path}/data/Connecties{maprange}.csv")
-        
-    
+
     def load_stations(self, filepath: str) -> None:
         """
         Load stations from data file into self.stations.
@@ -45,7 +44,6 @@ class RailNL:
 
                 # And add to internal dictionary
                 self.stations[name] = station
-
 
     def load_connections(self, filepath: str) -> None:
         """
@@ -80,7 +78,6 @@ class RailNL:
                 # add the connections to this class
                 self.connections.add((stat1_o, stat2_o))
 
-
     def stations_dict(self) -> dict:
         """
         Return a dictionary of stations.
@@ -89,7 +86,6 @@ class RailNL:
           are Station objects. (used to get station objects using the name)
         """
         return self.stations
-
 
     def max_connections(self) -> int:
         """
@@ -103,7 +99,6 @@ class RailNL:
         connections = lambda station: self.stations[station].amount_connecting()
         return max(connections(station) for station in stations)
     
-
     def min_connections(self) -> int:
         """
         Find the lowest number of connections of any station.
@@ -115,14 +110,12 @@ class RailNL:
         # Find amount of connections using amount_connecting method
         connections = lambda station: self.stations[station].amount_connecting()
         return min(connections(station) for station in stations)
-    
 
     def get_random_station(self) -> "Station":
         """
         Return a random station from self.stations.
         """
         return choice(list(self.stations.values()))
-    
 
     def get_total_connections(self) -> set:
         """
