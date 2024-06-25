@@ -276,7 +276,7 @@ def logplot_autorun_hillclimber(project_name: str | None = None,
     Args:
     
     - project_name (str): name of the project in
-    `parent/code/algorithms/autorun_hillclimber/` with log data.
+    `parent/code/autorun_hillclimber/` with log data.
     
     - use_aggregated (bool): if True, use the aggregated log data 
     produced as byproduct of this function. If you rerun this function 
@@ -318,7 +318,7 @@ def logplot_autorun_hillclimber(project_name: str | None = None,
     
     # Else fill in project name for autorun_hillclimber
     else:
-        log_file_dir = f"parent/code/algorithms/autorun_hillclimber/{project_name}"
+        log_file_dir = f"parent/code/autorun_hillclimber/{project_name}"
         log_file_path = f"{log_file_dir}/log.csv"
     
     # Prepare the data:
@@ -450,7 +450,7 @@ def plot_endscores_autorun_hillclimber(project_name: str,
     Plot the end scores of an autorun_hillclimber project.
 
     Pre: Project `project_name` with `end_scores.csv` exists in
-    `parent/code/algorithms/autorun_hillclimber/`.
+    `parent/code/autorun_hillclimber/`.
 
     Post: plot is created and saved to the project directory.
 
@@ -464,7 +464,7 @@ def plot_endscores_autorun_hillclimber(project_name: str,
     """
     
     # Set project directory
-    project_dir = f"parent/code/algorithms/autorun_hillclimber/{project_name}"
+    project_dir = f"parent/code/autorun_hillclimber/{project_name}"
     # Set plot directory to root of project (may become subdir in future)
     plot_dir = project_dir
     
@@ -487,4 +487,4 @@ def plot_endscores_autorun_hillclimber(project_name: str,
                       plot_dir = plot_dir)
     
     print(f"\nEnd scores plot for '{project_name}'", 
-          "created successfully and saved to {plot_dir}")
+          f"created successfully and saved to {plot_dir}")
