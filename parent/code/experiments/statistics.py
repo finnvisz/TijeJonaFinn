@@ -25,18 +25,24 @@ def write_scores_to_csv(scores: "np.ndarray",
                         filename: str, 
                         custom_file_path: bool = False) -> None:
         """
-        Write single numpy array of scores to a CSV file. 
-        Default export directory is `parent/code/experiments/results`.
+        Write single numpy array of scores to a CSV file. Default export
+        directory is `parent/code/experiments/results`.
 
         - Pre: `scores` contains numpy array of scores,
-        argument 2 `filename` is a string (extension is allowed but optional).
-        - Post: scores are written to `filename`.csv in the results subdirectory.
-        Each score is written in a new row.
+        argument 2 `filename` is a string (extension is allowed but
+        optional).
+        
+        - Post: scores are written to `filename`.csv in the results
+          subdirectory. Each score is written in a new row.
 
         Args:
-        - `scores`: numpy array of scores.
-        - `filename`: name of the file to write to, extension is optional.
-        - `custom_file_path`: if True, override default directory so 
+        
+        - scores: numpy array of scores.
+        
+        - filename: name of the file to write to, extension is
+          optional.
+        
+        - custom_file_path: if True, override default directory so 
         `filename` becomes a path from root directory of this project.
         """
 
@@ -57,20 +63,25 @@ def write_scores_to_csv(scores: "np.ndarray",
 
 
 def read_scores_from_csv(filename: str,
-                         custom_file_path: bool = False) -> "np.ndarray[float]":
+                         custom_file_path: bool = False
+                         ) -> "np.ndarray[float]":
     """
-    Read scores from a CSV file with single column
-    and return them as a single numpy array.
+    Read scores from a CSV file with single column and return them as a
+    single numpy array.
 
-    - Pre: CSV file with scores exists in the `experiments/results/` directory
-      and has a single column without header.
+    - Pre: CSV file with scores exists in the `experiments/results/`
+      directory and has a single column without header.
+    
     - Post: returns a numpy array with scores.
 
-    Args:
-    - `filename`: name of the file to read from, extension is optional.
-    - `custom_file_path`: if True, override default directory so
+    Args: 
+    
+    - filename: name of the file to read from, extension is optional.
+    
+    - custom_file_path: if True, override default directory so
     `filename` becomes a path from root directory of this project.
     """
+    
     # If custom file path is True, override default directory so 
     # user can specify path from parent directory
     if custom_file_path:
@@ -92,19 +103,23 @@ def append_scores_to_csv(scores: "np.ndarray",
                          filename: str,
                          custom_file_path: bool = False) -> None:
     """
-    Append a numpy array of scores to an existing CSV file as a new column.
-    If `filename.csv` does not yet exist, a new file will be created.
-    Default directory is `parent/code/experiments/results`.
+    Append a numpy array of scores to an existing CSV file as a new
+    column. If `filename.csv` does not yet exist, a new file will be
+    created. Default directory is `parent/code/experiments/results`.
 
     - Pre: `scores` contains numpy array of scores,
     `filename.csv` exists (extension is allowed but optional).
+    
     - Post: a new column with scores is appended to `filename.csv`
     in the results subdirectory.
 
-    Args:
-    - `scores`: numpy array of scores.
-    - `filename`: name of the file to append to, extension is optional.
-    - `custom_file_path`: if True, override default directory so
+    Args: 
+    
+    - scores: numpy array of scores.
+    
+    - filename: name of the file to append to, extension is optional.
+    
+    - custom_file_path: if True, override default directory so
     `filename` becomes a path from root directory of this project.
     """
     
@@ -140,6 +155,7 @@ def append_scores_to_csv(scores: "np.ndarray",
     # Combine old df and new df
     df_concatenated = pd.concat([df_original, df_additional], axis=1)
         
+
     # Write the updated DataFrame back to the CSV file 
     df_concatenated.to_csv(f"{csv_results_dir}{filename}",
                             index=False, header=False)
@@ -152,13 +168,18 @@ def append_single_score_to_csv(score: float,
     If `filename.csv` does not yet exist, a new file will be created.
     Default directory is `parent/code/experiments/results`.
 
-    Pre: `score` is a single float score, `filename.csv` exists.
-    Post: a new row with `score` is appended to `filename.csv`.
+    - Pre: `score` is a single float score.
+    
+    - Post: a new row with `score` is appended to `filename.csv`, or
+    a new file is created with `score` as the only row.
     
     Args:
-    - `score`: single float score to append.
-    - `filename`: name of the file to append to, extension is optional.
-    - `custom_file_path`: if True, override default directory so
+    
+    - score: single float score to append.
+    
+    - filename: name of the file to append to, extension is optional.
+    
+    - custom_file_path: if True, override default directory so
     `filename` becomes a path from root directory of this project.
     """
     
@@ -185,20 +206,14 @@ def append_single_score_to_csv(score: float,
         write_scores_to_csv(np.array([score]), 
                             filename, 
                             custom_file_path = custom_file_path)
-        # print(np.array([score]))
         return
-
-    # print(df_original)
+    
 
     # Turn column 1 of df into numpy array
     scores_array = df_original.iloc[:,0].to_numpy()
-
-    # print(f"Scores array before: {scores_array}")
     
     # Append the new score to the numpy array
     scores_array = np.append(scores_array, score)
-
-    # print(f"Scores array after: {scores_array}")
 
     # Write the updated numpy array back to the CSV file
     np.savetxt(f"{csv_results_dir}{filename}",
@@ -209,19 +224,25 @@ def write_solution_to_csv(routes: list[Route],
                           map="Holland", 
                           custom_file_path: bool = False):
     """
-    Translate algorithm output (solution consisting of multiple Route objects) 
+    Export algorithm output (list consisting of multiple Route objects)
     to required .csv file.
     
     - Pre: `routes` is a list of route objects, `filename` contains 
-    filename to write to in `experiments/route_csv` 
-    (extension is optional).
-    - Post: csv-file of given format is located in `route_csv` folder.
+    filename to write to in `experiments/route_csv` (unless
+    `custom_file_path`; extension is optional).
+    
+    - Post: csv-file of given format is located in `route_csv` folder
+      (unless `custom_file_path`).
 
-    args:
-    - `routes`: list of Route objects, output of algorithm.
-    - `filename`: name of the file to write to, extension is optional.
-    - `map`: name of the map used in the algorithm. Default is "Holland".
-    - `custom_file_path`: if True, override default directory so
+    Args:
+    
+    - routes: list of Route objects, output of algorithm.
+    
+    - filename: name of the file to write to, extension is optional.
+    
+    - map: name of the map used in the algorithm. Default is "Holland".
+    
+    - custom_file_path: if True, override default directory so
     `filename` becomes a path from root directory of this project.
     """
     # If custom file path is True, override default directory so 
@@ -245,13 +266,14 @@ def write_solution_to_csv(routes: list[Route],
         filename = filename.split(".csv")[0]
         filename += f"_{current_time}.csv"
 
+    
     with open(f"{csv_solution_dir}{filename}", 'w') as file:
         writer = csv.writer(file)
 
         writer.writerow(["train", "stations"])
 
         for i in range(len(routes)):
-            writer.writerow([f"train_{i+1}", routes[i].stations_string()])
+            writer.writerow([f"train_{i+1}", routes[i].get_stations_as_string()])
 
         score = calculate_score(routes, map)
         writer.writerow(["score", f"{score}"])
@@ -263,25 +285,30 @@ def read_solution_from_csv(filename: str,
     Read a solution for the RailNL problem from a CSV file.
 
     - Pre: CSV file `filename` with solution created by 
-    `write_solution_to_csv()` exists in the directory chosen by 
+    `write_solution_to_csv()` exists in the directory chosen by
     `file_path` argument.
+    
     - Post: return a list of Route objects
 
     Args:
-    - `filename`: name of the file to read from, extension is optional.
     
-    - `map`: name of the map used in the algorithm 
+    - filename: name of the file to read from, extension is optional.
+    
+    - map: name of the map used in the algorithm 
     (Holland or Nationaal; default is Holland).
     
-    - `file_path`: choose between "default", "for_manim" or 
+    - file_path: choose between "default", "for_manim" or 
     "custom_file_path":
     
         - default: read from `experiments/route_csv/`
     
-        - for_manim: read from `experiments/route_csv/` with relative path from manim script
+        - for_manim: read from `experiments/route_csv/` with relative
+          path from manim script
         
-        - custom_file_path: read from root of git repository, so user can specify path manually
+        - custom_file_path: read from root of git repository, so user can
+          specify path manually
     """
+    
     # Set directory for reading the CSV file:
     
     # Default directory is experiments/route_csv/
@@ -307,6 +334,7 @@ def read_solution_from_csv(filename: str,
     if not filename.endswith(".csv"):
         filename += ".csv"
 
+
     # Initialize the RailNL object once
     rail_network = RailNL(map)
 
@@ -324,7 +352,9 @@ def read_solution_from_csv(filename: str,
                     stations.append(rail_network.stations_dict()[station_name])
                 for i in range(len(stations)-1):
                     connection_duration = stations[i].connections[stations[i + 1]]
-                    route.add_connection(stations[i], stations[i+1], connection_duration)
+                    route.add_connection(stations[i], 
+                                         stations[i+1], 
+                                         connection_duration)
                 solution.append(route)
     
     return solution
@@ -332,22 +362,29 @@ def read_solution_from_csv(filename: str,
 def calculate_p_value(sample1: "np.ndarray[float]", sample2: "np.ndarray[float]"
                       , return_type: str = "p_value_only") -> float:
     """
-    Calculates a p-value to infer if the difference between two sets of scores
-    is significant. Function uses the Mann-Whitney U rank test to test the null
-    hypothesis that the distribution underlying sample 1 is the same as
-    the distribution underlying sample 2. Return value under 0.05 is a common
-    threshold for significance.
+    Calculates a p-value to infer if the difference between two sets of
+    scores is significant. Function uses the Mann-Whitney U rank test to
+    test the null hypothesis that the distribution underlying sample 1 is
+    the same as the distribution underlying sample 2. Return value under
+    0.05 is a common threshold for significance.
 
-    - Pre: sample1 and sample2 are independent samples, given as numpy arrays
-    of floats. The alternative hypothesis is two-sided 
-    (no specific directionality).
+    - Pre: sample1 and sample2 are independent samples, given as numpy
+      arrays of floats. The alternative hypothesis is two-sided (no
+      specific directionality).
+    
     - Post: returns the p-value of a Mann-Whitney U rank test.
 
-    options:
-    - return_type: "p_value_only" (default), "object" (returns full object with
-      test statistic inluded),
-    "significant" (returns True if p-value < 0.05)
+    Args: 
+    
+    - return_type: 
+        
+        - "p_value_only" (default)
+        
+        - "object" (returns full object with test statistic inluded)
+        
+        - "significant" (returns True if p-value < 0.05)
     """
+    
     result_as_object = stats.mannwhitneyu(sample1, sample2)
 
     if return_type == "p_value_only":
@@ -381,38 +418,51 @@ def plot_scores(sample1: "np.ndarray[float]",
     Plot the scores of 1 to 4 samples in a histogram.
 
     - Pre: Each sample is given as a numpy arrays of floats.
-    - Post: histogram is plotted (default: only preview, save to pdf also possible).
+    
+    - Post: histogram is plotted (default: only preview, save to pdf also
+      possible).
 
-    Example usage:
-    `plot_scores(sample1, sample2,
-    title = "Condition 1 vs Condition 2", 
-    legend_labels = ("Condition 1", "Condition 2"))`
+    Example usage: `plot_scores(sample1, sample2, title = "Condition 1 vs
+    Condition 2", legend_labels = ("Condition 1", "Condition 2"))`
 
     args:
 
     Save settings:
+
     - save_to_pdf: save plot to pdf file in directory `plot_dir`.
+    
     - plot_dir: (optional) custom directory to save the plot to. 
     Default is `parent/code/experiments/plots`.
+    
     - preview: show preview of plot.
+    
     - filename: (optional) custom filename for the plot. When not 
-    provided, user-provided `title` is used or else a default name with 
+    provided, user-provided `title` is used or else a default name with
     timestamp.
     
     Plot settings:
+    
     - title: title of the plot, also used as filename if saved to pdf.
     When not provided, a default name with timestamp is used.
+    
     - legend_title: title of the legend in the plot. Default is "Groep".
+    
     - legend_labels: custom labels for the legend. Should be a tuple
     of strings with the same length as the number of samples.
     
     - binwidth: width of the bins in the histogram (default is 400, 
     seems a sweet spot).
+    
     - xlim: (optional) set custom x-axis limits for the plot.
+    
     - alpha: (optional) set custom transparency of the bars in the 
-    histogram. Value between 0 and 1. Default is 0.85 for single sample 
+    histogram. Value between 0 and 1. Default is 0.85 for single sample
     and 0.7 for multiple samples.
     """
+
+    # Infer number of samples provided from input
+    n_samples: int = sum([sample1 is not None, sample2 is not None, 
+                    sample3 is not None, sample4 is not None])
 
     # Settings for plot
     color_palette = ("lightblue", "lightgrey", "lightsalmon", "lightgreen")
@@ -446,26 +496,21 @@ def plot_scores(sample1: "np.ndarray[float]",
     # Ensure correct legend labels
     # If provided, check for correct amount of labels
     if legend_labels is not None:
-        assert len(legend_labels) == sum([sample1 is not None,
-                                            sample2 is not None, 
-                                            sample3 is not None, 
-                                            sample4 is not None]), """
+        assert len(legend_labels) == n_samples, """
         Number of legend labels should match number of samples."""
     
     # If not provided, use default labels
     else:
         legend_label_options = ("Sample 1", "Sample 2", "Sample 3", "Sample 4")
-        legend_labels = legend_label_options[:sum([sample1 is not None,
-                                                    sample2 is not None, 
-                                                    sample3 is not None, 
-                                                    sample4 is not None])]
+        legend_labels = legend_label_options[:n_samples]
+
         
     if xlim is None:
         lower_bound_xlim = min(sample1)
         xlim = (lower_bound_xlim, 10000)
 
-    # If sample2 is not provided, create plot for single sample
-    if sample2 is None:
+    # If single sample is provided, create plot for single sample
+    if n_samples == 1:
         
         # Smaller width for single sample (because no legend)
         p9.options.figure_size = (8, 5)
@@ -489,7 +534,7 @@ def plot_scores(sample1: "np.ndarray[float]",
         )
     
     # Else create plot for 2 samples
-    elif sample3 is None:
+    elif n_samples == 2:
         
         # Create dataframe with scores
         df = pd.DataFrame({
@@ -497,7 +542,9 @@ def plot_scores(sample1: "np.ndarray[float]",
             "Sample 2": sample2
         })
 
-        df = df.melt(value_vars=['Sample 1','Sample 2'], var_name='Groep', value_name='Score')
+        df = df.melt(value_vars=['Sample 1','Sample 2'], 
+                     var_name='Groep', 
+                     value_name='Score')
 
         # Default alpha value
         if alpha is None:
@@ -512,7 +559,7 @@ def plot_scores(sample1: "np.ndarray[float]",
         )
 
     # Else create plot for 3 samples
-    elif sample4 is None:
+    elif n_samples == 3:
         # Create dataframe with scores
         df = pd.DataFrame({
             "Sample 1": sample1,
@@ -520,7 +567,9 @@ def plot_scores(sample1: "np.ndarray[float]",
             "Sample 3": sample3
         })
 
-        df = df.melt(value_vars=['Sample 1','Sample 2', 'Sample 3'], var_name='Groep', value_name='Score')
+        df = df.melt(value_vars=['Sample 1','Sample 2', 'Sample 3'], 
+                     var_name='Groep', 
+                     value_name='Score')
 
         # Default alpha value
         if alpha is None:
@@ -544,7 +593,9 @@ def plot_scores(sample1: "np.ndarray[float]",
             "Sample 4": sample4
         })
 
-        df = df.melt(value_vars=['Sample 1','Sample 2', 'Sample 3', 'Sample 4'], var_name='Groep', value_name='Score')
+        df = df.melt(value_vars=['Sample 1','Sample 2', 'Sample 3', 'Sample 4'], 
+                     var_name='Groep', 
+                     value_name='Score')
 
         # Default alpha value
         if alpha is None:
@@ -563,10 +614,7 @@ def plot_scores(sample1: "np.ndarray[float]",
     plot += p9.xlim(xlim)
     plot += p9.scale_fill_manual(name = legend_title,
                                 values = 
-                                color_palette[:sum([sample1 is not None,
-                                                    sample2 is not None, 
-                                                    sample3 is not None, 
-                                                    sample4 is not None])],
+                                color_palette[:n_samples],
                                 labels = legend_labels)
     plot += p9.theme_minimal() 
     plot += p9.labs(title = title, 
@@ -585,7 +633,8 @@ def plot_scores(sample1: "np.ndarray[float]",
         # Show the plot
         plot.show()
 
-def plot_autorun_hillclimber(project_name: str | None = None,
+
+def logplot_autorun_hillclimber(project_name: str | None = None,
                              use_aggregated: bool = False, 
                     
                     # plot settings
@@ -603,28 +652,30 @@ def plot_autorun_hillclimber(project_name: str | None = None,
 
     - Pre: Project `project_name` with log data created by 
     autorun_hillclimber exists.
+    
     - Post: plot is created and saved to the project directory
     (default: only save to pdf, preview also possible).
 
     Args:
-    - `project_name` (str): name of the project in
+    - project_name (str): name of the project in
     `parent/code/algorithms/autorun_hillclimber/` with log data.
-    - `use_aggregated` (bool): if True, use the aggregated log data 
+    
+    - use_aggregated (bool): if True, use the aggregated log data 
     produced as byproduct of this function. If you rerun this function 
     on an unchanged project, setting this to True will greatly increase 
     speed.
     
     Plot settings:
-    - `title` (str): title of the plot, shown in plot and becomes filename
+    - title (str): title of the plot, shown in plot and becomes filename
       for pdf file. If not provided, title is set to project name.
 
     Save settings:
-    - `save_to_pdf` (bool): save plot to pdf file in directory
+    - save_to_pdf (bool): save plot to pdf file in directory
       `pdf_save_dir`. Default is True.
     
-    - `preview` (bool): show preview of plot. Default is False.
+    - preview (bool): show preview of plot. Default is False.
     
-    - `custom_file_path` (str): if provided, override `project_name` and
+    - custom_file_path (str): if provided, override `project_name` and
         set custom file path to read log data from. Plot is saved to
         the directory of the custom file path.
     """

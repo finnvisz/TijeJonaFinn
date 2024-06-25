@@ -2,9 +2,11 @@
 import numpy as np
 
 # Local imports
+from parent.code.classes.route import Route
 from parent.code.algorithms.algorithm import Algorithm
 from parent.code.algorithms.score import calculate_score
 from parent.code.algorithms.random_greedy import Random_Greedy
+
 
 class Experiment:
 
@@ -15,12 +17,13 @@ class Experiment:
         
         - maprange: name of the map to run the algorithm on 
         (default: "Holland" or "Nationaal" for full map).
-        - algorithm_class: name of algorithm class to run the experiment on.
+        - algorithm_class: name of algorithm class to run the experiment
+        on.
         """
-        self.algorithm_class: "Algorithm" = algorithm_class
         self.maprange: str = maprange
-
+        self.algorithm_class: "Algorithm" = algorithm_class
         
+
     def run_experiment(self, iterations: int, **algorithm_kwargs) -> float:
         """
         Runs algorithm N times, and returns the scores in a numpy array.
@@ -37,7 +40,8 @@ class Experiment:
             run method.
         """
         
-        print(f"Running {self.algorithm_class.__name__} algorithm {iterations} times on {self.maprange} map...")
+        print(f"Running {self.algorithm_class.__name__} algorithm", 
+              f"{iterations} times on {self.maprange} map...")
 
         # Scores are saved in numpy array, way faster than list!
         # Space in memory is reserved and filled with NaNs
@@ -49,14 +53,15 @@ class Experiment:
             algorithm_instance = self.algorithm_class(self.maprange)
 
             # Run and calculate score
-            solution = algorithm_instance.run(**algorithm_kwargs)
-            score = calculate_score(solution, self.maprange)
+            solution: list[Route] = algorithm_instance.run(**algorithm_kwargs)
+            score: float = calculate_score(solution, self.maprange)
 
             # Add score to array at correct positions
             self.scores[i] = score
 
         # Check that all scores have been filled in
-        assert not any(np.isnan(self.scores)), """Not all scores have been filled in, bug in run_experiment."""
+        assert not any(np.isnan(self.scores)), (
+        "Not all scores have been filled in, bug in run_experiment.")
 
         print(f"Experiment finished! Mean score: {np.mean(self.scores)}")
 

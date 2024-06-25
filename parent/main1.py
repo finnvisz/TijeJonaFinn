@@ -1,5 +1,7 @@
 from parent.code.algorithms.random_greedy import Random_Greedy
 from parent.code.experiments.experiment import Experiment
+from parent.code.experiments.statistics import plot_scores
+
 ### 1. EXPERIMENTATION ###
 # If you want to get a feel for what the samplespace of this problem looks like,
 # you can use our experiment-focused algorithm for that.
@@ -30,6 +32,4 @@ plot_scores(random_algorithm_results,
                   legend_title= "Algorithm",
                   legend_labels=("Random", "Greedy", "Random + heuristic"),
                   save_to_pdf = True)
-
-Random_Greedy().run(1)
 

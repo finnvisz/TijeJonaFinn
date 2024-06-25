@@ -17,7 +17,8 @@ class Station:
         """
         Add a connection to another station.
         
-        - Pre: other is a valid Station object, and duration is a positive integer.
+        - Pre: other is a valid Station object, and duration is a
+          positive integer.
         - Post: The connection is added to the connections 
                 dictionary of this station.
         """
@@ -75,10 +76,12 @@ class Station:
     
     def get_connections(self):
         """
-        Get the connections of this station, sorted as they were read from the CSV file.
+        Get the connections of this station, sorted as they were read
+        from the CSV file.
 
         - Pre: self has connections
-        - Post: return a list of tuples with the connected stations and their duration
+        - Post: return a list of tuples with the connected stations and
+          their duration
         """
         # Put connections in list of tuples
         connections = list(self.connections.items())
@@ -108,8 +111,8 @@ class Station:
     
     def get_shortest_connection(self):
         """
-        Returns a Station object representing the connected station with the 
-        shortest connection.
+        Returns a Station object representing the connected station with
+        the shortest connection.
         """
         # Use min function, but it uses values to compare instead of keys
         return min(self.connections, key=self.connections.get)
@@ -119,7 +122,8 @@ class Station:
         Return the time it takes to travel to the given station.
         """
         # Check if station has this connection
-        assert self.has_connection(station), f"Station {station.name} is not connected to {self.name}"
+        assert self.has_connection(station), (
+            f"Station {station.name} is not connected to {self.name}")
         
         # Return the time it takes to travel to the given station
         return self.connections.get(station)

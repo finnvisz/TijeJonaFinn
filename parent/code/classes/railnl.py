@@ -12,6 +12,7 @@ class RailNL:
         Initialize a RailNL object with stations and connections.
         
         - Pre: maprange is either "Holland" or "Nationaal".
+        
         - Post: self.stations contains all stations and their connections 
           from the corresponding CSV files based on the maprange.
         """
@@ -19,6 +20,7 @@ class RailNL:
         
         self.stations: dict[str, "Station"] = {}
         self.connections = set()
+        
         self.load_stations(f"{parent_path}/data/Stations{maprange}.csv")
         self.load_connections(f"{parent_path}/data/Connecties{maprange}.csv")
 
@@ -26,9 +28,9 @@ class RailNL:
         """
         Load stations from data file into self.stations.
         
-        - Pre: filepath is a valid path to a CSV file containing station data.
-        CSV file is formatted as follows:
-        `StationName,latitude,longitude`
+        - Pre: filepath is a valid path to a CSV file containing station
+          data. CSV file is formatted as follows:
+          `StationName,latitude,longitude`
         
         - Post: self.stations contains all stations from the file.
         """
@@ -47,13 +49,15 @@ class RailNL:
 
     def load_connections(self, filepath: str) -> None:
         """
-        Load connections from data file into the stations of self.stations.
+        Load connections from data file into the stations of
+        self.stations.
         
-        - Pre: filepath is a valid path to a CSV file containing connection data.
-        CSV file is formatted as follows:
+        - Pre: filepath is a valid path to a CSV file containing
+          connection data. CSV file is formatted as follows:
         `StationName1,StationName2,afstand`
         
-        - Post: station objects in self.stations contain their connections.
+        - Post: station objects in self.stations contain their
+          connections.
         """
         # Open file
         with open(filepath) as file:
@@ -82,8 +86,9 @@ class RailNL:
         """
         Return a dictionary of stations.
         
-        - Post: Returns a dictionary where keys are station names and values 
-          are Station objects. (used to get station objects using the name)
+        - Post: Returns a dictionary where keys are station names and
+          values are Station objects. (used to get station objects using
+          the name)
         """
         return self.stations
 

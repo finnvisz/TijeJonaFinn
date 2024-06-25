@@ -18,7 +18,7 @@ autorun_hillclimber(n_runs = 10,
 
 # Now that you have an autorun hillclimber project, you can get a
 # summary of your logfile using a plot:
-plot_autorun_hillclimber(project_name = project_name, 
+logplot_autorun_hillclimber(project_name = project_name, 
                          title = "Logplot: my first Autorun Hillclimber project", 
                          use_aggregated = False
                          )
