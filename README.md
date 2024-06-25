@@ -23,13 +23,32 @@ K = p*10000 - (T*100 + Min)
 
 Om deze case beter te begrijpen zijn er twee "kaarten" waar een oplossing voor gevonden kan worden. Een kleine kaart (Holland), en een grote kaart (Nationaal). We raden aan om te beginnen met de kleine kaart, waar de oplossingsruimte kleiner is en je sneller resultaten ziet. Als je goed plan van aanpak hebt kun je door naar de grote kaart om je plan te toetsen.
 
-# Aan de slag
+# Aan de slag: Experimentatie
+Als je een idee wilt krijgen van hoe de voorbeeldruimte van dit probleem eruit ziet,
+daarvoor kun je ons experimentgerichte algoritme gebruiken. Run het volgende:
+
+```
+python3 main1.py
+```
+
+We vergelijken een eenvoudig random algoritme, een eenvoudig greedy algoritme en een random algoritme + heuristiek om te zien hoeveel verschil een heuristiek kan maken. Een plot zou moeten openen in een pop-up, maar wordt ook opgeslagen als pdf naar 
+```
+parent/code/experiments/plots
+```
+
+# Aan de slag: Autorun Hillclimber
+Dit duurt ietjes langer, maar het is het waard! Run het volgende:
+```
+python3 main2.py
+```
+Nu run je het autorun_hillclimber programma met de projectnaam 'my_first_project'. Het gaat 10 iteraties lang proberen de score te verbeteren
+
 
 ## Vereisten
 
 Deze codebase is geschreven in Python 3.10.12. Om aan de slag te gaan moeten eerst twee commando's worden gerunt. Ga in je terminal naar de rootmap van ons project, en volg de volgende instructies:
 
-1. In requirements.txt staan alle benodigde packages om de code succesvol te runnen. Deze zijn gemakkelijk te installeren via pip met de volgende instructie:
+1. In requirements.txt staan alle benodigde packages om de code succesvol te runnen. Ook 'istalleer'je onze repository. Deze zijn gemakkelijk te installeren via pip met de volgende instructie:
 
 ```
 pip install -r requirements.txt
@@ -39,11 +58,6 @@ Of via conda:
 
 ```
 conda install --file requirements.txt
-```
-
-2. Onze repository maakt gebruik van een editable pip install. Om onze code te kunnen runnen moet onze repository eerst "geïnstalleerd" worden:
-```
-pip install -e .
 ```
 
 ## Gebruik
@@ -83,4 +97,4 @@ De hierop volgende lijst beschrijft de belangrijkste mappen en files in het proj
 # Auteurs
 - Jona Aalten
 - Finn Dokter
-- Tije 
+- Tije Schut

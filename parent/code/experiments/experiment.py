@@ -21,14 +21,20 @@ class Experiment:
         self.maprange: str = maprange
 
         
-    def run_experiment(self, iterations: int = 100, **algorithm_kwargs) -> float:
+    def run_experiment(self, iterations: int, **algorithm_kwargs) -> float:
         """
-        Runs algorithm N times (default 100), and returns the scores in a numpy array.
+        Runs algorithm N times, and returns the scores in a numpy array.
         
-        - Pre: Experiment instance has been initialized with existing algorithm and maprange.
-        Necessary keyword arguments for the algorithm's run method have been provided
-        to this method (if any).
+        - Pre: Experiment instance has been initialized with existing 
+        algorithm and maprange. Necessary keyword arguments for the 
+        algorithm's run method have been provided (if any).
+        
         - Post: returns a numpy array with N scores.
+
+        Args:
+            - iterations (int): number of times to run the algorithm.
+            - **algorithm_kwargs: keyword arguments for the algorithm's 
+            run method.
         """
         
         print(f"Running {self.algorithm_class.__name__} algorithm {iterations} times on {self.maprange} map...")
@@ -56,3 +62,4 @@ class Experiment:
 
         # And return the scores
         return self.scores
+
