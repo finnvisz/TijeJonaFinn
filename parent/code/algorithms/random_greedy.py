@@ -607,27 +607,3 @@ class Random_Greedy(Algorithm):
         if connection_key in self.unused_connections:
             # Pop this key-value pair from unused and add to the used connections
             self.used_connections[connection_key] = self.unused_connections.pop(connection_key)
-
-
-
-
-# Run and print results
-if __name__ == "__main__":
-    # Run the Random_Greedy algorithm on the Holland map
-    # with default settings
-    random_greedy = Random_Greedy("Holland")
-    # list consisting of 4 lists with 2 stations each
-    custom_starting_stations = [[random_greedy.load.stations["Alkmaar"], random_greedy.load.stations["Amsterdam Amstel"]], 
-                                [random_greedy.load.stations["Rotterdam Alexander"], random_greedy.load.stations["Rotterdam Centraal"]], 
-                                [random_greedy.load.stations["Castricum"], random_greedy.load.stations["Beverwijk"]], 
-                                [random_greedy.load.stations["Schiphol Airport"], random_greedy.load.stations["Zaandam"]]]
-    
-    # results = random_greedy.run(starting_stations="custom_list_without_replacement", 
-    #                             starting_station_list = custom_starting_stations, 
-    #                             final_number_of_routes=2)
-    
-    results = random_greedy.run(route_time_limit = 40, final_number_of_routes= 3, starting_stations="original_stations_only_soft")
-
-    for route in results:
-        print(f"Route time: {route.time} minutes")
-    # print(f"Number of routes: {len(results)}")
