@@ -51,7 +51,7 @@ class Random_Greedy(Algorithm):
 
         - Pre: run method is called on a fresh Random_Greedy object 
         (i.e. this is the first time run is called on this object).
-        - Post: Returns a list of routes
+        - Post: Returns a list of routes (i.e. a solution)
 
         args:
         
@@ -62,7 +62,7 @@ class Random_Greedy(Algorithm):
         in the route. Options: "random" (default), or "shortest" for a
         greedy approach to connections.
         
-        
+
         Options for starting station per route:
 
         - starting_stations: Specify how to pick the starting station for 

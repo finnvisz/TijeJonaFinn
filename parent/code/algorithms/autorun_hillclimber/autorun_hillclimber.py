@@ -79,16 +79,17 @@ def autorun_hillclimber(n_runs: int,
             # Set a start state based on our found heuristics
             start_state = Random_Greedy(maprange).run(
                             starting_stations="original_stations_only_hard",
-                            final_number_of_routes = 20,
-                            route_time_limit = 180)
+                            final_number_of_routes = 9,
+                            route_time_limit = [180, 140, 160])
 
             # Run the Hillclimber algorithm and save solutions
             hillclimber_alg = Hillclimber(start_state, maprange)
-            solution = hillclimber_alg.run(iterations = 1000,
+            solution = hillclimber_alg.run(iterations = 600000,
                                         log_csv=f"{project_dir}/log.csv",
-                                        simulated_annealing=False,
-                                        cap = 20000,
+                                        simulated_annealing=True,
+                                        cap = 30000,
                                         improve_routes = True)
+                                        # original_connections_only = True)
             
 
             # After a run, write the solution to a csv file in auto_run folder
@@ -130,5 +131,18 @@ def autorun_hillclimber(n_runs: int,
 
 
 if __name__ == "__main__":
-    autorun_hillclimber(15, "nationaal_1000_iteraties_no_sim_an", maprange="Nationaal", allow_overwrite=True)
+    autorun_hillclimber(1000, "maandagnacht_Nationaal_Jona_3", maprange="Nationaal", allow_overwrite=False)
+    # maprange = "Nationaal"
 
+    # Set a start state based on our found heuristics
+    # start_state = Random_Greedy(maprange).run(
+    #                 starting_stations="original_stations_only_hard",
+    #                 final_number_of_routes = 9,
+    #                 route_time_limit = [180, 140, 160])
+
+    # # Run the Hillclimber algorithm and save solutions
+    # hillclimber_alg = Hillclimber(start_state, maprange)
+    # solution = hillclimber_alg.run(iterations = 600000,
+    #                             simulated_annealing=True,
+    #                             cap = 30000,
+    #                             improve_routes = True)
