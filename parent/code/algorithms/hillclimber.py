@@ -69,6 +69,28 @@ class Hillclimber(Algorithm):
                 break
             connections = list(current_station.connections_dict().keys())
             connection = random.choice(connections)
+
+
+            # If original_connections_only is set, keep trying until a 
+            # connection is found that hasn't been used yet
+            if self.original_connections_only:
+
+                # If this connection is already used, try another one
+                while route.is_connection_used(current_station, connection):
+                    connections.remove(connection)
+
+                    # If no connections left, break
+                    if len(connections) == 0:
+                        break
+
+                    connection = random.choice(connections)
+
+                # If no connections left from current station, end this 
+                # route
+                if len(connections) == 0:
+                    break
+
+
             duration = int(current_station.connection_duration(connection))
             total = time_used + duration
             if total < max_time:
@@ -169,6 +191,7 @@ class Hillclimber(Algorithm):
             simulated_annealing: bool = False, 
             cap=10**99,
             improve_routes: bool = True,
+            original_connections_only: bool = False,
             
             log_csv: str | None = None) -> list[Route]:
         """
@@ -189,6 +212,9 @@ class Hillclimber(Algorithm):
         - improve_routes (bool): if True, Hillclimber tries to remove redundant
           connections from routes each iteration (head, tail, middle). 
           Default True.
+        - original_connections_only (bool): if True, a route never uses 
+        the same connection more than once (i.e.: never goes back to 
+        a previously visited station)
 
         Data collection settings:
         - log_csv: if not None, append score per iteration to specified 
@@ -201,6 +227,7 @@ class Hillclimber(Algorithm):
         count_no_change = 0
         self.simulated_annealing = simulated_annealing
         self.cap = cap
+        self.original_connections_only = original_connections_only
 
         if improve_routes:
             self.routes = self.improve_routes(self.routes)
