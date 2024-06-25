@@ -17,14 +17,14 @@ def run_hillclimber(maprange: str, project_dir: str) -> list[Route]:
     """
     
     # Set a start state based on our found heuristics
-    start_state = Random_Greedy(maprange).run(
+    start_state: list[Route] = Random_Greedy(maprange).run(
                     starting_stations="original_stations_only_hard",
                     final_number_of_routes = (10, 11, 12),
                     route_time_limit = [180, 140, 160])
 
     # Run the Hillclimber algorithm and save solution, also log progress
     hillclimber_alg = Hillclimber(start_state, maprange)
-    solution = hillclimber_alg.run(iterations = 600000,
+    solution: list[Route] = hillclimber_alg.run(iterations = 600000,
                                 log_csv=f"{project_dir}/log.csv",
                                 simulated_annealing=True,
                                 cap = 60000,
@@ -35,20 +35,23 @@ def run_hillclimber(maprange: str, project_dir: str) -> list[Route]:
 
 
 def autorun_hillclimber(n_runs: int, 
-                        session_name: str,
+                        project_name: str,
                         maprange: str = "Holland", 
                         allow_overwrite: bool = False
                         ):
     """
-    Run the Hillclimber algorithm for a specified number of runs.
+    Run the Hillclimber algorithm for a specified number of runs, and
+    automatically save results to an autorun_hillclimber project
+    directory (set with `project_name`).
 
     Args:
         - n_runs (int): The number of runs to perform.
-        - session_name (str): The name of the session or project.
-        - maprange (str, optional): The map range to use. Defaults to
-          "Holland".
-        - allow_overwrite (bool, optional): Whether to allow overwriting
-          an existing project directory. Defaults to False.
+        - project_name (str): The name of project to create / append to.
+        - maprange (str, optional): The map range to use ("Holland" or
+          "Nationaal"). Defaults to "Holland".
+        - allow_overwrite (bool, optional): Whether to allow appending to
+          an existing project directory (if `project_name` is already in
+          use). Defaults to False.
     """
 
     # Input check
@@ -57,13 +60,13 @@ def autorun_hillclimber(n_runs: int,
 
 
     # Set root directory (where all project directories will be created)
-    root_dir = "parent/code/algorithms/autorun_hillclimber/"
+    root_dir: str = "parent/code/algorithms/autorun_hillclimber/"
     # Project dir is subdirectory of root dir
-    project_dir = f"{root_dir}{session_name}"
+    project_dir: str = f"{root_dir}{project_name}"
 
 
     # Create project directory or append to existing project
-    project_created: bool = create_project(session_name, 
+    project_created: bool = create_project(project_name, 
                                         project_dir, 
                                         allow_overwrite)
     # If functions returns False: fatal error so return
@@ -84,14 +87,14 @@ def autorun_hillclimber(n_runs: int,
         try:
             
             # Run the Hillclimber algorithm
-            solution = run_hillclimber(maprange, project_dir)
+            solution: list[Route] = run_hillclimber(maprange, project_dir)
 
             # Write the produced solution to a csv file
             write_run_to_csv(solution, maprange, project_dir)
 
             # Print succes message seperated by empty lines
             print(
-            f"\nRun {run_number} of {n_runs} of project {session_name}", 
+            f"\nRun {run_number} of {n_runs} of project {project_name}", 
             "completed. Proceeding to next run.\n")
 
 
@@ -109,7 +112,7 @@ def autorun_hillclimber(n_runs: int,
             continue
 
 
-def create_project(session_name: str, 
+def create_project(project_name: str, 
                    project_dir: str, 
                    allow_overwrite: bool
                    ) -> bool:
@@ -121,7 +124,6 @@ def create_project(session_name: str,
     if project already exists and overwriting is not allowed.
     """
     
-    
     # Create project directory
     # If directory already exists, handle that
     try:
@@ -130,27 +132,22 @@ def create_project(session_name: str,
         # Create subdirectory to store solution of each run
         os.mkdir(f"{project_dir}/solutions")
 
-        print("")
-        print(f"New project {session_name} succesfully created.")
-        print("") 
+        print(f"\nNew project {project_name} succesfully created.\n") 
     
     # But if project was already created (project is re-run)
     except FileExistsError:
         # If overwriting is not allowed, print error message and return
         # False to indicate fatal error
         if not allow_overwrite:
-            print("")
-            print(f"Error: Directory {session_name} already exists.", 
+            print(f"\nError: Directory {project_name} already exists.", 
                   "If appending to existing project is deliberate,",
                     "set 'allow_overwrite' to True.")
+            
             return False
 
         # If overwriting is allowed, print warning message
-        print("")
-        print(f"Warning: Directory {session_name} already exists.", 
-              "Appending to that project.")
-        print("")        
-
+        print(f"\nWarning: Directory {project_name} already exists.", 
+              "Appending to that project.\n")
 
     # Return True if project was succesfully created or appended
     return True
@@ -166,16 +163,16 @@ def write_run_to_csv(solution: list[Route],
     """
     
     # Calculate score of the solution
-    score = calculate_score(solution, maprange)
+    score: float = calculate_score(solution, maprange)
     
     # Set filename for the solution based on maprange and score
-    solution_filename = f"{maprange}_{round(score)}_HC.csv"
+    solution_filename: str = f"{maprange}_{round(score)}_HC.csv"
 
     # Write the solution to a csv file in solutions directory
     write_solution_to_csv(solution, 
                         f"{project_dir}/solutions/{solution_filename}", 
                         custom_file_path=True, 
-                        map= maprange)
+                        map = maprange)
     
     # Append the end score of this run to the end_scores csv file
     append_single_score_to_csv(score, 
