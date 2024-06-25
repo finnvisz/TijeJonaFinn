@@ -10,36 +10,15 @@ from parent.code.classes.railnl import RailNL
 
         
 if __name__ == "__main__":
-    # solution = read_solution_from_csv("../../algorithms/autorun_hillclimber/4_routes_zondag/solutions/Holland_9192_HC")
+    connecties_holland = pd.read_csv("parent/data/ConnectiesHolland.csv", header = None, names = ["station1", "station2", "time"], index_col = False)
 
-    # i = 1
-    # for route in solution:
-    #     print(f"Route {i}: {route.time} minuten")
-    #     i += 1
+    sum_time = connecties_holland["time"].sum()
+    print(f"Total time for Holland: {sum_time}")
 
-    # plot_autorun_hillclimber(project_name="zondagnacht_cap_30000", title="Hillclimber: zondagnacht_cap_30000", use_aggregated=False)
+    p = 1
+    T = 4
+    Min = sum_time
 
-    # end_scores_zaterdag = read_scores_from_csv("parent/code/algorithms/autorun_hillclimber/agile_zaterdag/end_scores.csv", custom_file_path=True)
-    # end_scores_zondag = read_scores_from_csv("parent/code/algorithms/autorun_hillclimber/4_routes_zondag/end_scores.csv", custom_file_path=True)
+    K = p*10000 - (T*100 + Min)
 
-    # plot_scores_fancy(end_scores_zondag, title="Hillclimber '4_routes_zondag': verdeling van eindscores", binwidth=10, xlim=(min(end_scores_zondag), max(end_scores_zondag)), save_to_pdf=True)
-
-    plot_endscores_autorun_hillclimber(project_name="4_routes_zondag")
-
-    # np.savetxt("parent/code/algorithms/autorun_hillclimber/agile_zaterdag/test_error_bericht.csv", 
-    #                [230])
-    
-    
-
-
-
-
-    # ConnectiesHolland = pd.read_csv("parent/data/ConnectiesHolland.csv", 
-    #                     header=None)
-    
-    # ConnectiesHolland.columns = ["Station1", "Station2", "Afstand"]
-
-    # ConnectiesHolland["Afstand"] = ConnectiesHolland["Afstand"].astype(int)
-
-    # print(sum(ConnectiesHolland["Afstand"])/ 120)
-
+    print(f"K: {K}")

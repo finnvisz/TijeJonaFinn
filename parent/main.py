@@ -1,94 +1,80 @@
-import random
-import copy
-import matplotlib.pyplot as plt
-import numpy as np
+from parent.code.algorithms.autorun_hillclimber import autorun_hillclimber
+from parent.code.algorithms.random_greedy import Random_Greedy
+from parent.code.experiments.experiment import Experiment
+from parent.code.experiments.statistics import plot_autorun_hillclimber, plot_endscores_autorun_hillclimber, plot_scores_fancy
 
-from code.classes.railnl import RailNL
-from code.algorithms.algorithm import Algorithm
-from code.algorithms.random_algorithm import RandomAlgorithm
-from code.algorithms.greedy import Greedy
-from code.algorithms.hillclimber import Hillclimber
-from parent.code.experiments.experiments import Experiment
+### 1. EXPERIMENTATION ###
+# If you want to get a feel for what the samplespace of this problem looks like,
+# you can use our experiment-focused algorithm for that.
 
-if __name__ == "__main__":
-    data = RailNL("Nationaal") # manipulate
+# Let's compare a basic random algorithm, a basic greedy algorithm
+# and a random algorithm + heuristic to see how much difference a 
+# heuristic can make.
+print("Running experiment 1: Random algorithm")
+random_algorithm_results = Experiment("Holland").run_experiment(1000, 
+                                                                next_connection_choice = "random")
 
-    # Test Random Algorithm
-    random_algorithm = RandomAlgorithm(data, [20], 180)
-    random_score = Score(random_algorithm)
-    random_algorithm.make_picture()
-    print(f"Random Algorithm Score: {random_score.calculate()}")
+print("Running experiment 2: Greedy algorithm")
+greedy_algorithm_results = Experiment("Holland").run_experiment(1000, 
+                                                                next_connection_choice = "shortest")
 
-    # # Plotting frequency distributions of connections used
-    # total_connections = RailNL("Holland").get_total_connections()
-    # connection_labels = [f"{c[0].name} - {c[1].name}" for c in total_connections]
-    
-    # plt.figure(figsize=(10, 10))
-    # plt.bar(range(len(total_connections)), random_experiment.count_connections_used, tick_label=connection_labels)
-    # plt.xticks(rotation=90)
-    # plt.title('Connections Used in Random Algorithm, 1 route')
-    # plt.xlabel('Connection')
-    # plt.ylabel('Frequency')
-    # plt.grid(True)
-    # plt.tight_layout()
-    # plt.savefig("freq2.png")
+print("Running experiment 3: Random algorithm with original starting stations heuristic")
+random_algorithm_with_heuristic = Experiment("Holland").run_experiment(1000, 
+                                                                       next_connection_choice = "random", 
+                                                                       starting_stations = "original_stations_only_hard")
 
-    # # Plotting frequency distribution of stations used
-    # total_stations = list(RailNL("Holland").stations_dict().values())
-    # station_labels = [station.name for station in total_stations]
+# And plot the results (plot should open in pop-up window,
+# but is also saved as pdf to parent/code/experiments/plots)
+plot_scores_fancy(random_algorithm_results, 
+                  greedy_algorithm_results,
+                  random_algorithm_with_heuristic,
+                  
+                  title="Heuristics matter: Random vs Greedy algorithm", 
+                  legend_title= "Algorithm",
+                  legend_labels=("Random", "Greedy", "Random + heuristic"),
+                  save_to_pdf = True)
 
-    # plt.figure(figsize=(10, 6))
-    # plt.bar(range(len(total_stations)), random_experiment.count_stations_used, tick_label=station_labels)
-    # plt.xticks(rotation=90)
-    # plt.title('Stations Used in Random Algorithm, 1 route')
-    # plt.xlabel('Station')
-    # plt.ylabel('Frequency')
-    # plt.grid(True)
-    # plt.tight_layout()
-    # plt.savefig("freq3.png")
-
-    # # Test Greedy Algorithm
-    # greedy_alg = Greedy(data)
-    # greedy_score = Score(greedy_alg).calculate()
-    # greedy_alg.make_picture()
-    # print(f"Greedy algorithm score: {greedy_score}")
-
-    # # Perform experiment with Greedy and collect scores
-    # greedy_experiment = Experiment(Greedy, "Holland")
-    # scores = greedy_experiment.run_experiment(1000)
-    # average = greedy_experiment.average_score()
-    # print(f"average score: {average}")
-
-    # # Plotting the frequency distribution of scores
-    # plt.figure(figsize=(10, 6))
-    # plt.hist(scores, bins=50, edgecolor='black', alpha=0.7)
-    # plt.title('Frequency Distribution of Scores Greedy 7 routes')
-    # plt.xlabel('Score')
-    # # plt.xlim(0, 10000)
-    # plt.ylabel('Frequency')
-    # plt.grid(True)
-    # plt.tight_layout()
-    # plt.savefig("freq.png")
-
-    # # Plotting frequency distributions of connections used
-    # total_connections = RailNL("Holland").get_total_connections()
-    # connection_labels = [f"{c[0].name} - {c[1].name}" for c in total_connections]
-    
-    # plt.figure(figsize=(10, 10))
-    # plt.bar(range(len(total_connections)), greedy_experiment.count_connections_used, tick_label=connection_labels)
-    # plt.xticks(rotation=90)
-    # plt.title('Connections Used in Greedy, 7 routes')
-    # plt.xlabel('Connection')
-    # plt.ylabel('Frequency')
-    # plt.grid(True)
-    # plt.tight_layout()
-    # plt.savefig("freq2.png")
-
-    # # Test Hillclimber algorithm
-    # hillclimber_alg = Hillclimber(data, RandomAlgorithm(data))
-    # hillclimber_alg.make_picture()
-
-    
+# There are way more conditions to experiment with! 
+# Check out the Random_Greedy algorithm's docs by hovering over "run"
+Random_Greedy().run(1)
 
 
+"""
+### 2. AUTORUN HILLCLIMBER ###
 
+# This one takes a bit longer, but it's worth it!
+
+# Choose a name for your new Autorun Hillclimber project (I bet you can do better than "my_first_project"):
+project_name = "my_first_project"
+
+# Run the autorun_hillclimber program with the chosen project name
+# Let's start with 10 runs and the smaller map: "Holland"
+# This way you can see the results (relatively) quickly and get a feel for the program
+autorun_hillclimber(n_runs = 10, 
+                    session_name = project_name, 
+                    maprange = "Holland", 
+                    allow_overwrite = False
+                    )
+
+# Now that you have an autorun hillclimber project, you can get a
+# summary of your logfile using a plot:
+plot_autorun_hillclimber(project_name = project_name, 
+                         title = "Logplot: my first Autorun Hillclimber project", 
+                         use_aggregated = False
+                         )
+
+# You can also plot the endscores your hillclimber achieved:
+plot_endscores_autorun_hillclimber(project_name = project_name)
+
+# Both functions will save the plots in your project directory.
+
+# If you go to your project directory, you will find a directory called "solutions".
+# This directory contains the solution produced by each run as a csv file.
+# Take a look and see what your best solution looks like!
+"""
+
+
+### 3. MANIM VISUALISATION ###
+
+# CSV files can only tell you so much
+# Let's visualise the best solution of your autorun hillclimber project!
