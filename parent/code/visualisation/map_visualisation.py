@@ -1,7 +1,7 @@
 from manim import FadeIn, Transform
-from base_map import BaseMapScene
+from base_map import BaseScene
 
-class map_visualisation(BaseMapScene):
+class map_visualisation(BaseScene):
 
     # Play scene showing labels, points and connections
     def construct(self):
