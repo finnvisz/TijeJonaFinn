@@ -225,7 +225,7 @@ class Hillclimber(Algorithm):
             accept_new = False
             if self.simulated_annealing == True:
                 # Simulated annealing, always accept a higher or equal score
-                temperature = self.best_score / 10000
+                temperature = self.best_score / 30000
                 if random.random() < 2 ** (temperature * (new_score - self.best_score)):
                     accept_new = True
             else:

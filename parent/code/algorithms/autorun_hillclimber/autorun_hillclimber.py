@@ -79,20 +79,17 @@ def autorun_hillclimber(n_runs: int,
             # Set a start state based on our found heuristics
             start_state = Random_Greedy(maprange).run(
                             starting_stations="original_stations_only_hard",
-                            final_number_of_routes = 4,
-                            route_time_limit = [100, 120, 120, 120])
+                            final_number_of_routes = 20,
+                            route_time_limit = 180)
 
             # Run the Hillclimber algorithm and save solutions
             hillclimber_alg = Hillclimber(start_state, maprange)
-            solution = hillclimber_alg.run(iterations = 450000,
+            solution = hillclimber_alg.run(iterations = 1000,
                                         log_csv=f"{project_dir}/log.csv",
-                                        simulated_annealing=True,
-                                        cap = 15000,
-                                        improve_routes = True,
-                                        original_connections_only = True)
+                                        simulated_annealing=False,
+                                        cap = 20000,
+                                        improve_routes = True)
             
-
-
 
             # After a run, write the solution to a csv file in auto_run folder
             score = routes_score(solution, maprange)
@@ -118,9 +115,9 @@ def autorun_hillclimber(n_runs: int,
 
 
         # If an error occurs, log run number and on to the next run
-        except:
+        except Exception as e:
             print("")
-            print(f"Error occurred in run {run_number}. Proceeding to next run.")
+            print(f"Error occurred in run {run_number}. {e} Proceeding to next run.")
             print("")
             
             append_single_score_to_csv(run_number, 
@@ -133,5 +130,5 @@ def autorun_hillclimber(n_runs: int,
 
 
 if __name__ == "__main__":
-    autorun_hillclimber(1000, "maandag_oco_cap_gehalveerd", maprange="Holland", allow_overwrite=False)
+    autorun_hillclimber(15, "nationaal_1000_iteraties_no_sim_an", maprange="Nationaal", allow_overwrite=True)
 
