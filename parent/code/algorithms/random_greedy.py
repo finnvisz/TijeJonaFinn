@@ -43,19 +43,21 @@ class Random_Greedy(Algorithm):
             chance_of_early_route_end: bool = False) -> list[Route]:
         """
         
-        Random and/or greedy algorithm to generate routes, with lots of options.
-        Meant for running random-based tests and comparing various 
-        subsets of the total state space.
+        Random and/or greedy algorithm to generate routes, with lots of
+        options. Meant for running random-based tests and comparing
+        various subsets of the total state space.
 
-        NOTE: make sure to reinitialize the class when running multiple times.
+        NOTE: make sure to reinitialize the class when running multiple
+        times.
 
         - Pre: run method is called on a fresh Random_Greedy object 
         (i.e. this is the first time run is called on this object).
-        - Post: Returns a list of routes (i.e. a solution)
-
-        args:
         
-        Options per connection (How to pick the next connection in the
+        - Post: Returns a list of routes (i.e. a solution).
+
+        Args:
+        
+        Option per connection (How to pick the next connection in the
         route):
         
         - next_connection_choice: Specify how to pick the next connection 
@@ -67,26 +69,25 @@ class Random_Greedy(Algorithm):
 
         - starting_stations: Specify how to pick the starting station for 
         each route. Options: 
-        1. fully_random: pick random with replacement from all stations.
-        2. original_stations_only_soft: (Tije version) pick random
-        with replacement, but if another route starts at this station, 
-        pick another.
-        3. original_stations_only_hard: (Jona version) pick 
-        random station with 0 connections, or else random station with
-        unused connections.
-        
-        4. custom_list_with_replacement: pick random from custom list
-        (with replacement)
-        5. `custom_list_without_replacement`: pick random from custom list
-        (without replacement; NOTE: make sure the list length is equal to
-        the number of routes generated.)
+            - 1. fully_random: pick random with replacement from all
+                 stations. 
+            - 2. original_stations_only_soft: (Tije version) pick random
+                 with replacement, but if another route starts at this
+                 station, pick another. 
+            - 3. original_stations_only_hard: (Jona version) pick random
+                 station with 0 connections, or else random station with
+                 unused connections.
+            - 4. custom_list_with_replacement: pick random from custom
+                 list (with replacement) 
+            - 5. custom_list_without_replacement: pick random from custom
+                 list (without replacement; NOTE: make sure the list
+                 length is equal to the number of routes generated.)
         
         - starting_station_list: list of stations to pick from,
-        OR list with multiple station lists is also possible 
-        (in that case one of the station lists will be chosen randomly).
-        Only used when starting_stations is set to
-        "custom_list_with_replacement" or
-        "custom_list_without_replacement"
+        OR list with multiple station lists is also possible (in that
+        case one of the station lists will be chosen randomly). Only used
+        when starting_stations is set to "custom_list_with_replacement"
+        or "custom_list_without_replacement"
 
         
         Options for number + length of routes:
@@ -96,17 +97,19 @@ class Random_Greedy(Algorithm):
           `int` to override this. If set to `tuple[int]`, a random value
           out of the tuple will be chosen as number of routes.
 
-        - route_time_limit: Maximum time for each route. Default is 120 
-          minutes for Holland map, 180 minutes for Nationaal map. Can be set
-          with `int` to override this fixed time limit. If set to `tuple[int]`, 
-          a random value out of the tuple will be chosen as fixed time limit
-          for all routes. If set to `list[int]`, each route will have a 
-          different time limit randomly chosen from the list.
+        - route_time_limit: Maximum time for each route. Default is 120
+          minutes for Holland map, 180 minutes for Nationaal map. Can be
+          set with `int` to override this fixed time limit. If set to
+          `tuple[int]`, a random value out of the tuple will be chosen as
+          fixed time limit for all routes. If set to `list[int]`, each
+          route will have a different time limit randomly chosen from the
+          list.
 
-
+          
         Experimental (USE AT OWN RISK):
         
-        - chance_of_early_route_end (bool): (CREATE ROUTES WITH 0 CONNECTIONS)
+        - chance_of_early_route_end (bool): (CREATE ROUTES WITH 0
+          CONNECTIONS)
         If set to True, routes can end before `route_time_limit` minutes.
         Default is False.
         """
@@ -260,7 +263,8 @@ class Random_Greedy(Algorithm):
 
 
     def set_final_number_of_routes(self, 
-                                   final_number_of_routes: int | tuple[int] | None) -> int:
+                                   final_number_of_routes: int | tuple[int] | None
+                                   ) -> int:
         """
         Set the final number of routes to generate, depending on user 
         input and the map.
@@ -307,7 +311,8 @@ class Random_Greedy(Algorithm):
             elif self.load.mapname == "Nationaal":
                 time_limit_this_route = 180
             else:
-                raise ValueError("Invalid mapname. Please use 'Holland' or 'Nationaal'.")
+                raise ValueError(
+                    "Invalid mapname. Please use 'Holland' or 'Nationaal'.")
         
         # If an int is provided, just pass it on
         elif type(route_time_limit) is int:
@@ -406,11 +411,11 @@ class Random_Greedy(Algorithm):
             
             # Set the first station for this route (method depends on 
             # starting_stations argument)
-            current_station = self.set_starting_station(starting_stations,
+            current_station: Station = self.set_starting_station(starting_stations,
                                                     starting_station_list)
 
             # Create a new route with the given parameters
-            new_route = self.create_a_route(current_station,
+            new_route: Route = self.create_a_route(current_station,
                                             time_limit_this_route,
                                             next_connection_choice,
                                             original_connections_only,
@@ -545,6 +550,11 @@ class Random_Greedy(Algorithm):
                          original_connections_only: bool,
                          chance_of_early_route_end: bool,
                          time_limit_this_route: int) -> "Station":
+        """
+        Choose the next station for the route, depending on the
+        parameters given.
+        """
+        
         # Get connections of current station, sorted by duration
         # This is a queue of possible connections, with the shortest connection first
         connections = current_station.get_connections()
@@ -596,8 +606,9 @@ class Random_Greedy(Algorithm):
     def set_as_used(self, current_station: "Station", 
                     next_station: "Station") -> None:
         """
-        Takes two stations and moves the connection between them from unused to used connections.
-        Order of the stations does not matter, connections are handled alphabetically.
+        Takes two stations and moves the connection between them from
+        unused to used connections. Order of the stations does not
+        matter, connections are handled alphabetically.
         """
         
         # Extract dictionary key for the connection
