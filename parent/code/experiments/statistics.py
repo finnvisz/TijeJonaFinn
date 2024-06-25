@@ -249,7 +249,7 @@ def write_solution_to_csv(routes: list[Route],
         writer.writerow(["train", "stations"])
 
         for i in range(len(routes)):
-            writer.writerow([f"train_{i+1}", routes[i].stations_list()])
+            writer.writerow([f"train_{i+1}", routes[i].stations_string()])
 
         score = routes_score(routes, map)
         writer.writerow(["score", f"{score}"])
