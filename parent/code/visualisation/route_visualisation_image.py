@@ -1,80 +1,13 @@
-from manim import Line, Dot, VGroup, manim_colors, Text, UP, LEFT
 
-from manim import PURE_RED, PURE_GREEN, PURE_BLUE
-from manim import YELLOW, PURPLE, ORANGE, PINK
-
-from parent.code.experiments.statistics import read_solution_from_csv
-from parent.code.algorithms.score import routes_score
-
-from base_map import BaseScene
+from parent.code.visualisation.route_visualisation import route_visualisation_Scene
 from numpy.linalg import norm
+import manim as m
 
-class route_visualisation_image(BaseScene):
+class route_visualisation_image(route_visualisation_Scene):
     """Show trainroutes on map."""
 
-    def setup_2(self) -> None:
-
-        # Run a specific algorithm
-        self.run_algorithm()
-
-        # Create dictionary to save colors used on lines
-        self.line_colors_dict: dict[Line, list] = {}
-        self.colors = [PURE_RED, PURE_GREEN, 
-                       PURE_BLUE, YELLOW, 
-                       PURPLE, ORANGE, PINK]
-
-    # Move camera to capture network
-    def setup_camera(self) -> None:
-        self.camera.frame.move_to(self.dots)
-        self.camera.frame.set_height(1.1 * self.dots.get_height())
-
-    # Run algorithm here
-    def run_algorithm(self) -> None:
-        
-        # NOTE: instead of running an algorithm, we can now read 
-        # a solution from a csv file
-        self.output = read_solution_from_csv("../../algorithms/autorun_hillclimber/maandag_oco_cap_gehalveerd/solutions/Holland_9210_HC", file_path = "for_manim")
-        # Greedy(self.data).run() 
-        
-        # Save number of routes for later reference
-        self.n_routes = len(self.output)
-
-        # Set mapname based on number of routes
-        # (Could fail at some point but seems robust for now)
-        if self.n_routes <= 7:
-            self.mapname = "Holland"
-        else:  
-            self.mapname = "Nationaal"
-        
-        
-    # Find dots associated to station name
-    def correspondence(self, name_start: str, name_end: str) -> tuple:
-            
-            # Find corresponding station object 
-            station_start = self.name_station_dict[name_start]
-            station_end = self.name_station_dict[name_end]
-
-            # Find corresponding dot object
-            dot_start = self.station_dot_dict[station_start]
-            dot_end = self.station_dot_dict[station_end]
-
-            return (dot_start, dot_end)
-    
-    # Find line associated with connection    
-    def find_connection(self, dot_start: Dot, dot_end: Dot, time: int) -> Line:
-
-        # Check if connection exists
-        if (dot_start, dot_end, time) in self.connection_line_dict:
-            line = self.connection_line_dict[(dot_start, dot_end, time)]
-            
-        # Otherwise reversed connection must exist
-        else:
-            line = self.connection_line_dict[(dot_end, dot_start, time)]
-
-        return line
-
     # Main method calling upon other methods to color route and move train
-    def color_route(self, route: list, color: manim_colors):
+    def color_route(self, route: list, color: m.manim_colors):
 
         for connection in route:
             time = connection[2]
@@ -89,7 +22,7 @@ class route_visualisation_image(BaseScene):
             self.set_color(line, color)
 
     # Set color depending on if already colored
-    def set_color(self, line: Line, color: manim_colors):
+    def set_color(self, line: m.Line, color: m.manim_colors):
 
         # If line not yet colored just color
         if not line in self.line_colors_dict:
@@ -104,7 +37,7 @@ class route_visualisation_image(BaseScene):
                 self.set_multiple_colors(line, colors)
 
     # Set line with multiple colors 
-    def set_multiple_colors(self, line: Line, colors: list):
+    def set_multiple_colors(self, line: m.Line, colors: list):
 
         # Find start and end brutally
         starting_point = line.start
@@ -119,7 +52,7 @@ class route_visualisation_image(BaseScene):
         segment_length = length / amount
 
         # Create new line VGroup to replace old
-        new_line = VGroup()
+        new_line = m.VGroup()
 
         # Create new line consisting of segments
         for i in range(amount):
@@ -128,7 +61,7 @@ class route_visualisation_image(BaseScene):
             ending_point = starting_point + direction * segment_length
 
             # Create new segment linepiece
-            segment = Line(start = starting_point, end = ending_point, 
+            segment = m.Line(start = starting_point, end = ending_point, 
                            color = colors[i], stroke_width = 0.75)
 
             # Add segment and set ending point as new starting
@@ -138,40 +71,5 @@ class route_visualisation_image(BaseScene):
         # Transformeer oude lijn naar nieuw gesegmenteerde lijn
         self.add(new_line)
 
-    def place(self, label: VGroup) -> None:
-        pass
-
-    def construct(self):
-
-        self.setup_2()
-        self.add(self.dots, self.connections, self.connection_labels)
-        label = Text(f"RailNL - {self.mapname}")
-        score = Text(f"Score = {routes_score(self.output, self.mapname)}")
-
-        position = self.camera.frame.get_center()
-        height = self.camera.frame.get_height()
-        width = self.camera.frame.get_width()
-
-        label.move_to(position)
-        score.move_to(position)
-
-        label.scale(0.05)
-        score.scale(0.05)
-
-        label.shift(LEFT * width * 0.25 - UP * height * 0.25)
-        score.shift(LEFT * width * 0.25 - UP * height * 0.3)
-
-        self.add(label)
-        self.add(score)
-
-        # Using amount of routes provided
-        for i in range(self.n_routes):
-
-            # Iterate over route_objects in output
-            route_object = self.output[i]
-
-            # Get connections within route_object
-            route = route_object.get_connections_used()
-
-            # Color route with ith color
-            self.color_route(route, self.colors[i])
+    def is_video(self):
+        return False

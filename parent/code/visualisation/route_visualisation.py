@@ -1,16 +1,11 @@
-from manim import ApplyMethod, Line, Transform, Dot, VGroup, Text, UP, LEFT
-from manim import manim_colors, smooth
-
-from manim import PURE_RED, PURE_GREEN, PURE_BLUE
-from manim import YELLOW, PURPLE, ORANGE, PINK
-
 from parent.code.experiments.statistics import read_solution_from_csv
 from parent.code.algorithms.score import routes_score
+from parent.code.visualisation.base_map import BaseScene
 
-from base_map import BaseScene
 from numpy.linalg import norm
+import manim as m
 
-class route_visualisation(BaseScene):
+class route_visualisation_Scene(BaseScene):
     """Show trainroutes on map."""
 
     def setup_2(self) -> None:
@@ -19,27 +14,27 @@ class route_visualisation(BaseScene):
         self.run_algorithm()
 
         # Create dictionary to save colors used on lines
-        self.line_colors_dict: dict[Line, list] = {}
-        self.colors = [PURE_RED, PURE_GREEN, 
-                       PURE_BLUE, YELLOW, 
-                       PURPLE, ORANGE, PINK]
-
-    # Move camera to capture network
-    def setup_camera(self) -> None:
-        self.camera.frame.move_to(self.dots)
-        self.camera.frame.set_height(1.1 * self.dots.get_height())
+        self.line_colors_dict: dict[m.Line, list] = {}
+        self.colors = [m.PURE_RED, 
+                       m.PURE_GREEN, 
+                       m.PURE_BLUE, 
+                       m.YELLOW, 
+                       m.PURPLE, 
+                       m.ORANGE, 
+                       m.PINK]
 
     # Make train to ride tracks
-    def setup_train(self, dot_start: Dot) -> None:
-        self.train = Dot(point = dot_start.get_center(), radius = 0.0075)
+    def setup_train(self, dot_start: m.Dot) -> None:
+        self.train = m.Dot(point = dot_start.get_center(), radius = 0.0075)
 
     # Run algorithm here
     def run_algorithm(self) -> None:
         
-        # NOTE: instead of running an algorithm, we can now read 
-        # a solution from a csv file
-        self.output = read_solution_from_csv("../../algorithms/autorun_hillclimber/maandag_na_bugfix_improve_routes/solutions/Holland_9210_HC", file_path = "for_manim")
-        # Greedy(self.data).run() 
+        """NOTE: instead of running an algorithm, we can now read 
+        a solution from a csv file"""
+        file_path = "../../algorithms/autorun_hillclimber/maandag_na_bugfix_improve_routes/solutions/Holland_9210_HC"
+        
+        self.output = read_solution_from_csv(file_path, file_path = "for_manim")
         
         # Save number of routes for later reference
         self.n_routes = len(self.output)
@@ -65,7 +60,7 @@ class route_visualisation(BaseScene):
             return (dot_start, dot_end)
     
     # Find line associated with connection    
-    def find_connection(self, dot_start: Dot, dot_end: Dot, time: int) -> Line:
+    def find_connection(self, dot_start: m.Dot, dot_end: m.Dot, time: int) -> m.Line:
 
         # Check if connection exists
         if (dot_start, dot_end, time) in self.connection_line_dict:
@@ -78,7 +73,7 @@ class route_visualisation(BaseScene):
         return line
 
     # Main method calling upon other methods to color route and move train
-    def color_route(self, route: list, color: manim_colors):
+    def color_route(self, route: list, color: m.manim_colors):
 
         start_route = 0
         for connection in route:
@@ -100,14 +95,14 @@ class route_visualisation(BaseScene):
 
             # Move train
             shift = self.train.animate.move_to(dot_end.get_center())
-            self.play(shift, run_time = 0.4, rate_func = smooth)
+            self.play(shift, run_time = 0.4, rate_func = m.smooth)
 
     # Set color depending on if already colored
-    def set_color(self, line: Line, color: manim_colors):
+    def set_color(self, line: m.Line, color: m.manim_colors):
 
         # If line not yet colored just color
         if not line in self.line_colors_dict:
-            self.play(ApplyMethod(line.set_color, color), run_time = 0.1)
+            self.play(m.ApplyMethod(line.set_color, color), run_time = 0.1)
             self.line_colors_dict[line] = [color]
 
         else:
@@ -118,7 +113,7 @@ class route_visualisation(BaseScene):
                 self.set_multiple_colors(line, colors)
 
     # Set line with multiple colors 
-    def set_multiple_colors(self, line: Line, colors: list):
+    def set_multiple_colors(self, line: m.Line, colors: list):
 
         # Find start and end brutally
         starting_point = line.start
@@ -133,7 +128,7 @@ class route_visualisation(BaseScene):
         segment_length = length / amount
 
         # Create new line VGroup to replace old
-        new_line = VGroup()
+        new_line = m.VGroup()
 
         # Create new line consisting of segments
         for i in range(amount):
@@ -142,7 +137,7 @@ class route_visualisation(BaseScene):
             ending_point = starting_point + direction * segment_length
 
             # Create new segment linepiece
-            segment = Line(start = starting_point, end = ending_point, 
+            segment = m.Line(start = starting_point, end = ending_point, 
                            color = colors[i], stroke_width = 0.75)
 
             # Add segment and set ending point as new starting
@@ -150,15 +145,18 @@ class route_visualisation(BaseScene):
             starting_point = ending_point
 
         # Transformeer oude lijn naar nieuw gesegmenteerde lijn
-        self.play(Transform(line, new_line), run_time = 0.1)
+        self.play(m.Transform(line, new_line), run_time = 0.1)
+
+    def is_video(self):
+        return True
 
     def construct(self):
 
         self.setup_2()
         self.add(self.dots, self.connections, self.connection_labels)
         
-        label = Text(f"RailNL - {self.mapname}")
-        score = Text(f"Score = {routes_score(self.output, self.mapname)}")
+        label = m.Text(f"RailNL - {self.mapname}")
+        score = m.Text(f"Score = {routes_score(self.output, self.mapname)}")
 
         position = self.camera.frame.get_center()
         height = self.camera.frame.get_height()
@@ -170,13 +168,14 @@ class route_visualisation(BaseScene):
         label.scale(0.05)
         score.scale(0.05)
 
-        label.shift(LEFT * width * 0.25 - UP * height * 0.25)
-        score.shift(LEFT * width * 0.25 - UP * height * 0.3)
+        label.shift(m.LEFT * width * 0.25 - m.UP * height * 0.25)
+        score.shift(m.LEFT * width * 0.25 - m.UP * height * 0.3)
 
         self.add(label)
         self.add(score)
         
-        self.wait(2)
+        if self.is_video():
+            self.wait(2)
 
         # Using seven routes
         for i in range(self.n_routes):
@@ -190,4 +189,5 @@ class route_visualisation(BaseScene):
             # Color route with ith color
             self.color_route(route, self.colors[i])
 
-        self.wait(2)
+        if self.is_video():
+            self.wait(2)
