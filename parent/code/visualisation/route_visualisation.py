@@ -62,7 +62,7 @@ class RouteVisualisationScene(BaseScene):
         return line
 
     # Main method calling upon other methods to color route and move train
-    def color_route(self, route: list, color: m.manim_colors):
+    def color_route(self, route: list, color: m.manim_colors) -> None:
 
         start_route = 0
         for connection in route:
@@ -87,7 +87,7 @@ class RouteVisualisationScene(BaseScene):
             self.play(shift, run_time = 0.4, rate_func = m.smooth)
 
     # Set color depending on if already colored
-    def set_color(self, line: m.Line, color: m.manim_colors):
+    def set_color(self, line: m.Line, color: m.manim_colors) -> None:
 
         # If line not yet colored just color
         if not line in self.line_colors_dict:
@@ -102,7 +102,7 @@ class RouteVisualisationScene(BaseScene):
                 self.set_multiple_colors(line, colors)
 
     # Set line with multiple colors 
-    def set_multiple_colors(self, line: m.Line, colors: list):
+    def set_multiple_colors(self, line: m.Line, colors: list) -> None:
 
         # Find start and end brutally
         starting_point = line.start

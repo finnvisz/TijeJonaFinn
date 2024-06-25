@@ -42,6 +42,11 @@ class BaseScene(MovingCameraScene):
     create_connection_labels: Creates time labels for line objects.
     construct: Main method called upon by MovingCameraScene.__init__().
 
+    Usage
+    ----
+    NOTE: Always check visualisation_settings.csv.
+    Use VScode manim sideview extension.
+    Alternatively run: manim -pql map_visualisation.py BaseScene
     """
 
     def setup(self) -> None:
@@ -50,9 +55,8 @@ class BaseScene(MovingCameraScene):
 
         Pre
         ---
-        Reads from visualisation_settings.csv. A csv file containing 
-        only: "map", "relative path to routes to visualise csv format".
-
+        Reads from visualisation_settings.csv. A csv file containing:
+            "map","relative path to routes to visualise csv format".
 
         Post
         ---
@@ -168,6 +172,13 @@ class BaseScene(MovingCameraScene):
             self.dot_labels.add(label)
 
     def create_connections(self) -> None:
+        """
+        Creates line objects to represent connections.
+
+        Post
+        ---
+        Creates connections and connection_line_dict.
+        """
     
         # VGroup and dictionaries to load into
         self.connections = m.VGroup()
@@ -194,6 +205,13 @@ class BaseScene(MovingCameraScene):
                     self.connections.add(line)
 
     def create_connection_labels(self) -> m.VGroup:
+        """
+        Creates time labels for line objects.
+
+        Post
+        ---
+        Creates connection_labels and connection_label_dict.
+        """
 
         # Create VGroup and dictionaries to load into
         self.connection_labels = m.VGroup()
@@ -219,6 +237,19 @@ class BaseScene(MovingCameraScene):
 
     # Play scene showing labels, points and connections
     def construct(self):
+        """
+        Main method called upon by MovingCameraScene.__init__().
+
+        Pre
+        ---
+        dot_labels, dots, connections and connection_labels need to be 
+        instantiated.
+
+        Post
+        ---
+        Creates visualisation of complete Holland/Nationaal train network.
+        """
+
         self.play(m.FadeIn(self.dot_labels), run_time = 2)
         self.play(m.Transform(self.dot_labels, self.dots), run_time = 2)
         self.play(m.FadeIn(self.connections), run_time = 2)
