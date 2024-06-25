@@ -244,6 +244,7 @@ def write_solution_to_csv(routes: list[Route],
 
 
     # Check whether file already exists
+    # If so, add timestamp to filename to avoid overwriting
     if os.path.exists(f"{csv_solution_dir}{filename}"):
         # get current time
         now = datetime.now()
