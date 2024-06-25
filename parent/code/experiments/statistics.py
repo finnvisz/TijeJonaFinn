@@ -3,10 +3,10 @@ import numpy as np
 import scipy.stats as stats
 import plotnine as p9
 import pandas as pd
-import matplotlib.pyplot as plt
 import numpy as np
 import csv
 from datetime import datetime
+import os
 
 # Internal imports
 # from parent.code.algorithms.hillclimber import Hillclimber
@@ -241,6 +241,18 @@ def write_solution_to_csv(routes: list[Route],
     # Add .csv extension if not present
     if not filename.endswith(".csv"):
         filename += ".csv"
+
+
+    # Check whether file already exists
+    if os.path.exists(f"{csv_solution_dir}{filename}"):
+        # get current time
+        now = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        
+        filename = filename.split(".csv")[0]
+        filename += f"_{current_time}.csv"
+
+        
 
     
     with open(f"{csv_solution_dir}{filename}", 'w') as file:
