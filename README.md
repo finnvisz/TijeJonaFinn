@@ -159,7 +159,7 @@ Berekent de p-waarde om te bepalen of het verschil tussen twee sets scores signi
 8. plot_scores
 Maakt een histogram van de scores van 1 tot 4 samples.
 
-9. plot_autorun_hillclimber
+9. logplot_autorun_hillclimber
 Maakt een plot om een autorun_hillclimber logbestand samen te vatten.
 
 ## Visualisatie

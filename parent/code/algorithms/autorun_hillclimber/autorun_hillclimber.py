@@ -3,8 +3,8 @@ import os
 from parent.code.classes.route import Route
 from parent.code.algorithms.random_greedy import Random_Greedy
 from parent.code.algorithms.hillclimber import Hillclimber
-from parent.code.experiments.statistics import write_solution_to_csv, append_single_score_to_csv
-from parent.code.algorithms.score import calculate_score
+from parent.code.helpers.csv import write_solution_to_csv, append_single_score_to_csv
+from parent.code.helpers.score import calculate_score
 
 
 # This function sets parameters for the start state and execution of the

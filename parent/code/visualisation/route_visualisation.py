@@ -1,5 +1,5 @@
-from parent.code.experiments.statistics import read_solution_from_csv
-from parent.code.algorithms.score import calculate_score
+from parent.code.helpers.csv import read_solution_from_csv
+from parent.code.helpers.score import calculate_score
 from parent.code.visualisation.map_visualisation import BaseScene
 
 import numpy as np

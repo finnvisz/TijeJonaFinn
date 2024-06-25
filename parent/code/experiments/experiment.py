@@ -4,7 +4,7 @@ import numpy as np
 # Local imports
 from parent.code.classes.route import Route
 from parent.code.algorithms.algorithm import Algorithm
-from parent.code.algorithms.score import calculate_score
+from parent.code.helpers.score import calculate_score
 from parent.code.algorithms.random_greedy import Random_Greedy
 
 

@@ -1,6 +1,5 @@
-from parent.code.algorithms.random_greedy import Random_Greedy
 from parent.code.experiments.experiment import Experiment
-from parent.code.experiments.statistics import plot_scores
+from parent.code.helpers.plots import plot_scores
 
 ### 1. EXPERIMENTATION ###
 # If you want to get a feel for what the samplespace of this problem looks like,
