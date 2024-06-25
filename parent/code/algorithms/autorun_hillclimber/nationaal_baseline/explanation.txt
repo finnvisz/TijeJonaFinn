@@ -1,8 +1,0 @@
-Baseline to compare with:
-
-10000 iterations
-11 routes max
-180 min route time limit
-no cap
-temp = self.best_score/10000
-simulated annealing = True
