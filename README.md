@@ -24,7 +24,7 @@ K = p*10000 - (T*100 + Min)
 Om deze case beter te begrijpen zijn er twee "kaarten" waar een oplossing voor gevonden kan worden. Een kleine kaart (Holland), en een grote kaart (Nationaal). We raden aan om te beginnen met de kleine kaart, waar de oplossingsruimte kleiner is en je sneller resultaten ziet. Als je goed plan van aanpak hebt kun je door naar de grote kaart om je plan te toetsen.
 
 
-## Vereisten
+# Vereisten
 
 Deze codebase is geschreven in Python 3.10.12. Om aan de slag te gaan moeten eerst twee commando's worden gerunt. Ga in je terminal naar de rootmap van ons project, en volg de volgende instructies:
 
