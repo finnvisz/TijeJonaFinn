@@ -8,10 +8,56 @@ import manim as m
 import csv as c
 
 class BaseScene(MovingCameraScene):
-    """A class creating dots, lines and labels from RailNL load."""
+    """
+    A manim Scene creating and displaying several objects formed from 
+    Holland or National train network.
 
-    # Setup VGroups, dictionaries and camera
+    Attributes
+    ---------
+    data: Instance of RailNL load class given specific 
+          settings obtained from visualisation_settings.csv
+    map: Map to create, either Holland or Nationaal.
+    filepath: Relative path to list of route objects to visualise.
+    radius: Radius of dot objects meant to visualise stations.
+    label_scale: Size of station-name, connection-time and map labels.
+    line_width: Thickness of connection lines.
+    zoom_scale: Camera zoom factor.
+    dots: Manim VGroup of dot objects
+    station_dot_dict: Association between station objects and dots.
+    dot_location_dict: Association between dot objects and locations.
+    dot_labels: Manim VGroup of station name dot labels.
+    dot_labels_dict: Association between dot objects and their labels.
+    connections: Manim VGroup of lines.
+    connection_line_dict: Association between connections and line objects.
+    connection_labels: Manim VGroup of connection time labels.
+    connection_labels_dict: Association between connections and time labels.
+
+    Methods
+    --------
+    setup: Defacto initializer. Called upon by MovingCameraScene.__init__().
+    setup_camera: Places camera appropriately.
+    create_dots: Creates dot objects to represent stations.
+    create_connections: Creates line objects to represent connections.
+    create_dot_labels: Creates name labels for dot objects.
+    create_connection_labels: Creates time labels for line objects.
+    construct: Main method called upon by MovingCameraScene.__init__().
+
+    """
+
     def setup(self) -> None:
+        """
+        Defacto initializer called upon by MovingCameraScene.__init__().
+
+        Pre
+        ---
+        Reads from visualisation_settings.csv. A csv file containing 
+        only: "map", "relative path to routes to visualise csv format".
+
+
+        Post
+        ---
+        Instantiates all class attributes by calling upon methods.
+        """
 
         # Get visualisation settings
         with open('visualisation_settings.csv', newline = '') as file:
@@ -37,11 +83,11 @@ class BaseScene(MovingCameraScene):
             self.zoom_scale = 1.1
 
         elif self.map == "Nationaal":
-            self.radius = 0.0075
-            self.label_scale = 0.04
-            self.line_width = 0.7
-            self.time_label_shift = 0.015
-            self.zoom_scale = 1.1
+            self.radius = 0.015
+            self.label_scale = 0.07
+            self.line_width = 1.2
+            self.time_label_shift = 0.03
+            self.zoom_scale = 0.8
 
         else:
             raise ValueError("Map in visualisation_settings.csv must be Holland or Nationaal.")
@@ -55,8 +101,16 @@ class BaseScene(MovingCameraScene):
         # Set camera to capture network
         self.setup_camera()
 
-    # Move camera to capture network
     def setup_camera(self):
+        """
+        Places camera appropriately.
+
+        Post
+        ---
+        Places and zooms camera depending on instantiated dots attribute.
+        
+        """
+
         self.camera.frame.move_to(self.dots)
 
         # Find minimum dimension to not stretch
@@ -64,6 +118,13 @@ class BaseScene(MovingCameraScene):
         self.camera.frame.set_height(self.zoom_scale * zoom)
         
     def create_dots(self) -> None:
+        """
+        Creates dot objects to represent stations.
+
+        Post
+        ---
+        Creates dots, station_dot_dict and dot_location_dict.
+        """
 
         # VGroup and dictionaries to load into
         self.dots = m.VGroup()
@@ -84,6 +145,13 @@ class BaseScene(MovingCameraScene):
             self.dots.add(dot)
 
     def create_dot_labels(self) -> None:
+        """
+        Creates name labels for dot objects.
+
+        Post
+        ---
+        Creates dot_labels and dot_labels_dict.
+        """
 
         # VGroup and dictionaries to load into
         self.dot_labels = m.VGroup()

@@ -140,12 +140,10 @@ def append_scores_to_csv(scores: "np.ndarray",
     # Combine old df and new df
     df_concatenated = pd.concat([df_original, df_additional], axis=1)
         
-
     # Write the updated DataFrame back to the CSV file 
     df_concatenated.to_csv(f"{csv_results_dir}{filename}",
                             index=False, header=False)
         
-
 def append_single_score_to_csv(score: float,
                                filename: str,
                                custom_file_path: bool = False) -> None:
@@ -175,7 +173,6 @@ def append_single_score_to_csv(score: float,
     if not filename.endswith(".csv"):
         filename += ".csv"
 
-
     # Try to open existing CSV file, if not found run write_scores_to_csv
     try:
         # Read the existing CSV file into a DataFrame 
@@ -190,13 +187,11 @@ def append_single_score_to_csv(score: float,
                             custom_file_path = custom_file_path)
         # print(np.array([score]))
         return
-    
 
     # print(df_original)
 
     # Turn column 1 of df into numpy array
     scores_array = df_original.iloc[:,0].to_numpy()
-
 
     # print(f"Scores array before: {scores_array}")
     
@@ -205,11 +200,9 @@ def append_single_score_to_csv(score: float,
 
     # print(f"Scores array after: {scores_array}")
 
-
     # Write the updated numpy array back to the CSV file
     np.savetxt(f"{csv_results_dir}{filename}",
                 scores_array, delimiter = ",")
-
 
 def write_solution_to_csv(routes: list[Route], 
                           filename: str, 
@@ -242,7 +235,6 @@ def write_solution_to_csv(routes: list[Route],
     if not filename.endswith(".csv"):
         filename += ".csv"
 
-
     # Check whether file already exists
     if os.path.exists(f"{csv_solution_dir}{filename}"):
         # get current time
@@ -252,9 +244,6 @@ def write_solution_to_csv(routes: list[Route],
         filename = filename.split(".csv")[0]
         filename += f"_{current_time}.csv"
 
-        
-
-    
     with open(f"{csv_solution_dir}{filename}", 'w') as file:
         writer = csv.writer(file)
 
@@ -265,7 +254,6 @@ def write_solution_to_csv(routes: list[Route],
 
         score = calculate_score(routes, map)
         writer.writerow(["score", f"{score}"])
-
 
 def read_solution_from_csv(filename: str, 
                            map="Holland", 
@@ -314,13 +302,9 @@ def read_solution_from_csv(filename: str,
         raise ValueError("Invalid file_path argument, choose 'default',"
                          " 'for_manim' or 'custom_file_path'")
 
-
     # Add .csv extension if not present
     if not filename.endswith(".csv"):
         filename += ".csv"
-
-
-
 
     # Initialize the RailNL object once
     rail_network = RailNL(map)
@@ -343,7 +327,6 @@ def read_solution_from_csv(filename: str,
                 solution.append(route)
     
     return solution
-
 
 def calculate_p_value(sample1: "np.ndarray[float]", sample2: "np.ndarray[float]"
                       , return_type: str = "p_value_only") -> float:
@@ -374,7 +357,6 @@ def calculate_p_value(sample1: "np.ndarray[float]", sample2: "np.ndarray[float]"
         return result_as_object.pvalue < 0.05
     else:
         raise ValueError("Invalid return_type argument, choose 'p_value_only', 'object' or 'significant'.")
-
 
 def plot_scores(sample1: "np.ndarray[float]", 
                       sample2: "np.ndarray[float]" = None, 
@@ -416,7 +398,6 @@ def plot_scores(sample1: "np.ndarray[float]",
     provided, user-provided `title` is used or else a default name with 
     timestamp.
     
-
     Plot settings:
     - title: title of the plot, also used as filename if saved to pdf.
     When not provided, a default name with timestamp is used.
@@ -435,7 +416,6 @@ def plot_scores(sample1: "np.ndarray[float]",
     # Settings for plot
     color_palette = ("lightblue", "lightgrey", "lightsalmon", "lightgreen")
     p9.options.figure_size = (9, 5) # overwritten for single sample
-
     
     # Complex decision tree to determine filename and title
     # See docs for more info
@@ -461,7 +441,6 @@ def plot_scores(sample1: "np.ndarray[float]",
     # Add .pdf extension if not present
     if not filename.endswith(".pdf"):
         filename += ".pdf"
-    
 
     # Ensure correct legend labels
     # If provided, check for correct amount of labels
@@ -479,7 +458,6 @@ def plot_scores(sample1: "np.ndarray[float]",
                                                     sample2 is not None, 
                                                     sample3 is not None, 
                                                     sample4 is not None])]
-
         
     if xlim is None:
         lower_bound_xlim = min(sample1)
@@ -579,7 +557,6 @@ def plot_scores(sample1: "np.ndarray[float]",
                               position = "identity", color = "darkgrey")    
         )
     
-    
     # Add labels, title, theme and limits
     # The same for all plots
     plot += p9.xlim(xlim)
@@ -595,8 +572,6 @@ def plot_scores(sample1: "np.ndarray[float]",
                     subtitle= f"Runs = {len(sample1)}", 
                     y = "Aantal waarnemingen")
 
-
-
     # Save to pdf if specified
     if save_to_pdf:
         if plot_dir is None:
@@ -608,7 +583,6 @@ def plot_scores(sample1: "np.ndarray[float]",
     if preview:
         # Show the plot
         plot.show()
-
 
 def plot_autorun_hillclimber(project_name: str | None = None,
                              use_aggregated: bool = False, 
@@ -674,7 +648,6 @@ def plot_autorun_hillclimber(project_name: str | None = None,
         log_file_dir = f"parent/code/algorithms/autorun_hillclimber/{project_name}"
         log_file_path = f"{log_file_dir}/log.csv"
     
-
     # If use_aggregated is False, create aggregated log data first
     if not use_aggregated:
         print("Reading raw CSV log data...")
@@ -708,7 +681,6 @@ def plot_autorun_hillclimber(project_name: str | None = None,
 
         print("Melting of aggregated data successful. Saved to log_aggregated.csv.")
         
-
     # If use_aggregated is True, read the aggregated log data
     else:
         print("Reading aggregated CSV log data...")
@@ -719,9 +691,6 @@ def plot_autorun_hillclimber(project_name: str | None = None,
                              index_col = 0)
 
         print("Read-in of aggregated CSV log data successful.")
-
-
-
 
     print("Creating plot...")
 

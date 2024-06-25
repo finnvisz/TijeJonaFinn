@@ -1,11 +1,11 @@
 from parent.code.experiments.statistics import read_solution_from_csv
 from parent.code.algorithms.score import calculate_score
-from parent.code.visualisation.base_map import BaseScene
+from parent.code.visualisation.map_visualisation import BaseScene
 
 import numpy as np
 import manim as m
 
-class route_visualisation_Scene(BaseScene):
+class RouteVisualisationScene(BaseScene):
     """Show trainroutes on map."""
 
     def setup(self) -> None:
@@ -18,13 +18,11 @@ class route_visualisation_Scene(BaseScene):
 
         # Create dictionary to save colors used on lines
         self.line_colors_dict: dict[m.Line, list] = {}
-        self.colors = [m.PURE_RED, 
-                       m.PURE_GREEN, 
-                       m.PURE_BLUE, 
-                       m.YELLOW, 
-                       m.PURPLE, 
-                       m.ORANGE, 
-                       m.PINK]
+        self.colors = [m.PURE_RED, m.RED_A, m.PURE_GREEN, m.GREEN_A,
+                       m.PURE_BLUE, m.BLUE_A, m.YELLOW, m.YELLOW_A,
+                       m.PURPLE, m.PURPLE_A, m.ORANGE, m.PINK,
+                       m.TEAL, m.TEAL_A, m.GRAY, m.GRAY_A,
+                       m.GOLD, m.GOLD_A, m.MAROON, m.MAROON_A]
 
     # Make train to ride tracks
     def setup_train(self, dot_start: m.Dot) -> None:
@@ -32,7 +30,7 @@ class route_visualisation_Scene(BaseScene):
 
     # Run algorithm here
     def run_algorithm(self) -> None:
-        self.output = read_solution_from_csv("../../algorithms/autorun_hillclimber/maandagnacht_Nationaal_Jona/solutions/Nationaal_6592_HC", file_path = "for_manim")
+        self.output = read_solution_from_csv(self.filepath, file_path = "for_manim", map = self.map)
         
         # Save number of routes for later reference
         self.n_routes = len(self.output)
@@ -129,7 +127,7 @@ class route_visualisation_Scene(BaseScene):
 
             # Create new segment linepiece
             segment = m.Line(start = starting_point, end = ending_point, 
-                           color = colors[i], stroke_width = 0.75)
+                           color = colors[i], stroke_width = self.line_width)
 
             # Add segment and set ending point as new starting
             new_line.add(segment)
@@ -142,12 +140,10 @@ class route_visualisation_Scene(BaseScene):
         return True
 
     def construct(self):
-
-        self.setup_2()
         self.add(self.dots, self.connections, self.connection_labels)
         
-        label = m.Text(f"RailNL - {self.mapname}")
-        score = m.Text(f"Score = {calculate_score(self.output, self.mapname)}")
+        label = m.Text(f"RailNL - {self.map}")
+        score = m.Text(f"Score = {calculate_score(self.output, self.map)}")
 
         position = self.camera.frame.get_center()
         height = self.camera.frame.get_height()
@@ -156,8 +152,8 @@ class route_visualisation_Scene(BaseScene):
         label.move_to(position)
         score.move_to(position)
 
-        label.scale(0.05)
-        score.scale(0.05)
+        label.scale(self.label_scale)
+        score.scale(self.label_scale)
 
         label.shift(m.LEFT * width * 0.25 - m.UP * height * 0.25)
         score.shift(m.LEFT * width * 0.25 - m.UP * height * 0.3)
