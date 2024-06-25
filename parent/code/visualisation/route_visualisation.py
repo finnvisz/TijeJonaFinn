@@ -1,4 +1,4 @@
-from parent.code.helpers.csv import read_solution_from_csv
+from parent.code.helpers.csv_helpers import read_solution_from_csv
 from parent.code.helpers.score import calculate_score
 from parent.code.visualisation.map_visualisation import BaseScene
 

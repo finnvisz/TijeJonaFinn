@@ -7,7 +7,7 @@ from parent.code.algorithms.random_greedy import Random_Greedy
 from parent.code.helpers.score import calculate_score
 from parent.code.classes.railnl import RailNL
 from parent.code.classes.route import Route
-from parent.code.helpers.csv import append_scores_to_csv, write_solution_to_csv, read_solution_from_csv
+from parent.code.helpers.csv_helpers import append_scores_to_csv, write_solution_to_csv, read_solution_from_csv
 from parent.code.helpers.tot_con_used import get_total_connections_used
 
 class Hillclimber(Algorithm):

@@ -6,7 +6,7 @@ import numpy as np
 from datetime import datetime
 
 # Internal imports
-from parent.code.helpers.csv import read_scores_from_csv
+from parent.code.helpers.csv_helpers import read_scores_from_csv
 
 
 # Default directory for all functions in this file, can be changed if needed
