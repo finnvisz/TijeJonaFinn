@@ -62,4 +62,3 @@ class Experiment:
 
         # And return the scores
         return self.scores
-

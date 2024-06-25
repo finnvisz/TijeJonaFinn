@@ -261,7 +261,7 @@ def write_solution_to_csv(routes: list[Route],
         writer.writerow(["train", "stations"])
 
         for i in range(len(routes)):
-            writer.writerow([f"train_{i+1}", routes[i].stations_list()])
+            writer.writerow([f"train_{i+1}", routes[i].stations_string()])
 
         score = calculate_score(routes, map)
         writer.writerow(["score", f"{score}"])
@@ -376,7 +376,7 @@ def calculate_p_value(sample1: "np.ndarray[float]", sample2: "np.ndarray[float]"
         raise ValueError("Invalid return_type argument, choose 'p_value_only', 'object' or 'significant'.")
 
 
-def plot_scores_fancy(sample1: "np.ndarray[float]", 
+def plot_scores(sample1: "np.ndarray[float]", 
                       sample2: "np.ndarray[float]" = None, 
                       sample3: "np.ndarray[float]" = None, 
                       sample4: "np.ndarray[float]" = None, 
@@ -401,7 +401,7 @@ def plot_scores_fancy(sample1: "np.ndarray[float]",
     - Post: histogram is plotted (default: only preview, save to pdf also possible).
 
     Example usage:
-    `plot_scores_fancy(sample1, sample2,
+    `plot_scores(sample1, sample2,
     title = "Condition 1 vs Condition 2", 
     legend_labels = ("Condition 1", "Condition 2"))`
 
@@ -821,7 +821,7 @@ def plot_endscores_autorun_hillclimber(project_name: str,
         title = f"Hillclimber '{project_name}': verdeling van eindscores"
 
     # Plot the end_scores
-    plot_scores_fancy(end_scores, 
+    plot_scores(end_scores, 
                       title = title, 
                       binwidth=10, 
                       xlim=(min(end_scores), max(end_scores)), 

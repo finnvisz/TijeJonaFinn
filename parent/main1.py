@@ -22,7 +22,7 @@ random_algorithm_with_heuristic = Experiment("Holland").run_experiment(1000,
 
 # And plot the results (plot should open in pop-up window,
 # but is also saved as pdf to parent/code/experiments/plots)
-plot_scores_fancy(random_algorithm_results, 
+plot_scores(random_algorithm_results, 
                   greedy_algorithm_results,
                   random_algorithm_with_heuristic,
                   
