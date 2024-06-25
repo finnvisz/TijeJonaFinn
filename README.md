@@ -125,6 +125,42 @@ Voor meer details, raadpleeg de documentatie en het commentaar binnen de klasse-
 
 
 ## Experiments
+In de map experimetns zitten drie python bestanden. 
+### Experiment
+Dit is een klasse. Gegeven een algoritme en de kaart ("Holland" of "Nationaal) kan je een algoritme een aantal keer runnen. Elke run berekent het de score van de lijnvoering. Daarna berekent het meteen de gemiddelde score en geeft het een lijst met alle scores aan je terug.
+
+### Starting bins
+Ook dit is een klasse. De Sort_Starting klasse is ontworpen om een verzameling stations te sorteren op basis van hun connectiviteit. Deze klasse maakt gebruik van combinaties van stations en verdeelt deze in bins (bakken) afhankelijk van hun connectiviteitsgraad.
+
+### Statistics
+Hier wordt het echt leuk. Dit bestand bevat een verzameling functies voor het verwerken, opslaan, lezen en visualiseren van scores en oplossingen gegenereerd door verschillende algoritmen. Hier volgt een korte uitleg van de belangrijkste functies:
+
+1. write_scores_to_csv
+Schrijft een numpy array met scores naar een CSV-bestand.
+
+2. read_scores_from_csv
+Leest scores van een CSV-bestand en retourneert deze als een numpy array.
+
+3. append_scores_to_csv
+Voegt een numpy array met scores toe aan een bestaand CSV-bestand als een nieuwe kolom.
+
+4. append_single_score_to_csv
+Voegt een enkele score toe aan een bestaand CSV-bestand als een nieuwe rij.
+
+5. write_solution_to_csv
+Schrijft een lijst van Route-objecten naar een CSV-bestand.
+
+6. read_solution_from_csv
+Leest een oplossing voor het RailNL-probleem van een CSV-bestand en geeft een lijst van Route-objecten.
+
+7. calculate_p_value
+Berekent de p-waarde om te bepalen of het verschil tussen twee sets scores significant is.
+
+8. plot_scores
+Maakt een histogram van de scores van 1 tot 4 samples.
+
+9. plot_autorun_hillclimber
+Maakt een plot om een autorun_hillclimber logbestand samen te vatten.
 
 ## Visualisatie
 
