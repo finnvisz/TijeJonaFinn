@@ -2,12 +2,20 @@ import numpy as np
 import pandas as pd
 import os
 import shutil
-from datetime import datetime
 
 def combine_projects(project_names: tuple[str]):
     """
-    Combine log files from multiple projects into a single file. Useful 
-    when you ran the same project multiple times in parallel.
+    Combine multiple projects into one (the first project). Useful when
+    you ran the same project multiple times in parallel.
+
+    - Pre: Projects in `project_names` all exist, with solutions, log
+      file
+    and end_scores file.
+
+    - Post: Projects are combined into a the first project. Log files are
+    combined, end_scores files are combined, and solution directories are
+    combined. Original files in first project are renamed to indicate
+    they were combined.
 
     Args:
 
@@ -30,12 +38,12 @@ def combine_projects(project_names: tuple[str]):
 
     print(f"\nCombining projects complete.\n")
 
-
 def combine_logfiles(project_names: tuple[str], 
                      root_dir: str = "parent/code/autorun_hillclimber"
                      ) -> None:
     """
-    Combine log files from multiple projects into a single file. Subfunction of `combine_projects`.
+    Combine log files from multiple projects into a single file.
+    Subfunction of `combine_projects`.
     """
 
     assert len(project_names) > 1, "Need at least two projects to combine."
@@ -77,7 +85,6 @@ def combine_logfiles(project_names: tuple[str],
 
     print(f"Combined log file has {df_log_combined.shape[1]} columns.")
 
-
 def combine_endscores(project_names: tuple[str], 
                       root_dir: str = "parent/code/autorun_hillclimber"
                       ) -> None:
@@ -114,13 +121,12 @@ def combine_endscores(project_names: tuple[str],
 
     print(f"Combined end_scores file has {end_scores_combined.size} rows.")
 
-
 def combine_solution_directories(project_names: tuple[str], 
                                  root_dir: str = "parent/code/autorun_hillclimber"
                                  ) -> None:
     """
-    Combine solution directories from multiple projects into a single directory.
-    Subfunction of `combine_projects`.
+    Combine solution directories from multiple projects into a single
+    directory. Subfunction of `combine_projects`.
     """
     assert len(project_names) > 1, "Need at least two projects to combine."
 
