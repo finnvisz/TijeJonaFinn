@@ -184,6 +184,15 @@ Voor meer details, raadpleeg de documentatie en het commentaar binnen de klasse-
 
 ## Autorun voor Hillclimber
 
+Deze functie is bewust zo simpel mogelijk gehouden. Het idee is dat Hillclimber al perfect is afgesteld, dus die details zijn allemaal niet toegankelijk vanuit de argumenten van autorun_hillclimber. Er zijn 4 argumenten:
+
+- 
+
+De functie run_hillclimber initialiseert een startstaat met het Random_Greedy algoritme, voert het Hillclimber algoritme uit en geeft de oplossing.
+
+De functie autorun_hillclimber voert het Hillclimber algoritme meerdere keren uit. Kies zelf het aantal runs en de projectnaam, geef ook mee welke kaart je gebruikt en of het toegestaan is bestaande projecten te overschrijven. Hij slaat de resultaten automatisch op in een projectmap met de projectnaam.
+Het schrijft de oplossing en score van een run naar een CSV-bestand onder het kopje solutions in je projectmap, en alle tussentijdse scores naar een CSV bestand log.csv in je projectmap. Zie het kopje helpers - plots voor wat je met dit bestand kunt doen.
+
 ## Experiments
 In de map experimetns zitten drie python bestanden. 
 
@@ -192,16 +201,6 @@ Dit is een klasse. Gegeven een algoritme en de kaart ("Holland" of "Nationaal) k
 
 ### Starting bins
 Ook dit is een klasse. De Sort_Starting klasse is ontworpen om een verzameling stations te sorteren op basis van hun connectiviteit. Deze klasse maakt gebruik van combinaties van stations en verdeelt deze in bins (bakken) afhankelijk van hun connectiviteitsgraad. Hiermee probeerden we verschillende startstations te vergelijken voor Random_Greedy, maar hier is uiteindelijk geen concrete heuristiek uitgekomen.
-
-
-## Autorun voor Hillclimber
-Deze functie is bewust zo simpel mogelijk gehouden. Het idee is dat Hillclimber al perfect is afgesteld, dus die details zijn allemaal niet toegankelijk vanuit de argumenten van autorun_hillclimber. Er zijn 4 argumenten:
-- ignore
-
-De functie run_hillclimber initialiseert een startstaat met het Random_Greedy algoritme, voert het Hillclimber algoritme uit en geeft de oplossing.
-
-De functie autorun_hillclimber voert het Hillclimber algoritme meerdere keren uit. Kies zelf het aantal runs en de projectnaam, geef ook mee welke kaart je gebruikt en of het toegestaan is bestaande projecten te overschrijven. Hij slaat de resultaten automatisch op in een projectmap met de projectnaam.
-Het schrijft de oplossing en score van een run naar een CSV-bestand onder het kopje solutions in je projectmap, en alle tussentijdse scores naar een CSV bestand log.csv in je projectmap. Zie het kopje helpers - plots voor wat je met dit bestand kunt doen.
 
 ## Helpers
 Hier wordt het echt leuk. Deze map bevat een verzameling functies voor het verwerken, opslaan, lezen en visualiseren van scores en oplossingen gegenereerd door verschillende algoritmen. Hier volgt een korte uitleg van de belangrijkste modules:
