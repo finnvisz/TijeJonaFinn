@@ -23,6 +23,9 @@ def run_hillclimber(maprange: str, project_dir: str, demo_mode: bool) -> list[Ro
 
         # Hillclimber parameters
         iterations = 450000
+        cap = 30000
+        improve_routes = True
+        original_connections_only = True
         
     elif maprange == "Nationaal":
         # Random_Greedy parameters
@@ -31,6 +34,9 @@ def run_hillclimber(maprange: str, project_dir: str, demo_mode: bool) -> list[Ro
         
         # Hillclimber parameters
         iterations = 600000
+        cap = 20000
+        improve_routes = True
+        original_connections_only = False
         
     # If demo mode is enabled, reduce the number of iterations drastically
     if demo_mode:
@@ -47,9 +53,9 @@ def run_hillclimber(maprange: str, project_dir: str, demo_mode: bool) -> list[Ro
     solution: list[Route] = hillclimber_alg.run(iterations = iterations,
                                 log_csv=f"{project_dir}/log.csv",
                                 simulated_annealing=True,
-                                cap = 20000,
-                                improve_routes = True,
-                                original_connections_only = False)
+                                cap = cap,
+                                improve_routes = improve_routes,
+                                original_connections_only = original_connections_only)
 
     return solution
 
