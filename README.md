@@ -83,8 +83,9 @@ betreffende kaart, en ten slotte een afbeelding van de volledige route op de kaa
 
 ### Requirements
 Vanaf hier kan men de weg alleen vervolgen na het succesvol installeren van Manim.
-Als het goed is heeft de lezer vanuit het requirements.txt bestand Manim succesvol weten te installeren. Echter, er zijn bijkomende dependencies, die
-per besturingssysteem verschillen. Deze moeten ook nog worden geïnstalleerd. 
+Als het goed is heeft de lezer vanuit het requirements.txt bestand Manim succesvol weten te installeren. 
+Echter, er zijn bijkomende dependencies, die per besturingssysteem verschillen. 
+Deze moeten ook nog worden geïnstalleerd. 
 De volgende link leidt je door de installatie van de dependencies 
 heen. Dit duurt niet lang, en is de moeite meer dan waard.
 
@@ -92,16 +93,19 @@ heen. Dit duurt niet lang, en is de moeite meer dan waard.
 https://docs.manim.community/en/stable/installation.html#
 ```
 
-**Run vervolgens het volgende script, waarin we manim de opdracht geven om je beste oplossing te visualiseren:**
+Na het succesvol installeren van alle dependencies kunnen we de visualisatie
+instellingen zetten met behulp van een klein script. Dit scriptje 
+overschrijft de manim settings met een kaart en een relatief pad 
+**vanaf de code folder** naar een oplossing als volgt.
 
 ```
-python3 set_manim_settings.py kaart relative_path_to_file/file.csv
+python3 set_manim_settings.py map relative_path/file.csv
 ```
 
 Daarna kun je direct één van de drie visualisaties aanroepen op de door jou
-ingestelde kaart en lijnvoering. Het makkelijkste is om de VSCode manim sideview
-extension te downloaden. Alternatief kun je het ook gemakkelijk vanaf de 
-commandline runnen als volgt. 
+ingestelde kaart en lijnvoering vanuit de visualisation directory. 
+Het makkelijkste is om de VSCode manim sideview extension te downloaden.
+Alternatief kun je het ook gemakkelijk vanaf de commandline runnen als volgt:
 
 ```
 manim -pql script_to_animate.py class_to_animate
@@ -109,7 +113,9 @@ manim -pql script_to_animate.py class_to_animate
 
 Run bijvoorbeeld het volgende script waarin we de route met de hoogst gevonden
 score uit het voorgaande experiment visualiseren. Om dit te laten werken moet
-het project nog mijn_eerste_project heten.
+het project nog steeds mijn_eerste_project heten.
+
+**Run nu het volgende script, waarin we manim de opdracht geven om je beste oplossing te visualiseren:**
 
 ```
 python3 parent/main3.py
