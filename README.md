@@ -227,47 +227,50 @@ Ook dit is een klasse. De Sort_Starting klasse is ontworpen om een verzameling s
 
 
 ## Autorun voor Hillclimber
-
+TODO (Jona)
 
 ## Helpers
 Deze map bevat een verzameling functies voor het verwerken, opslaan, lezen en visualiseren van zowel scores als oplossingen gegenereerd door verschillende algoritmen. Hier volgt een korte uitleg van de belangrijkste modules:
 
 ### autorun_hillclimber_helpers
+TODO (Jona)
 
 ### csv_helpers
 1. write_scores_to_csv
 Schrijft een numpy array met scores naar een CSV-bestand.
 
-1. read_scores_from_csv
+2. read_scores_from_csv
 Leest scores van een CSV-bestand en retourneert deze als een numpy array.
 
-1. append_scores_to_csv
+3. append_scores_to_csv
 Voegt een numpy array met scores toe aan een bestaand CSV-bestand als een nieuwe kolom.
 
-1. append_single_score_to_csv
+4. append_single_score_to_csv
 Voegt een enkele score toe aan een bestaand CSV-bestand als een nieuwe rij.
 
-1. write_solution_to_csv
+5. write_solution_to_csv
 Schrijft een lijst van Route-objecten naar een CSV-bestand.
 
-1. read_solution_from_csv
+6. read_solution_from_csv
 Leest een oplossing voor het RailNL-probleem van een CSV-bestand en geeft een lijst van Route-objecten.
 
 
 ### plots
-8. plot_scores
+1. plot_scores
 Maakt een histogram van de scores van 1 tot 4 samples.
 
-9. logplot_autorun_hillclimber
+2. logplot_autorun_hillclimber
 Maakt een plot om een autorun_hillclimber logbestand samen te vatten.
 
 ### score
+Berekent de score gegeven een lijst routes en en de kaartnaam. ("Holland" of "Nationaal")
 
 ### statistics
-10. calculate_p_value
+1. calculate_p_value
 Berekent de p-waarde om te bepalen of het verschil tussen twee sets scores significant is.
 
 ### tot_con_used
+Maakt, gegeven een lijst routes, een set met daarin alle connecties die gebruikt zijn. Hierin komen alle connecties maximaal één keer voor. Dus bijvoorbeeld als Alkmaar-Den Helder al in de set zit, komt Den Helder-Alkmaar er niet meer bij.
 
 ## Visualisatie
 
