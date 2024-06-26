@@ -189,7 +189,9 @@ Om het Hillclimber-algoritme zelf met de hand te runnen, volg je deze stappen:
 
 1. Zorg er eerst voor dat je een lijst routes hebt. Je kan deze óf zelf met de hand maken, óf het Random-Greedy algoritme eerst uitvoeren en daar de output van nemen (run):
 ```
-start_routes = Random_Greedy(maprange).run(
+from parent.code.algorithms.random_greedy import Random_Greedy
+
+start_routes = Random_Greedy("Nationaal").run(
                             starting_stations="fully_random",
                             final_number_of_routes = 20,
                             route_time_limit = 180)
@@ -198,6 +200,8 @@ start_routes = Random_Greedy(maprange).run(
 2. Initialiseer het Algoritme: Initialiseer het Hillclimber-object met een set startposities en de gewenste kaart ("Holland" of "Nationaal"). In dit geval Nationaal:
 
 ```
+from parent.code.algorithms.hillclimber import Hillclimber
+
 hillclimber = Hillclimber(start_position=start_routes, maprange="Nationaal")
 ```
 3. Voer het Hillclimber-algoritme uit voor een gespecificeerd aantal iteraties:
@@ -206,6 +210,8 @@ optimized_routes = hillclimber.run(iterations=1000)
 ```
 4. Sla de resultaten op in een CSV-bestand. Gebruik hiervoor de functie write_solution_to_csv en geef als eerste argument de routes, dus in dit geval optimized_routes, en als tweede argument de filename van je CSV-bestand (mag je zelf kiezen):
 ```
+from parent.code.helpers.csv_helpers import write_solution_to_csv
+
 write_solution_to_csv(optimized_routes, "optimized_routes.csv")
 ```
 
