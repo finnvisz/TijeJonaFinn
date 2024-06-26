@@ -9,11 +9,9 @@ import os
 # Internal imports
 from parent.code.helpers.csv_helpers import read_scores_from_csv
 
-
 # Default directory for all functions in this file, can be changed if needed
 # Don't delete! Used by all functions in this file.
 experiments_root_dir = "parent/code/experiments"
-
 
 def plot_scores(sample1: "np.ndarray[float]", 
                       sample2: "np.ndarray[float]" = None, 

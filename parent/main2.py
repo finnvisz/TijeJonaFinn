@@ -16,7 +16,8 @@ project_name = sys.argv[1]
 autorun_hillclimber(n_runs = 10, 
                     project_name = project_name, 
                     maprange = "Holland", 
-                    allow_overwrite = False
+                    allow_overwrite = True,
+                    demo_mode = True
                     )
 
 # Now that you have an autorun hillclimber project, you can get a

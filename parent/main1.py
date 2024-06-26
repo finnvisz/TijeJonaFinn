@@ -27,8 +27,7 @@ plot_scores(random_algorithm_results,
                   greedy_algorithm_results,
                   random_algorithm_with_heuristic,
                   
-                  title="Heuristics matter: Random vs Greedy algorithm", 
-                  legend_title= "Algorithm",
-                  legend_labels=("Random", "Greedy", "Random + heuristic"),
+                  title="Het belang van heuristieken: Random vs Greedy algoritme", 
+                  legend_title= "Algoritme",
+                  legend_labels=("Random", "Greedy", "Random + heuristiek"),
                   save_to_pdf = True)
-

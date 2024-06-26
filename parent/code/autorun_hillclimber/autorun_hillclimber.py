@@ -10,26 +10,52 @@ from parent.code.helpers.score import calculate_score
 # This function sets parameters for the start state and execution of the
 # Hillclimber algorithm. Feel free to adjust these parameters to your
 # liking.
-def run_hillclimber(maprange: str, project_dir: str) -> list[Route]:
+def run_hillclimber(maprange: str, project_dir: str, demo_mode: bool) -> list[Route]:
     """
     Set a start state, run the Hillclimber algorithm and return the
     solution.
     """
-    
+    # Set Hillclimber parameters based on maprange
+    if maprange == "Holland":
+        # Random_Greedy parameters
+        final_number_of_routes = 4
+        route_time_limit = [100, 120, 120, 120]
+
+        # Hillclimber parameters
+        iterations = 450000
+        cap = 30000
+        improve_routes = True
+        original_connections_only = True
+        
+    elif maprange == "Nationaal":
+        # Random_Greedy parameters
+        final_number_of_routes = (10, 11, 12)
+        route_time_limit = [180, 140, 160]
+        
+        # Hillclimber parameters
+        iterations = 600000
+        cap = 20000
+        improve_routes = True
+        original_connections_only = False
+        
+    # If demo mode is enabled, reduce the number of iterations drastically
+    if demo_mode:
+        iterations = 600
+
     # Set a start state based on our found heuristics
     start_state: list[Route] = Random_Greedy(maprange).run(
                     starting_stations="original_stations_only_hard",
-                    final_number_of_routes = (10, 11, 12),
-                    route_time_limit = [180, 140, 160])
+                    final_number_of_routes = final_number_of_routes,
+                    route_time_limit = route_time_limit)
 
     # Run the Hillclimber algorithm and save solution, also log progress
     hillclimber_alg = Hillclimber(start_state, maprange)
-    solution: list[Route] = hillclimber_alg.run(iterations = 600,
+    solution: list[Route] = hillclimber_alg.run(iterations = iterations,
                                 log_csv=f"{project_dir}/log.csv",
                                 simulated_annealing=True,
-                                cap = 60000,
-                                improve_routes = True,
-                                original_connections_only = False)
+                                cap = cap,
+                                improve_routes = improve_routes,
+                                original_connections_only = original_connections_only)
 
     return solution
 
@@ -37,7 +63,8 @@ def run_hillclimber(maprange: str, project_dir: str) -> list[Route]:
 def autorun_hillclimber(n_runs: int, 
                         project_name: str,
                         maprange: str = "Holland", 
-                        allow_overwrite: bool = False
+                        allow_overwrite: bool = False,
+                        demo_mode: bool = False
                         ):
     """
     Run the Hillclimber algorithm for a specified number of runs, and
@@ -46,12 +73,20 @@ def autorun_hillclimber(n_runs: int,
 
     Args:
         - n_runs (int): The number of runs to perform.
+        
         - project_name (str): The name of project to create / append to.
+        
         - maprange (str, optional): The map range to use ("Holland" or
           "Nationaal"). Defaults to "Holland".
+        
         - allow_overwrite (bool, optional): Whether to allow appending to
           an existing project directory (if `project_name` is already in
           use). Defaults to False.
+        
+        - demo_mode (bool, optional): Whether to run the Hillclimber
+            algorithm in demo mode (for testing purposes). If true, the
+            number of iterations per run is drastically reduced.
+            Defaults to False.
     """
 
     # Input check
@@ -87,7 +122,9 @@ def autorun_hillclimber(n_runs: int,
         try:
             
             # Run the Hillclimber algorithm
-            solution: list[Route] = run_hillclimber(maprange, project_dir)
+            solution: list[Route] = run_hillclimber(maprange, 
+                                                    project_dir, 
+                                                    demo_mode)
 
             # Write the produced solution to a csv file
             write_run_to_csv(solution, maprange, project_dir)
