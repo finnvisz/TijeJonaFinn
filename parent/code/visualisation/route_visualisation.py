@@ -101,21 +101,42 @@ class RouteVisualisationScene(BaseScene):
         # Save number of routes for later reference
         self.n_routes = len(self.output)
 
-    # Find dots associated to station name
     def correspondence(self, name_start: str, name_end: str) -> tuple:
-            
-            # Find corresponding station object 
-            station_start = self.name_station_dict[name_start]
-            station_end = self.name_station_dict[name_end]
+        """
+        Find dot objects corresponding with names in a connection.
 
-            # Find corresponding dot object
-            dot_start = self.station_dot_dict[station_start]
-            dot_end = self.station_dot_dict[station_end]
+        Pre
+        ---
+        Two station names as strings for which a connection exist within
+        self.map.
 
-            return (dot_start, dot_end)
+        Post
+        ---
+        Returns tuple of two dot objects representing input stations.
+        """
+
+        # Find corresponding station object 
+        station_start = self.name_station_dict[name_start]
+        station_end = self.name_station_dict[name_end]
+
+        # Find corresponding dot object
+        dot_start = self.station_dot_dict[station_start]
+        dot_end = self.station_dot_dict[station_end]
+
+        return (dot_start, dot_end)
     
-    # Find line associated with connection    
     def find_connection(self, dot_start: m.Dot, dot_end: m.Dot, time: int) -> m.Line:
+        """
+        Find the connection line associated with two dot objects.
+
+        Pre
+        ---
+        Starting dot object, ending dot object and associated connection time label.
+
+        Post
+        ---
+        Returns line object representing connection between stations.
+        """
 
         # Check if connection exists
         if (dot_start, dot_end, time) in self.connection_line_dict:
@@ -127,8 +148,15 @@ class RouteVisualisationScene(BaseScene):
 
         return line
 
-    # Main method calling upon other methods to color route and move train
     def color_route(self, route: list, color: m.manim_colors) -> None:
+        """
+        Main route coloring method calling upon other class methods to color
+        all train routes in self.output.
+
+        Pre
+        ---
+        Route input is a list of route objects.  
+        """ 
 
         start_route = 0
         for connection in route:
@@ -226,7 +254,7 @@ class RouteVisualisationScene(BaseScene):
         self.add(score)
 
     def construct(self):
-        self.add(self.dots, self.connections, self.connection_labels)
+        self.add(self.dots, self.connections)
         self.place_labels()
         
         if self.is_video():
