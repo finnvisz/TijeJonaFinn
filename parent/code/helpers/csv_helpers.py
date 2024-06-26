@@ -219,10 +219,10 @@ def write_solution_to_csv(routes: list[Route],
     to required .csv file.
     
     - Pre: `routes` is a list of route objects, `filename` contains 
-    filename to write to in `experiments/route_csv` (unless
+    filename to write to in `experiments/solutions` (unless
     `custom_file_path`; extension is optional).
     
-    - Post: csv-file of given format is located in `route_csv` folder
+    - Post: csv-file of given format is located in `solutions` folder
       (unless `custom_file_path`).
 
     Args:
@@ -241,7 +241,7 @@ def write_solution_to_csv(routes: list[Route],
     if custom_file_path:
         csv_solution_dir = ""
     else:
-        csv_solution_dir = f"{experiments_root_dir}/route_csv/"
+        csv_solution_dir = f"{experiments_root_dir}/solutions/"
     
     # Add .csv extension if not present
     if not filename.endswith(".csv"):
@@ -291,9 +291,9 @@ def read_solution_from_csv(filename: str,
     - file_path: choose between "default", "for_manim" or 
     "custom_file_path":
     
-        - default: read from `experiments/route_csv/`
+        - default: read from `experiments/solutions/`
     
-        - for_manim: read from `experiments/route_csv/` with relative
+        - for_manim: read from `experiments/solutions/` with relative
           path from manim script
         
         - custom_file_path: read from root of git repository, so user can
@@ -302,10 +302,10 @@ def read_solution_from_csv(filename: str,
     
     # Set directory for reading the CSV file:
     
-    # Default directory is experiments/route_csv/
+    # Default directory is experiments/solutions/
     if file_path == "default":
         global experiments_root_dir
-        csv_results_dir = f"{experiments_root_dir}/route_csv/"
+        csv_results_dir = f"{experiments_root_dir}/solutions/"
 
     # Manim needs relative path from it's script to the default directory
     elif file_path == "for_manim":
