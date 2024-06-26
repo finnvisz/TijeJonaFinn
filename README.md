@@ -38,6 +38,8 @@ conda install --file requirements.txt
 
 # Aan de slag
 
+> Blijf in de rootmap van het project. Als je de onderstaande voorbeelden van daaruit runt kunnen we garanderen dat alles werkt en is het een kwestie van knippen, plakken en runnen. Bovendien verwacht ongeveer elke functie in ons project dat je momenteel in de rootmap bent.
+
 We nemen je mee langs de hoogtepunten van ons project aan de hand van drie onderdelen:
 
 ## 1. Experimentatie
