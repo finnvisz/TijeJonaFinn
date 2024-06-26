@@ -1,13 +1,14 @@
+# External imports:
 import random
 import copy
 import matplotlib.pyplot as plt
 
+# Internal imports:
 from parent.code.algorithms.algorithm import Algorithm
-from parent.code.algorithms.random_greedy import Random_Greedy
 from parent.code.helpers.score import calculate_score
 from parent.code.classes.railnl import RailNL
 from parent.code.classes.route import Route
-from parent.code.helpers.csv_helpers import append_scores_to_csv, write_solution_to_csv, read_solution_from_csv
+from parent.code.helpers.csv_helpers import append_scores_to_csv
 from parent.code.helpers.tot_con_used import get_total_connections_used
 
 class Hillclimber(Algorithm):
@@ -48,8 +49,7 @@ class Hillclimber(Algorithm):
         self.routes: list[Route] = start_position
         self.scores = []
         self.maprange = self.load.mapname
-        self.best_score = calculate_score(self.routes, self.maprange)
-        
+        self.best_score = calculate_score(self.routes, self.maprange) 
 
     def generate_random_route(self) -> Route:
         """Generate a random route within the rail network.
@@ -99,8 +99,7 @@ class Hillclimber(Algorithm):
                 current_station = connection  # Move to the next station
             else:
                 break
-        return route
-        
+        return route     
 
     def add_random_route(self, routes: list[Route]) -> list[Route]:
         """Add a random route to the list of routes.
@@ -117,7 +116,6 @@ class Hillclimber(Algorithm):
         # add it to the list of routes
         new_routes.append(new_route)
         return new_routes
-
 
     def remove_random_route(self, routes: list[Route]) -> list[Route]:
         """Remove a random route from the list of routes.
@@ -185,7 +183,6 @@ class Hillclimber(Algorithm):
                 updated_routes.append(route)
 
         return updated_routes
-
 
     def run(self, iterations: int, 
             simulated_annealing: bool = False, 
@@ -279,6 +276,7 @@ class Hillclimber(Algorithm):
                 count_no_change += 1
 
             if self.cap < self.iterations:
+                # if there has been no change for too many iterations, stop
                 if count_no_change == self.cap:
                     print("Too long no change")
                     break
