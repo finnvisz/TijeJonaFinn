@@ -83,16 +83,16 @@ class BaseScene(MovingCameraScene):
 
         # Set scales for different maps
         if self.map == "Holland":
-            self.radius = 0.0075
-            self.label_scale = 0.04
-            self.line_width = 0.7
+            self.radius = 0.01
+            self.label_scale = 0.06
+            self.line_width = 0.8
             self.time_label_shift = 0.015
             self.zoom_scale = 1.1
 
         elif self.map == "Nationaal":
-            self.radius = 0.015
-            self.label_scale = 0.07
-            self.line_width = 1.2
+            self.radius = 0.02
+            self.label_scale = 0.15
+            self.line_width = 1.3
             self.time_label_shift = 0.03
             self.zoom_scale = 0.8
 

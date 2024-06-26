@@ -97,7 +97,7 @@ class RouteVisualisationScene(BaseScene):
         self.output 
         """
 
-        self.output = read_solution_from_csv(filename = self.filepath, file_path = "custom_file_path", map = self.map)
+        self.output = read_solution_from_csv(filename = self.filepath, file_path = "for_manim", map = self.map)
         
         # Save number of routes for later reference
         self.n_routes = len(self.output)
@@ -290,7 +290,7 @@ class RouteVisualisationScene(BaseScene):
 
         # Create a descriptive and score label from map and output.
         label = m.Text(f"RailNL - {self.map}")
-        score = m.Text(f"Score = {calculate_score(self.output, self.map)}")
+        score = m.Text(f"Score = {int(calculate_score(self.output, self.map))}")
 
         # Get camera size to place labels
         position = self.camera.frame.get_center()
