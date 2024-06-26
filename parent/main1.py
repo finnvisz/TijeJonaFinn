@@ -9,17 +9,17 @@ from parent.code.helpers.plots import plot_scores
 # and a random algorithm + heuristic to see how much difference a 
 # heuristic can make.
 print("Running experiment 1: Random algorithm")
-random_algorithm_results = Experiment("Holland").run_experiment(1000, 
-                                                                next_connection_choice = "random")
+random_algorithm_results = Experiment().run_experiment(1000, 
+                                        next_connection_choice = "random")
 
 print("Running experiment 2: Greedy algorithm")
-greedy_algorithm_results = Experiment("Holland").run_experiment(1000, 
-                                                                next_connection_choice = "shortest")
+greedy_algorithm_results = Experiment().run_experiment(1000, 
+                                        next_connection_choice = "shortest")
 
 print("Running experiment 3: Random algorithm with original starting stations heuristic")
-random_algorithm_with_heuristic = Experiment("Holland").run_experiment(1000, 
-                                                                       next_connection_choice = "random", 
-                                                                       starting_stations = "original_stations_only_hard")
+random_algorithm_with_heuristic = Experiment().run_experiment(1000, 
+                                                            next_connection_choice = "random", 
+                                                            starting_stations = "original_stations_only_hard")
 
 # And plot the results (plot should open in pop-up window,
 # but is also saved as pdf to parent/code/experiments/plots)

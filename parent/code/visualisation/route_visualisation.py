@@ -60,11 +60,12 @@ class RouteVisualisationScene(BaseScene):
 
         # Create dictionary to save colors used on lines
         self.line_colors_dict: dict[m.Line, list] = {}
-        self.colors = [m.PURE_RED, m.RED_A, m.PURE_GREEN, m.GREEN_A,
-                       m.PURE_BLUE, m.BLUE_A, m.YELLOW, m.YELLOW_A,
-                       m.PURPLE, m.PURPLE_A, m.ORANGE, m.PINK,
-                       m.TEAL, m.TEAL_A, m.GRAY, m.GRAY_A,
-                       m.GOLD, m.GOLD_A, m.MAROON, m.MAROON_A]
+        self.colors = [m.PURE_RED, m.RED_A, m.PURE_GREEN, m.GREEN_E,
+                       m.PURE_BLUE, m.BLUE_E, m.YELLOW, m.GRAY,
+                       m.PURPLE, m.ORANGE, m.PINK, m.DARK_BROWN,
+                       m.LOGO_GREEN, m.MAROON_A, m.GRAY_BROWN,
+                       m.YELLOW_D, m.TEAL_E, m.PURPLE_E, 
+                       m.BLUE_E, m.TEAL_A]
 
     def setup_train(self, dot_start: m.Dot) -> None:
         """
