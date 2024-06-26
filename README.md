@@ -209,25 +209,25 @@ write_solution_to_csv(optimized_routes, "optimized_routes.csv")
 ```
 
 Er zijn parameters voor de hillclimber die je kan veranderen in de run-methode:
-1. simulated-annealing: De run-methode heeft een optie voor simulated annealing, waarmee het algoritme soms slechtere scores accepteert om lokale optima te vermijden. Deze staat standaard uit.
-2. improve_routes: Als de parameter improve_routes aan staat, verwijdert hij elke iteratie overbodige verbindingen binnen een route. Deze staat standaard aan.
-3. only_original: De parameter original_connections_only zorgt ervoor dat een route nooit dezelfde verbinding meer dan één keer gebruikt. Deze staat standaard uit.
+1. `simulated-annealing`: De run-methode heeft een optie voor simulated annealing, waarmee het algoritme soms slechtere scores accepteert om lokale optima te vermijden. Deze staat standaard uit.
+2. `improve_routes`: Als de parameter improve_routes aan staat, verwijdert hij elke iteratie overbodige verbindingen binnen een route. Deze staat standaard aan.
+3. `only_original`: De parameter original_connections_only zorgt ervoor dat een route nooit dezelfde verbinding meer dan één keer gebruikt. Deze staat standaard uit.
 
-Voor meer details, raadpleeg de documentatie en het commentaar binnen de klasse-definitie.
+> Voor meer details, raadpleeg de documentatie en het commentaar binnen de klasse-definitie.
 
 ## Autorun voor Hillclimber
 
 ### In het kort
-Deze functie is bewust zo simpel mogelijk gehouden. Het idee is dat Hillclimber al perfect is afgesteld, dus de instellingen van het algoritme zelf zijn allemaal niet toegankelijk voor de gebruiker van autorun_hillclimber. In de basis werkt het zo:
+Deze functie is bewust zo simpel mogelijk gehouden. Het idee is dat Hillclimber al perfect is afgesteld, dus de instellingen van het algoritme zelf zijn niet toegankelijk voor de gebruiker van autorun_hillclimber. In de basis werkt het zo:
 
-De gebruiker kiest een aantal runs, projectnaam en map. Vervolgens maakt autorun_hillclimber een projectmap in `parent/code/autorun_hillclimber`, waar alle gegenereerde oplossingen worden opgeslagen. De functie runt het Hillclimber algoritme zo vaak als opgegeven en bewaart zoveel mogelijk data voor latere analyse. Jij kan even wat anders gaan doen.
+De gebruiker kiest een hoeveelheid runs, een projectnaam en kaart ("Holland" of "Nationaal"). Vervolgens maakt autorun_hillclimber een projectmap in `parent/code/autorun_hillclimber`, waar alle gegenereerde oplossingen worden opgeslagen. De functie runt het Hillclimber algoritme zo vaak als opgegeven en bewaart alle data voor latere analyse. Jij kan even wat anders gaan doen.
 
 ### Argumenten
 Er zijn 4 argumenten:
 
 - `n_runs`: Het aantal keer dat Hillclimber moet worden gerunt.
 - `project_name`: Projectnaam om gegenereerde data in op te slaan.
-- `maprange`: Kaart om het algoritme op te runnen ("Holland" of "Nationaal"). Default is "Holland"
+- `maprange`: Kaart om het algoritme op te runnen ("Holland" of "Nationaal"). De default is "Holland"
 - `allow_overwrite`: Standaard is het niet toegestaan om een projectnaam te kiezen die al in gebruik is, om het overschrijven / mixen van resultaten te voorkomen. Als je `allow_overwrite` op `True` zet is het kiezen van een bestaande projectnaam wel toegestaan, en worden nieuwe resultaten toegevoegd aan dit bestaande project.
 
 ### Over de data
@@ -238,16 +238,43 @@ Er worden 3 dingen bijgehouden:
 - Er wordt een logbestand bijgehouden, waar elke kolom een run is en elke rij een iteratie binnen die run. 
 - Eindscores worden ook in een apart csv-bestand opgeslagen. 
 
-Het logbestand en de eindscores kunnen worden geplot met speciale functies (`logplot_autorun_hillclimber`, `plot_endscores_autorun_hillclimber`). Deze functies worden in meer detail beschreven in **Helpers -> plots**, verderop in deze README. Oplossingen kunnen worden gevisualiseerd met manim.
+Oplossingen kunnen later weer gelezen worden uit CSV en worden gevisualiseerd met manim (zie **Visualisatie**). Het logbestand en de eindscores kunnen worden geplot met speciale functies (`logplot_autorun_hillclimber`, `plot_endscores_autorun_hillclimber`). Deze functies worden in meer detail beschreven in **Helpers -> plots**, verderop in deze README. 
 
  ### Extra: zelf sleutelen aan het algoritme
- Wil je wel sleutelen aan de versie van Hillclimber die gebruikt wordt door autorun_hillclimber? Ga dan naar `parent/code/autorun_hillclimber/autorun_hillclimber.py`. Helemaal bovenaan staat de subfunctie `run_hillclimber`. Hier initialiseert het Random_Greedy algoritme een startstaat met onze parameters, die wordt doorgegeven aan Hillclimber. Vervolgens wordt Hillclimber zelf gerunt met door ons ingestelde parameters. Als je wil sleutelen onder de motorkap kan dat in deze subfunctie.
+ Vertrouw je ons niet op onze blauwe ogen en wil je wel zelf sleutelen aan de versie van Hillclimber die gebruikt wordt door autorun_hillclimber? Ga dan naar `parent/code/autorun_hillclimber/autorun_hillclimber.py`. Helemaal bovenaan staat de subfunctie `run_hillclimber`. Hier initialiseert het Random_Greedy algoritme een startstaat met onze parameters, die wordt doorgegeven aan Hillclimber. Vervolgens wordt Hillclimber zelf gerunt met door ons ingestelde parameters. Als je wil sleutelen onder de motorkap kan dat in deze subfunctie.
 
 ## Experiments
 In de map experiments zitten drie python bestanden. 
 
 ### Experiment
-Dit is een klasse. Gegeven een algoritme en de kaart ("Holland" of "Nationaal) kan je een algoritme een aantal keer runnen. Elke run berekent het de score van de lijnvoering. Daarna berekent het meteen de gemiddelde score en geeft het een lijst met alle scores aan je terug.
+Deze class is gemaakt om experimenten te runnen met het Random_Greedy algoritme. Gegeven een algoritme en kaart ("Holland" of "Nationaal") kan je een algoritme een aantal keer runnen. Elke run berekent het de score van de oplossing. Daarna geeft het een lijst met alle scores aan je terug, die je kunt opslaan naar **results** of meteen kunt plotten.
+
+#### Een voorbeeld:
+
+1. Initialiseer de Experiment class met de gewenste kaart
+```
+from parent.code.experiments.experiment import Experiment
+
+experiment = Experiment("Holland")
+```
+2. Run het Random_Greedy algoritme N keer met de opgegeven parameters (alles na argument 1 wordt doorgegeven naar Random_Greedy als kwargs)
+```
+results = experiment.run_experiment(1000, next_connection_choice = "random", starting_stations = "original_stations_only_hard")
+```
+3. Doe iets met je resultaten
+
+  - a. Sla op naar CSV (doelmap: **experiments/results**)
+```
+from parent.code.helpers.csv_helpers import write_scores_to_csv
+
+write_scores_to_csv(results, filename = "1000_mijn_eerste_experiment")
+```
+   - b. Plot resultaten meteen (doelmap: **experiments/plots**)
+```
+from parent.code.helpers.plots import plot_scores
+
+plot_scores(results, title = "1000_mijn_eerste_experiment", save_to_pdf = True)
+```
 
 ### Starting bins
 Ook dit is een klasse. De Sort_Starting klasse is ontworpen om een verzameling stations te sorteren op basis van hun connectiviteit. Deze klasse maakt gebruik van combinaties van stations en verdeelt deze in bins (bakken) afhankelijk van hun connectiviteitsgraad. Hiermee probeerden we verschillende startstations te vergelijken voor Random_Greedy, maar hier is uiteindelijk geen concrete heuristiek uitgekomen.
