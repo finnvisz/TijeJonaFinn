@@ -72,6 +72,8 @@ parent/code/autorun_hillclimber/mijn_eerste_project/
 
 Ook vind je hier een submap genaamd 'solutions'. Dit bevat de oplossing geproduceerd door elke run als een csv bestand. Neem eens een kijkje bij je project en zie hoe jouw beste oplossing eruit ziet!
 
+> Een CSV bestand spreekt waarschijnlijk niet echt tot de verbeelding. Ga daarom door naar stap 3, waar we je beste oplossing gaan visualiseren met manim.
+
 
 ## 3. Manim
 Alle visualisaties zijn gemaakt met de Mathematical Animation library Manim. 
@@ -81,47 +83,23 @@ betreffende kaart, en ten slotte een afbeelding van de volledige route op de kaa
 
 ### Requirements
 Vanaf hier kan men de weg alleen vervolgen na het succesvol installeren van Manim.
-Als het goed is heeft de lezer vanuit het requirements.txt bestand via bijvoorbeeld
-pip Manim succesvol weten te installeren. Echter, er zijn bijkomende dependencies, die
-per besturingssysteem verschillen. Deze moeten hier nog worden geinstalleerd. 
-Please bear with us, de volgende link leidt je door de installatie van de dependencies 
-heen. 
+Als het goed is heeft de lezer vanuit het requirements.txt bestand Manim succesvol weten te installeren. Echter, er zijn bijkomende dependencies, die
+per besturingssysteem verschillen. Deze moeten ook nog worden geïnstalleerd. 
+De volgende link leidt je door de installatie van de dependencies 
+heen. Dit duurt niet lang, en is de moeite meer dan waard.
 
 ```
 https://docs.manim.community/en/stable/installation.html#
 ```
 
-De visualisaties lezen vanuit het bestand visualisation_settings.csv. Dit 
-bestand bevat één regel tekst in de vorm: kaart,relatief_pad. De kaart is
-Holland of Nationaal, en het relatieve pad wordt gegeven vanaf de code folder 
-naar een csv output file van de vorm zoals vereist in de opdrachtomschrijving. 
-
-Na het creeëren van een output file door het runnen van een experiment, moet je 
-het script set_manim_settings.py aanroepen om visualisation_settings.csv te
-overschrijven met de juiste settings. Bijvoorbeeld als volgt:
+**Run vervolgens het volgende script, waarin we manim de opdracht geven om je beste oplossing te visualiseren:**
 
 ```
-python3 set_manim_settings.py kaart relative_path_to_file/file.csv
+python3 parent/main3.py mijn_eerste_project
 ```
 
-Daarna kun je direct één van de drie visualisaties aanroepen op de door jou
-ingestelde kaart en lijnvoering. Het makkelijkste is om de VSCode manim sideview
-extension te downloaden. Alternatief kun je het ook gemakkelijk vanaf de 
-commandline runnen als volgt. 
-
-```
-manim -pql script_to_animate.py class_to_animate
-```
-
-Run bijvoorbeeld het volgende script waarin we de route met de hoogst gevonden
-score uit het voorgaande experiment visualiseren.
-
-```
-python3 parent/main3.py
-```
-
-Alle media die op deze manier wordt gegenereerd kan zolang niet overschreven, 
-worden teruggevonden in de parent/code/visualisation/media folder.
+Alle media die op deze manier wordt gegenereerd kan 
+worden teruggevonden in de `parent/code/visualisation/media` folder. Let op: als je een nieuw filmpje genereert wordt de oude overschreven!
 
 # Structuur
 
@@ -330,25 +308,49 @@ Berekent een p-waarde om te bepalen of het verschil tussen twee sets scores sign
 
 ## Visualisatie
 
-### visualisation_settings
+De visualisaties lezen een opdracht vanuit het bestand visualisation_settings.csv. Dit 
+bestand bevat één regel tekst in de vorm: `kaart,relatief_pad`. De kaart is
+Holland of Nationaal, en het relatieve pad wordt gegeven vanaf de code folder 
+naar een oplossing in CSV formaat (`autorun_hillclimber` genereert zijn antwoorden automatisch in dit formaat; gebruik `write_solution_to_csv` om een oplossing naar CSV te schrijven in dit formaat). 
+
+Na het creeëren van een output file door het runnen van een experiment, moet je 
+het script set_manim_settings.py aanroepen om visualisation_settings.csv te
+overschrijven met de juiste settings. Bijvoorbeeld als volgt:
+
+```
+python3 parent/code/visualisation/set_manim_settings.py Holland relative_path_to_file/file.csv
+```
+
+Daarna kun je direct één van de drie visualisaties aanroepen op de door jou
+ingestelde kaart en lijnvoering. Het makkelijkste is om de VSCode manim sideview
+extension te downloaden. Alternatief kun je het ook gemakkelijk vanaf de 
+commandline runnen als volgt. 
+
+```
+manim -pql script_to_animate.py class_to_animate
+```
+
+### Modules
+
+#### visualisation_settings
 Dit is een miniscuul CSV bestand dat enkel een kaart (Holland of Nationaal)
 en een pad vanaf de code folder naar een bestand met een oplossing bevat. Dit CSV bestand bevat een lijnvoering geformat zoals door de opdracht
-op de proglab website gespecifiëerd. 
+op de proglab website gespecifiëerd.
 
-### set_manin_settings
+#### set_manin_settings
 Dit is een klein script om de `visualisation_settings` vanaf de command line
 te kunnen aanpassen na het runnen van een experiment.
 
-### map_visualisation
+#### map_visualisation
 
 Map visualisation is een manim Scene klasse en creëert een video preview 
 van de kaart gespecifiëerd in visualisation_settings.
 
-### route_visualisation
+#### route_visualisation
 Route visualisation is een manim Scene klasse en creëert een video visualisatie
 van een kaart met lijnvoering gespecifiëerd in visualisation_settings
 
-### route_visualisation_image
+#### route_visualisation_image
 Route visualisation image is ook een manim Scene klasse maar creëert een
 afbeelding van een kaart met lijnvoering gespecifiëerd in visualisation_settings.
 
