@@ -6,9 +6,51 @@ import numpy as np
 import manim as m
 
 class RouteVisualisationScene(BaseScene):
-    """Show trainroutes on map."""
+    """
+    A manim scene animating a collection of train routes on a given map.
+    Inherits all BaseScene attributes and methods.
+
+    Attributes
+    ---------
+    line_colors_dict: Association between connection lines and their colors.
+    colors: List of all possible colors used to form visualisation.
+    train: Dot object to visualise a train riding the track.
+    output: List of lists of route objects. 
+    n_routes: Amount of routes to color.
+
+    Methods
+    -------
+    setup: Defacto initializer. Called upon by Super().__init__().
+    setup_train: Method to instantiate dot object representing a train.
+    run_algorithm: Reads solution from csv file containing train routes.
+    correspondence: Find dot objects corresponding with names in a connection.
+    find_connection: Find the connection line associated with two dot objects.
+    color_route: Calls upon methods to color given route and moves train.
+    set_color: Colors route a color or calls upon set_multiple_colors.
+    set_multiple_colors: Colors line with multiple colors using line_colors_dict.
+    is_video: Method to infer whether image or video needs to be created.
+    place_labels: Places RailNL and score labels within scene.
+    construct: Main method called upon by Super.__init__().
+
+    Usage
+    -----
+    NOTE: Always check visualisation_settings.csv.
+    Use VScode manim sideview extension.
+    Alternatively run: manim -pql map_visualisation.py RouteVisualisationScene.
+    Running should return a video showing Holland or Nationaal train route network
+    visualisation dependend on visualisation_settings.csv.
+    """
 
     def setup(self) -> None:
+        """
+        Defacto initializer called upon by Super.__init__().
+
+        Post
+        ---
+        Inherits all attributes from BaseScene. Obtains collection of 
+        routes to visualise from run_algorithm. Instantiates line_colors_dict
+        and sets possible colors.
+        """
 
         # Inherit setup
         super().setup()
@@ -24,12 +66,36 @@ class RouteVisualisationScene(BaseScene):
                        m.TEAL, m.TEAL_A, m.GRAY, m.GRAY_A,
                        m.GOLD, m.GOLD_A, m.MAROON, m.MAROON_A]
 
-    # Make train to ride tracks
     def setup_train(self, dot_start: m.Dot) -> None:
+        """
+        Creates train dot object to ride track.
+
+        Pre
+        ---
+        Dot object corresponding to a station.
+
+        Post
+        ---
+        Sets self.train as dot placed upon station dot.
+        """
+
         self.train = m.Dot(point = dot_start.get_center(), radius = self.radius)
 
-    # Run algorithm here
     def run_algorithm(self) -> None:
+        """
+        Reads algorithm output from self.filepath.
+
+        Pre
+        ---
+        Self.filepath is obtained from visualisation_settings.csv in BaseScene 
+        class. This must be a relative path to a csv output file formatted 
+        as specified by read_solution_from_csv.
+
+        Post
+        ---
+        self.output 
+        """
+
         self.output = read_solution_from_csv(self.filepath, file_path = "for_manim", map = self.map)
         
         # Save number of routes for later reference
@@ -138,10 +204,8 @@ class RouteVisualisationScene(BaseScene):
 
     def is_video(self):
         return True
-
-    def construct(self):
-        self.add(self.dots, self.connections, self.connection_labels)
-        
+    
+    def place_labels(self):
         label = m.Text(f"RailNL - {self.map}")
         score = m.Text(f"Score = {calculate_score(self.output, self.map)}")
 
@@ -160,6 +224,10 @@ class RouteVisualisationScene(BaseScene):
 
         self.add(label)
         self.add(score)
+
+    def construct(self):
+        self.add(self.dots, self.connections, self.connection_labels)
+        self.place_labels()
         
         if self.is_video():
             self.wait(2)

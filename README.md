@@ -28,7 +28,7 @@ Om deze case beter te begrijpen zijn er twee "kaarten" waar een oplossing voor g
 
 Deze codebase is geschreven in Python 3.10.12. Om aan de slag te gaan moeten eerst twee commando's worden gerunt. Ga in je terminal naar de rootmap van ons project, en volg de volgende instructies:
 
-1. In requirements.txt staan alle benodigde packages om de code succesvol te runnen. Ook 'istalleer'je onze repository. Deze zijn gemakkelijk te installeren via pip met de volgende instructie:
+1. In requirements.txt staan alle benodigde packages om de code succesvol te runnen. Ook 'installeer'je onze repository. Deze zijn gemakkelijk te installeren via pip met de volgende instructie:
 
 ```
 pip install -r requirements.txt

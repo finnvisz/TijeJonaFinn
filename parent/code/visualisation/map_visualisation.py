@@ -28,7 +28,7 @@ class BaseScene(MovingCameraScene):
     dot_labels: Manim VGroup of station name dot labels.
     dot_labels_dict: Association between dot objects and their labels.
     connections: Manim VGroup of lines.
-    connection_line_dict: Association between connections and line objects.
+    connection_line_dict: Association between two dots in connection and line object.
     connection_labels: Manim VGroup of connection time labels.
     connection_labels_dict: Association between connections and time labels.
 
@@ -46,7 +46,9 @@ class BaseScene(MovingCameraScene):
     ----
     NOTE: Always check visualisation_settings.csv.
     Use VScode manim sideview extension.
-    Alternatively run: manim -pql map_visualisation.py BaseScene
+    Alternatively run: manim -pql map_visualisation.py BaseScene.
+    Running should return a video showing Holland or Nationaal visualisation
+    dependend on visualisation_settings.csv.
     """
 
     def setup(self) -> None:
