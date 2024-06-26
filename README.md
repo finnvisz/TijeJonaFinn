@@ -64,8 +64,23 @@ Zo zie je (relatief) snel de resultaten en krijg je gevoel voor het programma.
 
 Nu je een autorun hillclimber project hebt, krijg je een samenvatting van je logfile met behulp van een plot. Ook worden de eindscores van je hillclimber geplot. Deze worden opgeslagen in je project directory. Als je hierheen gaat vind je een directory genaamd 'solutions'. Dit bevat de oplossing van elke run als een csv bestand. Neem eens een kijkje en zie hoe jouw beste oplossing eruit ziet!
 
-
 ## Manim
+Alle visualisaties zijn gemaakt met de Mathematical Animation library Manim. 
+Er zijn drie verschillende visualisaties voor zowel Holland als Nationaal. 
+Er is een basale kaartvisualisatie, een video die een route visualiseert op de 
+betreffende kaart, en ten slotte een afbeelding van de volledige route op de kaart.
+
+De visualisaties lezen af vanuit het bestand visualisation_settings.csv. Dit 
+bestand bevat één regel tekst in de vorm: kaart,relatief_pad. De kaart is
+Holland of Nationaal, en het relatieve pad wordt gegeven vanaf de code folder 
+naar een csv output file van de vorm zoals vereist in de opdrachtomschrijving. 
+
+Na het creeëren van een output file door het runnen van een experiment, moet je 
+het script set_manim_settings.py aanroepen om visualisation_settings.csv te
+overschrijven met de juiste settings. Bijvoorbeeld als volgt:
+
+
+
 Run het volgende:
 ```
 python3 main3.py
