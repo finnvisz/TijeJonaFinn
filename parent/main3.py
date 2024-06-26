@@ -8,7 +8,7 @@ import subprocess
 
 # Check that the user has provided a project name
 if len(sys.argv) != 2 or sys.argv[1] == "": 
-    print("Usage: python3 parent/main2.py <project_name>")
+    print("Usage: python3 parent/main3.py <project_name>")
     sys.exit(1)
 
 # Set projectname with command line argument
@@ -22,7 +22,7 @@ files.sort()
 highest = files[-1]
 
 # Construct path to file from main
-path = f"autorun_hillclimber/mijn_eerste_project/solutions/{highest}"
+path = f"autorun_hillclimber/{project_name}/solutions/{highest}"
 
 # Now we need to navigate to the correct working directory because we are not software engineers
 working_directory = os.getcwd()

@@ -118,7 +118,7 @@ het project nog steeds mijn_eerste_project heten.
 **Run nu het volgende script, waarin we manim de opdracht geven om je beste oplossing te visualiseren:**
 
 ```
-python3 parent/main3.py
+python3 parent/main3.py mijn_eerste_project
 ```
 
 Alle media die op deze manier wordt gegenereerd kan 
