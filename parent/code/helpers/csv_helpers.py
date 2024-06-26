@@ -309,7 +309,7 @@ def read_solution_from_csv(filename: str,
 
     # Manim needs relative path from it's script to the default directory
     elif file_path == "for_manim":
-        csv_results_dir = "../experiments/route_csv/"
+        csv_results_dir = "../"
 
     # If custom file path, override default directory so user can specify
     # path from parent directory
@@ -324,7 +324,6 @@ def read_solution_from_csv(filename: str,
     # Add .csv extension if not present
     if not filename.endswith(".csv"):
         filename += ".csv"
-
 
     # Initialize the RailNL object once
     rail_network = RailNL(map)
@@ -349,6 +348,3 @@ def read_solution_from_csv(filename: str,
                 solution.append(route)
     
     return solution
-
-
-

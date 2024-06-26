@@ -96,7 +96,7 @@ class RouteVisualisationScene(BaseScene):
         self.output 
         """
 
-        self.output = read_solution_from_csv(filename = self.filepath, file_path = "custom_file_path", map = self.map)
+        self.output = read_solution_from_csv(filename = self.filepath, file_path = "for_manim", map = self.map)
         
         # Save number of routes for later reference
         self.n_routes = len(self.output)
