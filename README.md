@@ -1,5 +1,3 @@
-# TijeJonaFinn
-
 # RailNL
 
 Een dienstregeling voor treinverkeer bestaat eigenlijk uit vier planningsonderdelen:
@@ -38,7 +36,7 @@ Of via conda:
 conda install --file requirements.txt
 ```
 
-# Aan de slag! 
+# Aan de slag
 ## Experimentatie
 Als je een idee wilt krijgen van hoe de oplossingsruimte van dit probleem eruit ziet,
 kun je daarvoor ons experimentgerichte algoritme gebruiken: `Random_Greedy`. We hebben een voorbeeldje klaargezet. Run het volgende:
@@ -125,10 +123,16 @@ De hierop volgende lijst beschrijft de belangrijkste mappen en files in het proj
 - **/parent/data**: bevat de verschillende databestanden. Er zijn twee "kaarten": "Holland" en "Nationaal", met elk eigen stations.
 - **/parent/docs**: bevat een schematische weergave van ons project, voor wat extra overzicht.
 
+# Extra uitleg per onderdeel
+
 ## Algoritmes
 Wij hebben eigenlijk twee algoritmes geschreven, maar in beide zijn er veel argumenten te variëren of aan/uit te zetten.
-### Random-Greedy
-TODO
+### Random_Greedy
+Het Random_Greedy algoritme is onze experimenten-toolbox. Afhankelijk van de opties die je kiest is hij random, greedy, anderszijds deterministisch of iets ertussenin. Je kunt verschillende varianten van het algoritme runnen door de parameters van de run-method aan te passen.
+
+Het runnen van Random_Greedy gaat in twee stappen:
+
+1. Initialiseer het algoritme 
 
 ### Hillclimber
 Om het Hillclimber-algoritme zelf met de hand te runnen, volg je deze stappen:
