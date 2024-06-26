@@ -113,8 +113,7 @@ manim -pql script_to_animate.py class_to_animate
 ```
 
 Run bijvoorbeeld het volgende script waarin we de route met de hoogst gevonden
-score uit het voorgaande experiment visualiseren. Om dit te laten werken moet
-het project nog steeds mijn_eerste_project heten.
+score uit het voorgaande experiment visualiseren.
 
 **Run nu het volgende script, waarin we manim de opdracht geven om je beste oplossing te visualiseren:**
 
