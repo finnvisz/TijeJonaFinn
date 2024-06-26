@@ -73,12 +73,20 @@ def autorun_hillclimber(n_runs: int,
 
     Args:
         - n_runs (int): The number of runs to perform.
+        
         - project_name (str): The name of project to create / append to.
+        
         - maprange (str, optional): The map range to use ("Holland" or
           "Nationaal"). Defaults to "Holland".
+        
         - allow_overwrite (bool, optional): Whether to allow appending to
           an existing project directory (if `project_name` is already in
           use). Defaults to False.
+        
+        - demo_mode (bool, optional): Whether to run the Hillclimber
+            algorithm in demo mode (for testing purposes). If true, the
+            number of iterations per run is drastically reduced.
+            Defaults to False.
     """
 
     # Input check
@@ -114,7 +122,9 @@ def autorun_hillclimber(n_runs: int,
         try:
             
             # Run the Hillclimber algorithm
-            solution: list[Route] = run_hillclimber(maprange, project_dir)
+            solution: list[Route] = run_hillclimber(maprange, 
+                                                    project_dir, 
+                                                    demo_mode)
 
             # Write the produced solution to a csv file
             write_run_to_csv(solution, maprange, project_dir)

@@ -50,14 +50,13 @@ kun je daarvoor ons experimentgerichte algoritme gebruiken: `Random_Greedy`. We 
 python3 parent/main1.py
 ```
 
-We vergelijken een eenvoudig random algoritme, een eenvoudig greedy algoritme en een random algoritme + heuristiek om te zien hoeveel verschil een heuristiek kan maken. Een plot zou moeten openen in een pop-up, maar wordt ook opgeslagen als pdf naar 
+We vergelijken een eenvoudig random algoritme, een eenvoudig greedy algoritme en een random algoritme + heuristiek om te zien hoeveel verschil een heuristiek kan maken. De plot zou moeten openen in een pop-up, maar wordt ook opgeslagen als pdf naar 
 ```
-parent/code/experiments/plots/Heuristics matter: Random vs Greedy algorithm.pdf
+parent/code/experiments/plots/Het belang van heuristieken: Random vs Greedy algoritme.pdf
 ```
 Het interpreteren van de resultaten laten we aan de lezer, maar het moge duidelijk zijn dat wij heuristieken belangrijk vinden bij het oplossen van dit probleem.
 
 ## 2. Autorun Hillclimber
-> Dit duurt ietjes langer, maar het is het waard!
 
 Om de beste oplossing te vinden voor ons probleem, hebben we een iteratief algoritme geïmplementeerd: de Hillclimber. Daarover later meer. We hebben met schade en schande geleerd welke instellingen optimale resultaten genereren, en vervolgens wilden we even achterover gaan zitten. Daarvoor is `autorun_hillclimber`. Deze functie runt het hillclimber algoritme met optimale instellingen automatisch N keer, en slaat de resultaten op in een door de gebruiker gekozen projectmap.
 
