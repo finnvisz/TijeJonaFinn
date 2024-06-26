@@ -184,17 +184,34 @@ Voor meer details, raadpleeg de documentatie en het commentaar binnen de klasse-
 
 ## Autorun voor Hillclimber
 
-Deze functie is bewust zo simpel mogelijk gehouden. Het idee is dat Hillclimber al perfect is afgesteld, dus die details zijn allemaal niet toegankelijk vanuit de argumenten van autorun_hillclimber. Er zijn 4 argumenten:
+### In het kort
+Deze functie is bewust zo simpel mogelijk gehouden. Het idee is dat Hillclimber al perfect is afgesteld, dus de instellingen van het algoritme zelf zijn allemaal niet toegankelijk voor de gebruiker van autorun_hillclimber. In de basis werkt het zo:
 
-- 
+De gebruiker kiest een aantal runs, projectnaam en map. Vervolgens maakt autorun_hillclimber een projectmap in `parent/code/autorun_hillclimber`, waar alle gegenereerde oplossingen worden opgeslagen. De functie runt het Hillclimber algoritme zo vaak als opgegeven en bewaart zoveel mogelijk data voor latere analyse. Jij kan even wat anders gaan doen.
 
-De functie run_hillclimber initialiseert een startstaat met het Random_Greedy algoritme, voert het Hillclimber algoritme uit en geeft de oplossing.
+### Argumenten
+Er zijn 4 argumenten:
 
-De functie autorun_hillclimber voert het Hillclimber algoritme meerdere keren uit. Kies zelf het aantal runs en de projectnaam, geef ook mee welke kaart je gebruikt en of het toegestaan is bestaande projecten te overschrijven. Hij slaat de resultaten automatisch op in een projectmap met de projectnaam.
-Het schrijft de oplossing en score van een run naar een CSV-bestand onder het kopje solutions in je projectmap, en alle tussentijdse scores naar een CSV bestand log.csv in je projectmap. Zie het kopje helpers - plots voor wat je met dit bestand kunt doen.
+- `n_runs`: Het aantal keer dat Hillclimber moet worden gerunt.
+- `project_name`: Projectnaam om gegenereerde data in op te slaan.
+- `maprange`: Kaart om het algoritme op te runnen ("Holland" of "Nationaal"). Default is "Holland"
+- `allow_overwrite`: Standaard is het niet toegestaan om een projectnaam te kiezen die al in gebruik is, om het overschrijven / mixen van resultaten te voorkomen. Als je `allow_overwrite` op `True` zet is het kiezen van een bestaande projectnaam wel toegestaan, en worden nieuwe resultaten toegevoegd aan dit bestaande project.
+
+### Over de data
+
+Er worden 3 dingen bijgehouden:
+
+- In **solutions** wordt elke gegenereerd oplossing opgeslagen met een duidelijke naam.
+- Er wordt een logbestand bijgehouden, waar elke kolom een run is en elke rij een iteratie binnen die run. 
+- Eindscores worden ook in een apart csv-bestand opgeslagen. 
+
+Het logbestand en de eindscores kunnen worden geplot met speciale functies (`logplot_autorun_hillclimber`, `plot_endscores_autorun_hillclimber`). Deze functies worden in meer detail beschreven in **Helpers -> plots**, verderop in deze README. Oplossingen kunnen worden gevisualiseerd met manim.
+
+ ### Extra: zelf sleutelen aan het algoritme
+ Wil je wel sleutelen aan de versie van Hillclimber die gebruikt wordt door autorun_hillclimber? Ga dan naar `parent/code/autorun_hillclimber/autorun_hillclimber.py`. Helemaal bovenaan staat de subfunctie `run_hillclimber`. Hier initialiseert het Random_Greedy algoritme een startstaat met onze parameters, die wordt doorgegeven aan Hillclimber. Vervolgens wordt Hillclimber zelf gerunt met door ons ingestelde parameters. Als je wil sleutelen onder de motorkap kan dat in deze subfunctie.
 
 ## Experiments
-In de map experimetns zitten drie python bestanden. 
+In de map experiments zitten drie python bestanden. 
 
 ### Experiment
 Dit is een klasse. Gegeven een algoritme en de kaart ("Holland" of "Nationaal) kan je een algoritme een aantal keer runnen. Elke run berekent het de score van de lijnvoering. Daarna berekent het meteen de gemiddelde score en geeft het een lijst met alle scores aan je terug.
@@ -223,6 +240,10 @@ Schrijft een lijst van Route-objecten naar een CSV-bestand.
 
 6. read_solution_from_csv
 Leest een oplossing voor het RailNL-probleem van een CSV-bestand en geeft een lijst van Route-objecten.
+
+### statistics
+7. calculate_p_value
+Berekent de p-waarde om te bepalen of het verschil tussen twee sets scores significant is.
 
 ### plots
 1. plot_scores
