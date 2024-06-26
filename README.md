@@ -76,6 +76,18 @@ Er zijn drie verschillende visualisaties voor zowel Holland als Nationaal.
 Er is een basale kaartvisualisatie, een video die een route visualiseert op de 
 betreffende kaart, en ten slotte een afbeelding van de volledige route op de kaart.
 
+### Requirements
+Vanaf hier kan men de weg alleen vervolgen na het succesvol installeren van Manim.
+Als het goed is heeft de lezer vanuit het requirements.txt bestand via bijvoorbeeld
+pip Manim succesvol weten te installeren. Echter, er zijn bijkomende dependencies, die
+per besturingssysteem verschillen. Deze moeten hier nog worden geinstalleerd. 
+Please bear with us, de volgende link leidt je door de installatie van de dependencies 
+heen. 
+
+```
+https://docs.manim.community/en/stable/installation.html#
+```
+
 De visualisaties lezen vanuit het bestand visualisation_settings.csv. Dit 
 bestand bevat één regel tekst in de vorm: kaart,relatief_pad. De kaart is
 Holland of Nationaal, en het relatieve pad wordt gegeven vanaf de code folder 
@@ -99,11 +111,14 @@ manim -pql script_to_animate.py class_to_animate
 ```
 
 Run bijvoorbeeld het volgende script waarin we de route met de hoogst gevonden
-score uit het voorgaande experiment mijn_eerste_project runnen.
+score uit het voorgaande experiment visualiseren.
 
 ```
 python3 parent/main3.py
 ```
+
+Alle media die op deze manier wordt gegenereerd kan zolang niet overschreven, 
+worden teruggevonden in de parent/code/visualisation/media folder.
 
 # Structuur
 
@@ -116,7 +131,6 @@ De hierop volgende lijst beschrijft de belangrijkste mappen en files in het proj
   - **/parent/code/experiments** bevat code om te experimenteren en de verdeling van de oplossingsruimte beter te leren kennen.
       - **plots** is de standaardmap voor plots van experimenten, wordt gebruikt door de `plot_scores` functie
       - **results** is de standaardmap voor resulaten van experimenten
-      - **solutions** is de standaardmap voor opgeslagen oplossingen 
   - **/parent/code/helpers** bevat allerlei overige hulpfuncties
   - **/parent/code/tests** bevat een aantal tests voor de code in ons project. Ik zou hier niet te lang blijven rondhangen, dat hebben wij ook niet gedaan.
   - **/parent/code/visualisation**: bevat de manim code voor het visualiseren van een oplossing
@@ -128,35 +142,13 @@ De hierop volgende lijst beschrijft de belangrijkste mappen en files in het proj
 # Extra uitleg per onderdeel
 
 ## Algoritmes
-Wij hebben twee algoritmes geschreven, in beide zijn er veel argumenten te variëren of aan/uit te zetten.
-
+Wij hebben eigenlijk twee algoritmes geschreven, maar in beide zijn er veel argumenten te variëren of aan/uit te zetten.
 ### Random_Greedy
 Het Random_Greedy algoritme is onze experimenten-toolbox. Afhankelijk van de opties die je kiest is hij random, greedy, anderszijds deterministisch of iets ertussenin. Je kunt verschillende varianten van het algoritme runnen door de parameters van de run-method aan te passen.
 
-Het runnen van Random_Greedy gaat als volgt:
+Het runnen van Random_Greedy gaat in twee stappen:
 
-1. Initialiseer het algoritme met de gewenste kaart (`maprange`; default is "Holland", anders "Nationaal"):
-```
-from parent.code.algorithms.random_greedy import Random_Greedy
-
-random_greedy = Random_Greedy("Holland")
-```
-
-2. Run het algoritme met gewenste parameters (dit zijn er een hoop; voorbeeld is heuristiek die we als Hillclimber start state gebruiken voor Holland):
-```
-solution = random_greedy.run(starting_stations = "original_stations_only_hard", final_number_of_routes = 4)
-```
-
-3. Sla de gegenereerde oplossing op
-```
-from parent.code.helpers.csv_helpers import write_solution_to_csv
-
-write_solution_to_csv(solution, filename = "Random_Greedy_solution_1.csv", map = "Holland")
-```
-
-4. De oplossing staat nu in `parent/code/experiments/solutions`. 
-
-> De run method bevat nog veel meer opties, die uitgebreid beschreven staan in de docstring van de method. 
+1. Initialiseer het algoritme 
 
 ### Hillclimber
 Om het Hillclimber-algoritme zelf met de hand te runnen, volg je deze stappen:
@@ -190,50 +182,20 @@ Er zijn parameters voor de hillclimber die je kan veranderen in de run-methode:
 
 Voor meer details, raadpleeg de documentatie en het commentaar binnen de klasse-definitie.
 
-
-## Experiments
-In de map experiments zitten twee classes. Ook staan hier submappen voor output van functies: **plots**, **results** en **solutions**. Het algemene idee is om verschillende instellingen voor het Random_Greedy algoritme met elkaar te vergelijken en bruikbare heuristieken te vinden.
-
-### Experiment class
-Deze class is gemaakt om experimenten te runnen met het Random_Greedy algoritme. Gegeven een algoritme en de kaart ("Holland" of "Nationaal) kan je een algoritme een aantal keer runnen. Elke run berekent het de score van de oplossing. Daarna geeft het een lijst met alle scores aan je terug, die je kunt opslaan naar **results** of meteen kunt plotten.
-
-1. Initialiseer de Experiment class
-```
-from parent.code.experiments.experiment import Experiment
-
-experiment = Experiment("Holland")
-```
-2. Run het Random_Greedy algoritme N keer met de opgegeven parameters (alles na argument 1 wordt doorgegeven als kwargs)
-```
-results = experiment.run_experiment(1000, next_connection_choice = "random", starting_stations = "original_stations_only_hard")
-```
-3. Sla je resultaten op naar CSV
-  
-  - a. Sla op naar CSV (doelmap: **experiments/results**)
-```
-from parent.code.helpers.csv_helpers import write_scores_to_csv
-
-write_scores_to_csv(results, filename = "1000_mijn_eerste_experiment")
-```
-   - b. Plot resultaten meteen (doelmap: **experiments/plots**)
-```
-from parent.code.helpers.plots import plot_scores
-
-plot_scores(results, title = "1000_mijn_eerste_experiment", save_to_pdf = True)
-```
-
-### Starting bins
-Ook dit is een klasse. De Sort_Starting klasse is ontworpen om een verzameling stations te sorteren op basis van hun connectiviteit. Deze klasse maakt gebruik van combinaties van stations en verdeelt deze in bins (bakken) afhankelijk van hun connectiviteitsgraad. Hiermee probeerden we verschillende startstations te vergelijken voor Random_Greedy, maar hier is uiteindelijk geen concrete heuristiek uitgekomen.
-
-
 ## Autorun voor Hillclimber
 TODO (Jona)
 
-## Helpers
-Deze map bevat een verzameling functies voor het verwerken, opslaan, lezen en visualiseren van zowel scores als oplossingen gegenereerd door verschillende algoritmen. Hier volgt een korte uitleg van de belangrijkste modules:
+## Experiments
+In de map experimetns zitten drie python bestanden. 
 
-### autorun_hillclimber_helpers
-TODO (Jona)
+### Experiment
+Dit is een klasse. Gegeven een algoritme en de kaart ("Holland" of "Nationaal) kan je een algoritme een aantal keer runnen. Elke run berekent het de score van de lijnvoering. Daarna berekent het meteen de gemiddelde score en geeft het een lijst met alle scores aan je terug.
+
+### Starting bins
+Ook dit is een klasse. De Sort_Starting klasse is ontworpen om een verzameling stations te sorteren op basis van hun connectiviteit. Deze klasse maakt gebruik van combinaties van stations en verdeelt deze in bins (bakken) afhankelijk van hun connectiviteitsgraad.
+
+## Helpers
+Hier wordt het echt leuk. Deze map bevat een verzameling functies voor het verwerken, opslaan, lezen en visualiseren van scores en oplossingen gegenereerd door verschillende algoritmen. Hier volgt een korte uitleg van de belangrijkste modules:
 
 ### csv_helpers
 1. write_scores_to_csv
@@ -254,6 +216,9 @@ Schrijft een lijst van Route-objecten naar een CSV-bestand.
 6. read_solution_from_csv
 Leest een oplossing voor het RailNL-probleem van een CSV-bestand en geeft een lijst van Route-objecten.
 
+### statistics
+7. calculate_p_value
+Berekent de p-waarde om te bepalen of het verschil tussen twee sets scores significant is.
 
 ### plots
 1. plot_scores
@@ -273,6 +238,29 @@ Berekent de p-waarde om te bepalen of het verschil tussen twee sets scores signi
 Maakt, gegeven een lijst routes, een set met daarin alle connecties die gebruikt zijn. Hierin komen alle connecties maximaal één keer voor. Dus bijvoorbeeld als Alkmaar-Den Helder al in de set zit, komt Den Helder-Alkmaar er niet meer bij.
 
 ## Visualisatie
+
+### visualisation_settings
+Dit is een miniscuul csv bestand wat enkel een kaart: Holland of Nationaal,
+en een pad vanaf de code folder naar een output csv bestand bevat. Dit 
+output csv bestand bevat een lijnvoering geformat zoals door de opdracht
+op de proglab website gespecifiëerd. 
+
+### set_manin_settings
+Dit is een klein script om de visualisation_settings vanaf de command line
+te kunnen aanpassen na het runnen van een experiment.
+
+### map_visualisation
+
+Map visualisation is een manim Scene klasse en creëert een video preview 
+van de kaart gespecifiëerd in visualisation_settings.
+
+### route_visualisation
+Route visualisation is een manim Scene klasse en creëert een video visualisatie
+van een kaart met lijnvoering gespecifiëerd in visualisation_settings
+
+### route_visualisation_image
+Route visualisation image is ook een manim Scene klasse maar creëert een
+afbeelding van een kaart met lijnvoering gespecifiëerd in visualisation_settings.
 
 # Auteurs
 - Jona Aalten
