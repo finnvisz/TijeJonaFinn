@@ -1,9 +1,9 @@
+from parent.code.visualisation.route_visualisation import RouteVisualisationScene
 
-from parent.code.visualisation.route_visualisation import route_visualisation_Scene
-from numpy.linalg import norm
+import numpy.linalg as np
 import manim as m
 
-class route_visualisation_image(route_visualisation_Scene):
+class RouteVisualisationImage(RouteVisualisationScene):
     """Show trainroutes on map."""
 
     # Main method calling upon other methods to color route and move train
@@ -44,7 +44,7 @@ class route_visualisation_image(route_visualisation_Scene):
         ending_point = line.end
 
         # Get direction and length 
-        length = norm(ending_point - starting_point)
+        length = np.norm(ending_point - starting_point)
         direction = (ending_point - starting_point) / length
 
         # Get length of each segment

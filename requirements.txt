@@ -6,4 +6,6 @@ pandas==2.2.2
 plotnine==0.13.6
 python-apt==2.4.0+ubuntu3
 scipy==1.13.1
+os
+datetime
 

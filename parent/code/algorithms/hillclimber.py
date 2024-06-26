@@ -4,11 +4,11 @@ import matplotlib.pyplot as plt
 
 from parent.code.algorithms.algorithm import Algorithm
 from parent.code.algorithms.random_greedy import Random_Greedy
-from parent.code.algorithms.score import calculate_score
+from parent.code.helpers.score import calculate_score
 from parent.code.classes.railnl import RailNL
 from parent.code.classes.route import Route
-from parent.code.experiments.statistics import append_scores_to_csv, write_solution_to_csv, read_solution_from_csv
-from parent.code.algorithms.tot_con_used import get_total_connections_used
+from parent.code.helpers.csv_helpers import append_scores_to_csv, write_solution_to_csv, read_solution_from_csv
+from parent.code.helpers.tot_con_used import get_total_connections_used
 
 class Hillclimber(Algorithm):
     """Hillclimber algorithm to optimize train routes.
