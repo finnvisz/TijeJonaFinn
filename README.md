@@ -277,50 +277,56 @@ plot_scores(results, title = "1000_mijn_eerste_experiment", save_to_pdf = True)
 ```
 
 ### Starting bins
-Ook dit is een klasse. De Sort_Starting klasse is ontworpen om een verzameling stations te sorteren op basis van hun connectiviteit. Deze klasse maakt gebruik van combinaties van stations en verdeelt deze in bins (bakken) afhankelijk van hun connectiviteitsgraad. Hiermee probeerden we verschillende startstations te vergelijken voor Random_Greedy, maar hier is uiteindelijk geen concrete heuristiek uitgekomen.
+Ook dit is een klasse. De Sort_Starting klasse is ontworpen om een verzameling stations te sorteren op basis van hun connectiviteit. Deze klasse maakt gebruik van combinaties van stations en verdeelt deze in bins (bakken) afhankelijk van hun connectiviteitsgraad. Hiermee probeerden we verschillende startstations te vergelijken voor Random_Greedy, maar hier is uiteindelijk geen concrete heuristiek uit gekomen.
 
 ## Helpers
 Deze map bevat een verzameling functies voor het verwerken, opslaan, lezen en visualiseren van zowel scores als oplossingen gegenereerd door verschillende algoritmen. Hier volgt een korte uitleg van de belangrijkste modules:
+
+### autorun_hillclimber_helpers
+1. `combine_projects`: Hulpfunctie die autorun_hillclimber projecten samenvoegt tot één project. Dit bleek een belangrijke functionaliteit, omdat wij graag alle cores van onze computer aan het werk zetten (dat leverde `mijn_project`, `mijn_project_2`, `mijn_project_3` op met allemaal precies dezelfde instellingen).
+
+> De andere functies in deze module zijn subfuncties van `combine_projects` en daarom buiten beschouwing gelaten in dit overzicht. 
 
 ### csv_helpers
 1. `write_scores_to_csv`:
 Schrijft een numpy array met scores naar een CSV-bestand.
 
 2. `read_scores_from_csv`:
-Leest scores van een CSV-bestand en retourneert deze als een numpy array.
+Leest scores van een CSV-bestand en returnt deze als een numpy array.
 
 3. `append_scores_to_csv`:
-Voegt een numpy array met scores toe aan een bestaand CSV-bestand als een nieuwe kolom.
+Voegt een numpy array met scores toe aan een bestaand CSV-bestand als een nieuwe kolom (erg handig voor het logbestand van `autorun_hillclimber`).
 
 4. `append_single_score_to_csv`:
-Voegt een enkele score toe aan een bestaand CSV-bestand als een nieuwe rij.
+Voegt een enkele score toe aan een bestaand CSV-bestand met één kolom als een nieuwe rij in die kolom (denk aan `end_scores` van autorun_hillclimber).
 
 5. `write_solution_to_csv`:
-Schrijft een lijst van Route-objecten naar een CSV-bestand.
+Schrijft een lijst van Route-objecten (oftewel: een oplossing) naar een CSV-bestand.
 
 6. `read_solution_from_csv`:
-Leest een oplossing voor het RailNL-probleem van een CSV-bestand en geeft een lijst van Route-objecten.
+Leest een oplossing uit een CSV-bestand en geeft een lijst van Route-objecten.
 
 ### plots
 1. `plot_scores`:
 Maakt een histogram van de scores van 1 tot 4 samples.
 
 2. `logplot_autorun_hillclimber`:
-Maakt een plot om een autorun_hillclimber logbestand samen te vatten.
+Maakt een plot die het logbestand van een autorun_hillclimber project samenvat, en zet die in de projectmap.
 
 3. `plot_endscores_autorun_hillclimber`:
-Visualiseert eindscores van een autorun_hillclimber project
+Maakt een plot die de verdeling van eindscores van een autorun_hillclimber project samenvat, en zet die in de projectmap.
 
 ### score
-1. `calculate_score`:
-Berekent de score gegeven een lijst routes en en de kaartnaam. ("Holland" of "Nationaal")
+-  `calculate_score`:
+Berekent de score van een oplossing, gegeven een lijst routes en en de kaartnaam ("Holland" of "Nationaal").
 
 ### statistics
-1. `calculate_p_value`:
-Berekent de p-waarde om te bepalen of het verschil tussen twee sets scores significant is.
+-  `calculate_p_value`:
+Berekent een p-waarde om te bepalen of het verschil tussen twee sets scores significant is (met een Mann-Whitney U rank test).
 
 ### tot_con_used
-Maakt, gegeven een lijst routes, een set met daarin alle connecties die gebruikt zijn. Hierin komen alle connecties maximaal één keer voor. Dus bijvoorbeeld als Alkmaar-Den Helder al in de set zit, komt Den Helder-Alkmaar er niet meer bij.
+- `get_total_connections_used`:
+  Maakt, gegeven een lijst routes, een set met daarin alle connecties die gebruikt zijn. Hierin komen alle connecties maximaal één keer voor. Bijvoorbeeld: als Alkmaar-Den Helder al in de set zit, komt Den Helder-Alkmaar er niet meer bij. Dit is een hulpfunctie voor het Hillclimber algoritme.
 
 ## Visualisatie
 
