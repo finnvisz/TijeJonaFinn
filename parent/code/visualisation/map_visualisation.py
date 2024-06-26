@@ -21,6 +21,7 @@ class BaseScene(MovingCameraScene):
     radius: Radius of dot objects meant to visualise stations.
     label_scale: Size of station-name, connection-time and map labels.
     line_width: Thickness of connection lines.
+    time_label_shift: Distance of time labels perpendicular to lines.
     zoom_scale: Camera zoom factor.
     dots: Manim VGroup of dot objects
     station_dot_dict: Association between station objects and dots.
