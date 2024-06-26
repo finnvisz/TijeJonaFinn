@@ -72,6 +72,8 @@ parent/code/autorun_hillclimber/mijn_eerste_project/
 
 Ook vind je hier een submap genaamd 'solutions'. Dit bevat de oplossing geproduceerd door elke run als een csv bestand. Neem eens een kijkje bij je project en zie hoe jouw beste oplossing eruit ziet!
 
+> Een CSV bestand spreekt waarschijnlijk niet echt tot de verbeelding. Ga daarom door naar stap 3, waar we je beste oplossing gaan visualiseren met manim.
+
 
 ## 3. Manim
 Alle visualisaties zijn gemaakt met de Mathematical Animation library Manim. 
@@ -81,24 +83,16 @@ betreffende kaart, en ten slotte een afbeelding van de volledige route op de kaa
 
 ### Requirements
 Vanaf hier kan men de weg alleen vervolgen na het succesvol installeren van Manim.
-Als het goed is heeft de lezer vanuit het requirements.txt bestand via bijvoorbeeld
-pip Manim succesvol weten te installeren. Echter, er zijn bijkomende dependencies, die
-per besturingssysteem verschillen. Deze moeten hier nog worden geinstalleerd. 
-Please bear with us, de volgende link leidt je door de installatie van de dependencies 
-heen. 
+Als het goed is heeft de lezer vanuit het requirements.txt bestand Manim succesvol weten te installeren. Echter, er zijn bijkomende dependencies, die
+per besturingssysteem verschillen. Deze moeten ook nog worden geïnstalleerd. 
+De volgende link leidt je door de installatie van de dependencies 
+heen. Dit duurt niet lang, en is de moeite meer dan waard.
 
 ```
 https://docs.manim.community/en/stable/installation.html#
 ```
 
-De visualisaties lezen vanuit het bestand visualisation_settings.csv. Dit 
-bestand bevat één regel tekst in de vorm: kaart,relatief_pad. De kaart is
-Holland of Nationaal, en het relatieve pad wordt gegeven vanaf de code folder 
-naar een csv output file van de vorm zoals vereist in de opdrachtomschrijving. 
-
-Na het creeëren van een output file door het runnen van een experiment, moet je 
-het script set_manim_settings.py aanroepen om visualisation_settings.csv te
-overschrijven met de juiste settings. Bijvoorbeeld als volgt:
+**Run vervolgens het volgende script, waarin we manim de opdracht geven om je beste oplossing te visualiseren:**
 
 ```
 python3 set_manim_settings.py kaart relative_path_to_file/file.csv
@@ -121,8 +115,8 @@ het project nog mijn_eerste_project heten.
 python3 parent/main3.py
 ```
 
-Alle media die op deze manier wordt gegenereerd kan zolang niet overschreven, 
-worden teruggevonden in de parent/code/visualisation/media folder.
+Alle media die op deze manier wordt gegenereerd kan 
+worden teruggevonden in de `parent/code/visualisation/media` folder. Let op: als je een nieuw filmpje genereert wordt de oude overschreven!
 
 # Structuur
 
@@ -230,6 +224,7 @@ Er zijn 4 argumenten:
 - `project_name`: Projectnaam om gegenereerde data in op te slaan.
 - `maprange`: Kaart om het algoritme op te runnen ("Holland" of "Nationaal"). De default is "Holland"
 - `allow_overwrite`: Standaard is het niet toegestaan om een projectnaam te kiezen die al in gebruik is, om het overschrijven / mixen van resultaten te voorkomen. Als je `allow_overwrite` op `True` zet is het kiezen van een bestaande projectnaam wel toegestaan, en worden nieuwe resultaten toegevoegd aan dit bestaande project.
+- `demo_mode`: Speciaal toegevoegd voor "Aan de slag" in deze README. Als `True` wordt elke run van het Hillclimber algoritme met maar 600 iteraties gerunt, als versnelde demonstratie van hoe het in het echt zou gaan.
 
 ### Over de data
 
@@ -278,73 +273,102 @@ plot_scores(results, title = "1000_mijn_eerste_experiment", save_to_pdf = True)
 ```
 
 ### Starting bins
-Ook dit is een klasse. De Sort_Starting klasse is ontworpen om een verzameling stations te sorteren op basis van hun connectiviteit. Deze klasse maakt gebruik van combinaties van stations en verdeelt deze in bins (bakken) afhankelijk van hun connectiviteitsgraad. Hiermee probeerden we verschillende startstations te vergelijken voor Random_Greedy, maar hier is uiteindelijk geen concrete heuristiek uitgekomen.
+Ook dit is een klasse. De Sort_Starting klasse is ontworpen om een verzameling stations te sorteren op basis van hun connectiviteit. Deze klasse maakt gebruik van combinaties van stations en verdeelt deze in bins (bakken) afhankelijk van hun connectiviteitsgraad. Hiermee probeerden we verschillende startstations te vergelijken voor Random_Greedy, maar hier is uiteindelijk geen concrete heuristiek uit gekomen.
 
 ## Helpers
 Deze map bevat een verzameling functies voor het verwerken, opslaan, lezen en visualiseren van zowel scores als oplossingen gegenereerd door verschillende algoritmen. Hier volgt een korte uitleg van de belangrijkste modules:
+
+### autorun_hillclimber_helpers
+1. `combine_projects`: Hulpfunctie die autorun_hillclimber projecten samenvoegt tot één project. Dit bleek een belangrijke functionaliteit, omdat wij graag alle cores van onze computer aan het werk zetten (dat leverde `mijn_project`, `mijn_project_2`, `mijn_project_3` op met allemaal precies dezelfde instellingen).
+
+> De andere functies in deze module zijn subfuncties van `combine_projects` en daarom buiten beschouwing gelaten in dit overzicht. 
 
 ### csv_helpers
 1. `write_scores_to_csv`:
 Schrijft een numpy array met scores naar een CSV-bestand.
 
 2. `read_scores_from_csv`:
-Leest scores van een CSV-bestand en retourneert deze als een numpy array.
+Leest scores van een CSV-bestand en returnt deze als een numpy array.
 
 3. `append_scores_to_csv`:
-Voegt een numpy array met scores toe aan een bestaand CSV-bestand als een nieuwe kolom.
+Voegt een numpy array met scores toe aan een bestaand CSV-bestand als een nieuwe kolom (erg handig voor het logbestand van `autorun_hillclimber`).
 
 4. `append_single_score_to_csv`:
-Voegt een enkele score toe aan een bestaand CSV-bestand als een nieuwe rij.
+Voegt een enkele score toe aan een bestaand CSV-bestand met één kolom als een nieuwe rij in die kolom (denk aan `end_scores` van autorun_hillclimber).
 
 5. `write_solution_to_csv`:
-Schrijft een lijst van Route-objecten naar een CSV-bestand.
+Schrijft een lijst van Route-objecten (oftewel: een oplossing) naar een CSV-bestand.
 
 6. `read_solution_from_csv`:
-Leest een oplossing voor het RailNL-probleem van een CSV-bestand en geeft een lijst van Route-objecten.
+Leest een oplossing uit een CSV-bestand en geeft een lijst van Route-objecten.
 
 ### plots
 1. `plot_scores`:
 Maakt een histogram van de scores van 1 tot 4 samples.
 
 2. `logplot_autorun_hillclimber`:
-Maakt een plot om een autorun_hillclimber logbestand samen te vatten.
+Maakt een plot die het logbestand van een autorun_hillclimber project samenvat, en zet die in de projectmap.
 
 3. `plot_endscores_autorun_hillclimber`:
-Visualiseert eindscores van een autorun_hillclimber project
+Maakt een plot die de verdeling van eindscores van een autorun_hillclimber project samenvat, en zet die in de projectmap.
 
 ### score
-1. `calculate_score`:
-Berekent de score gegeven een lijst routes en en de kaartnaam. ("Holland" of "Nationaal")
+-  `calculate_score`:
+Berekent de score van een oplossing, gegeven een lijst routes en en de kaartnaam ("Holland" of "Nationaal").
 
 ### statistics
-1. `calculate_p_value`:
-Berekent de p-waarde om te bepalen of het verschil tussen twee sets scores significant is.
+-  `calculate_p_value`:
+Berekent een p-waarde om te bepalen of het verschil tussen twee sets scores significant is (met een Mann-Whitney U rank test).
 
 ### tot_con_used
-Maakt, gegeven een lijst routes, een set met daarin alle connecties die gebruikt zijn. Hierin komen alle connecties maximaal één keer voor. Dus bijvoorbeeld als Alkmaar-Den Helder al in de set zit, komt Den Helder-Alkmaar er niet meer bij.
+- `get_total_connections_used`:
+  Maakt, gegeven een lijst routes, een set met daarin alle connecties die gebruikt zijn. Hierin komen alle connecties maximaal één keer voor. Bijvoorbeeld: als Alkmaar-Den Helder al in de set zit, komt Den Helder-Alkmaar er niet meer bij. Dit is een hulpfunctie voor het Hillclimber algoritme.
 
 ## Visualisatie
 
-### visualisation_settings
-Dit is een miniscuul csv bestand wat enkel een kaart: Holland of Nationaal,
-en een pad vanaf de code folder naar een output csv bestand bevat. Dit 
-output csv bestand bevat een lijnvoering geformat zoals door de opdracht
-op de proglab website gespecifiëerd. 
+De visualisaties lezen een opdracht vanuit het bestand visualisation_settings.csv. Dit 
+bestand bevat één regel tekst in de vorm: `kaart,relatief_pad`. De kaart is
+Holland of Nationaal, en het relatieve pad wordt gegeven vanaf de code folder 
+naar een oplossing in CSV formaat (`autorun_hillclimber` genereert zijn antwoorden automatisch in dit formaat; gebruik `write_solution_to_csv` om een oplossing naar CSV te schrijven in dit formaat). 
 
-### set_manin_settings
-Dit is een klein script om de visualisation_settings vanaf de command line
+Na het creeëren van een output file door het runnen van een experiment, moet je 
+het script set_manim_settings.py aanroepen om visualisation_settings.csv te
+overschrijven met de juiste settings. Bijvoorbeeld als volgt:
+
+```
+python3 parent/code/visualisation/set_manim_settings.py Holland relative_path_to_file/file.csv
+```
+
+Daarna kun je direct één van de drie visualisaties aanroepen op de door jou
+ingestelde kaart en lijnvoering. Het makkelijkste is om de VSCode manim sideview
+extension te downloaden. Alternatief kun je het ook gemakkelijk vanaf de 
+commandline runnen als volgt. 
+
+```
+manim -pql script_to_animate.py class_to_animate
+```
+
+### Modules
+
+#### visualisation_settings
+Dit is een miniscuul CSV bestand dat enkel een kaart (Holland of Nationaal)
+en een pad vanaf de code folder naar een bestand met een oplossing bevat. Dit CSV bestand bevat een lijnvoering geformat zoals door de opdracht
+op de proglab website gespecifiëerd.
+
+#### set_manin_settings
+Dit is een klein script om de `visualisation_settings` vanaf de command line
 te kunnen aanpassen na het runnen van een experiment.
 
-### map_visualisation
+#### map_visualisation
 
 Map visualisation is een manim Scene klasse en creëert een video preview 
 van de kaart gespecifiëerd in visualisation_settings.
 
-### route_visualisation
+#### route_visualisation
 Route visualisation is een manim Scene klasse en creëert een video visualisatie
 van een kaart met lijnvoering gespecifiëerd in visualisation_settings
 
-### route_visualisation_image
+#### route_visualisation_image
 Route visualisation image is ook een manim Scene klasse maar creëert een
 afbeelding van een kaart met lijnvoering gespecifiëerd in visualisation_settings.
 

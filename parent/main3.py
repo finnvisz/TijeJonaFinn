@@ -1,13 +1,21 @@
 ### 3. MANIM VISUALISATION ###
-
+import sys
 import os
 import subprocess
 
 # CSV files can only tell you so much
 # Let's visualise the best solution of your autorun hillclimber project!
 
+# Check that the user has provided a project name
+if len(sys.argv) != 2 or sys.argv[1] == "": 
+    print("Usage: python3 parent/main2.py <project_name>")
+    sys.exit(1)
+
+# Set projectname with command line argument
+project_name = sys.argv[1]
+
 # Find files and sort on score
-files = os.listdir("parent/code/autorun_hillclimber/mijn_eerste_project/solutions")
+files = os.listdir(f"parent/code/autorun_hillclimber/{project_name}/solutions")
 files.sort()
 
 # Get highest score 
