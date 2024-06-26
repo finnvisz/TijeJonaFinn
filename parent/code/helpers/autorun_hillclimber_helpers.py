@@ -191,14 +191,3 @@ def combine_solution_directories(project_names: tuple[str],
 
     n_solutions_combined = len(os.listdir(f"{root_dir}/{project_names[0]}/solutions"))
     print(f"Combined solution directory has {n_solutions_combined} solutions.")
-
-
-if __name__ == "__main__":
-    project_names = ("my_first_project", "my_first_project_copy")
-    
-    combine_projects(project_names)
-    # print(project_names[1:])
-    # print(len(project_names[1:]))
-    # combine_projects(project_names)
-
-    # print(datetime.now())

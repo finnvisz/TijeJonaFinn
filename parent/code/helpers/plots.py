@@ -4,6 +4,7 @@ import plotnine as p9
 import pandas as pd
 import numpy as np
 from datetime import datetime
+import os
 
 # Internal imports
 from parent.code.helpers.csv_helpers import read_scores_from_csv
@@ -397,9 +398,15 @@ def logplot_autorun_hillclimber(project_name: str | None = None,
     # Infer max iterations from the last row of the first column
     max_iterations = (df_data_aggregated.iloc[:, 0].values[-1]) + 1
 
-    # Get ylim lower bound from df_data_aggregated
+    # Get ylim from df_data_aggregated
     ylim_min = round(df_data_aggregated.iloc[:, -1].values[0])
-
+    
+    # If first solution of project is Nationaal, set ylim_max to 7600
+    if os.listdir(f"{log_file_dir}/solutions")[0].split("_")[0] == "Nationaal":
+        ylim_max = 7600
+    # Else set ylim_max to 10000
+    else:
+        ylim_max = 10000
 
     # Create plotnine plot with the mean, max and min per iteration
     plot = (
@@ -410,7 +417,7 @@ def logplot_autorun_hillclimber(project_name: str | None = None,
         
         p9.geom_line() +
 
-        p9.ylim(ylim_min, 10000) +
+        p9.ylim(ylim_min, ylim_max) +
         
         p9.scale_color_manual(name = "Per iteratie",
                             values = color_palette, 

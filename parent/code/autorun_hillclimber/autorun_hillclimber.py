@@ -24,7 +24,7 @@ def run_hillclimber(maprange: str, project_dir: str) -> list[Route]:
 
     # Run the Hillclimber algorithm and save solution, also log progress
     hillclimber_alg = Hillclimber(start_state, maprange)
-    solution: list[Route] = hillclimber_alg.run(iterations = 600,
+    solution: list[Route] = hillclimber_alg.run(iterations = 600000,
                                 log_csv=f"{project_dir}/log.csv",
                                 simulated_annealing=True,
                                 cap = 60000,
