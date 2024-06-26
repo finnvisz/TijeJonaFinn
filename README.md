@@ -331,13 +331,12 @@ Berekent een p-waarde om te bepalen of het verschil tussen twee sets scores sign
 ## Visualisatie
 
 ### visualisation_settings
-Dit is een miniscuul csv bestand wat enkel een kaart: Holland of Nationaal,
-en een pad vanaf de code folder naar een output csv bestand bevat. Dit 
-output csv bestand bevat een lijnvoering geformat zoals door de opdracht
+Dit is een miniscuul CSV bestand dat enkel een kaart (Holland of Nationaal)
+en een pad vanaf de code folder naar een bestand met een oplossing bevat. Dit CSV bestand bevat een lijnvoering geformat zoals door de opdracht
 op de proglab website gespecifiëerd. 
 
 ### set_manin_settings
-Dit is een klein script om de visualisation_settings vanaf de command line
+Dit is een klein script om de `visualisation_settings` vanaf de command line
 te kunnen aanpassen na het runnen van een experiment.
 
 ### map_visualisation
