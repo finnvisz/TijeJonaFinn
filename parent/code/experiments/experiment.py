@@ -7,7 +7,6 @@ from parent.code.algorithms.algorithm import Algorithm
 from parent.code.helpers.score import calculate_score
 from parent.code.algorithms.random_greedy import Random_Greedy
 
-
 class Experiment:
 
     def __init__(self, maprange: str = "Holland", algorithm_class: "Algorithm" = Random_Greedy) -> None:
