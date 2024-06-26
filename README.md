@@ -21,14 +21,14 @@ RailNL heeft recentelijk een doelfunctie opgesteld voor de kwaliteit van de lijn
 K = p*10000 - (T*100 + Min)
 ```
 
-Om deze case beter te begrijpen zijn er twee "kaarten" waar een oplossing voor gevonden kan worden. Een kleine kaart (Holland), en een grote kaart (Nationaal). We raden aan om te beginnen met de kleine kaart, waar de oplossingsruimte kleiner is en je sneller resultaten ziet. Als je goed plan van aanpak hebt kun je door naar de grote kaart om je plan te toetsen.
+Om deze case beter te begrijpen zijn er twee "kaarten" waar een oplossing voor gevonden kan worden. Een kleine kaart (Holland), en een grote kaart (Nationaal). We raden aan om te beginnen met de kleine kaart, waar de oplossingsruimte kleiner is en je sneller resultaten ziet. Als je een goed plan van aanpak hebt kun je door naar de grote kaart om je plan te toetsen.
 
 
 # Vereisten
 
 Deze codebase is geschreven in Python 3.10.12. Om aan de slag te gaan moeten eerst twee commando's worden gerunt. Ga in je terminal naar de rootmap van ons project, en volg de volgende instructies:
 
-1. In requirements.txt staan alle benodigde packages om de code succesvol te runnen. Ook 'installeer'je onze repository. Deze zijn gemakkelijk te installeren via pip met de volgende instructie:
+1. In requirements.txt staan alle benodigde packages om de code succesvol te runnen. Ook 'installeer' je onze repository met een editable install. Dit gaat allemaal via pip met de volgende instructie:
 
 ```
 pip install -r requirements.txt
@@ -42,33 +42,44 @@ conda install --file requirements.txt
 
 # Aan de slag! 
 ## Experimentatie
-Als je een idee wilt krijgen van hoe de voorbeeldruimte van dit probleem eruit ziet,
-daarvoor kun je ons experimentgerichte algoritme gebruiken. Run het volgende:
+Als je een idee wilt krijgen van hoe de oplossingsruimte van dit probleem eruit ziet,
+kun je daarvoor ons experimentgerichte algoritme gebruiken: `Random_Greedy`. We hebben een voorbeeldje klaargezet. Run het volgende:
 
 ```
-python3 main1.py
+python3 parent/main1.py
 ```
 
 We vergelijken een eenvoudig random algoritme, een eenvoudig greedy algoritme en een random algoritme + heuristiek om te zien hoeveel verschil een heuristiek kan maken. Een plot zou moeten openen in een pop-up, maar wordt ook opgeslagen als pdf naar 
 ```
-parent/code/experiments/plots
+parent/code/experiments/plots/Heuristics matter: Random vs Greedy algorithm.pdf
 ```
+Het interpreteren van de resultaten laten we aan de lezer, maar het moge duidelijk zijn dat wij heuristieken belangrijk vinden bij het oplossen van dit probleem.
 
 ## Autorun Hillclimber
-Dit duurt ietjes langer, maar het is het waard! Run het volgende:
-```
-python3 main2.py
-```
-Nu run je het autorun_hillclimber programma met de projectnaam 'my_first_project'. # Laten we beginnen met 10 runs en de kleinere kaart: "Holland"
-Zo zie je (relatief) snel de resultaten en krijg je gevoel voor het programma.
+> Dit duurt ietjes langer, maar het is het waard!
 
-Nu je een autorun hillclimber project hebt, krijg je een samenvatting van je logfile met behulp van een plot. Ook worden de eindscores van je hillclimber geplot. Deze worden opgeslagen in je project directory. Als je hierheen gaat vind je een directory genaamd 'solutions'. Dit bevat de oplossing van elke run als een csv bestand. Neem eens een kijkje en zie hoe jouw beste oplossing eruit ziet!
+Om de beste oplossing te vinden voor ons probleem, hebben we een iteratief algoritme geïmplementeerd: de Hillclimber. Daarover later meer. We hebben met schade en schande geleerd welke instellingen optimale resultaten genereren, en vervolgens wilden we even achterover gaan zitten. Daarvoor is `autorun_hillclimber`. Deze functie runt het hillclimber algoritme met optimale instellingen automatisch N keer, en slaat de resultaten op in een door de gebruiker gekozen projectmap.
+
+Run het volgende:
+```
+python3 parent/main2.py mijn_eerste_project
+```
+Nu run je het autorun_hillclimber programma met de projectnaam 'mijn_eerste_project'. Laten we beginnen met 10 runs en de kleinere kaart: "Holland". Elke run draait maar 600 iteraties (normaal doen we tot wel 600.000). Zo zie je snel de resultaten en krijg je gevoel voor het programma.
+
+Als autorun_hillclimber klaar is, krijg je een samenvatting van je logfile met behulp van een plot. Ook worden de eindscores van je hillclimber geplot. Deze worden opgeslagen in je project directory:
+```
+parent/code/autorun_hillclimber/mijn_eerste_project/
+```
+
+Ook vind je hier een submap genaamd 'solutions'. Dit bevat de oplossing geproduceerd door elke run als een csv bestand. Neem eens een kijkje bij je project en zie hoe jouw beste oplossing eruit ziet!
 
 
 ## Manim
+> CSV bestanden spreken niet tot de verbeelding. Tijd om je beste oplossing te visualiseren!
+
 Run het volgende:
 ```
-python3 main3.py
+python3 parent/main3.py
 ```
 
 # Structuur
@@ -78,7 +89,7 @@ De hierop volgende lijst beschrijft de belangrijkste mappen en files in het proj
 - **/parent/code**: bevat alle code van dit project
   - **/parent/code/algorithms**: bevat de code voor algoritmes
   - **/parent/code/classes**: bevat de benodigde classes voor deze case. Dit is de "bodemlaag" van onze code, dus wellicht minder interessant voor een gebruiker.
-  - **/parent/code/experiments** bevat code om te experimenteren en de verdeling van de oplossingsruimte beter te leren kennen
+  - **/parent/code/experiments** bevat code om te experimenteren en de verdeling van de oplossingsruimte beter te leren kennen. Plots word
   - **/parent/code/visualisation**: bevat de manim code voor het visualiseren van een oplossing
   - **/parent/code/tests** bevat een aantal tests voor de code in ons project. Ik zou hier niet te lang blijven rondhangen, dat hebben wij ook niet gedaan.
 - **/parent/data**: bevat de verschillende databestanden. Er zijn twee "kaarten": "Holland" en "Nationaal", met elk eigen stations.
@@ -90,7 +101,7 @@ Wij hebben eigenlijk twee algoritmes geschreven, maar in beide zijn er veel argu
 TODO
 
 ### Hillclimber
-Om het Hillclimber-algoritme te gebruiken, volg je deze stappen:
+Om het Hillclimber-algoritme zelf met de hand te runnen, volg je deze stappen:
 
 1. Zorg er eerst voor dat je een lijst routes hebt. Je kan deze óf zelf met de hand maken, óf het Random-Greedy algoritme eerst uitvoeren en daar de output van nemen (run):
 ```
@@ -132,9 +143,10 @@ Dit is een klasse. Gegeven een algoritme en de kaart ("Holland" of "Nationaal) k
 ### Starting bins
 Ook dit is een klasse. De Sort_Starting klasse is ontworpen om een verzameling stations te sorteren op basis van hun connectiviteit. Deze klasse maakt gebruik van combinaties van stations en verdeelt deze in bins (bakken) afhankelijk van hun connectiviteitsgraad.
 
-### Statistics
-Hier wordt het echt leuk. Dit bestand bevat een verzameling functies voor het verwerken, opslaan, lezen en visualiseren van scores en oplossingen gegenereerd door verschillende algoritmen. Hier volgt een korte uitleg van de belangrijkste functies:
+## Helpers
+Hier wordt het echt leuk. Deze map bevat een verzameling functies voor het verwerken, opslaan, lezen en visualiseren van scores en oplossingen gegenereerd door verschillende algoritmen. Hier volgt een korte uitleg van de belangrijkste functies:
 
+### csv_helpers
 1. write_scores_to_csv
 Schrijft een numpy array met scores naar een CSV-bestand.
 
@@ -153,9 +165,11 @@ Schrijft een lijst van Route-objecten naar een CSV-bestand.
 6. read_solution_from_csv
 Leest een oplossing voor het RailNL-probleem van een CSV-bestand en geeft een lijst van Route-objecten.
 
+### statistics
 7. calculate_p_value
 Berekent de p-waarde om te bepalen of het verschil tussen twee sets scores significant is.
 
+### plots
 8. plot_scores
 Maakt een histogram van de scores van 1 tot 4 samples.
 
