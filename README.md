@@ -252,6 +252,9 @@ Maakt een histogram van de scores van 1 tot 4 samples.
 2. `logplot_autorun_hillclimber`:
 Maakt een plot om een autorun_hillclimber logbestand samen te vatten.
 
+3. `plot_endscores_autorun_hillclimber`:
+Visualiseert eindscores van een autorun_hillclimber project
+
 ### score
 1. `calculate_score`:
 Berekent de score gegeven een lijst routes en en de kaartnaam. ("Holland" of "Nationaal")
