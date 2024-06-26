@@ -86,10 +86,16 @@ De hierop volgende lijst beschrijft de belangrijkste mappen en files in het proj
 
 - **/parent/code**: bevat alle code van dit project
   - **/parent/code/algorithms**: bevat de code voor algoritmes
+  - **/parent/code/autorun_hillclimber**: bevat autorun_hillclimber projecten + de autorun_hillclimber module zelf.
   - **/parent/code/classes**: bevat de benodigde classes voor deze case. Dit is de "bodemlaag" van onze code, dus wellicht minder interessant voor een gebruiker.
-  - **/parent/code/experiments** bevat code om te experimenteren en de verdeling van de oplossingsruimte beter te leren kennen. Plots word
-  - **/parent/code/visualisation**: bevat de manim code voor het visualiseren van een oplossing
+  - **/parent/code/experiments** bevat code om te experimenteren en de verdeling van de oplossingsruimte beter te leren kennen.
+      - **plots** is de standaardmap voor plots van experimenten, wordt gebruikt door de `plot_scores` functie
+      - **results** is de standaardmap voor resulaten van experimenten
+  - **/parent/code/helpers** bevat allerlei overige hulpfuncties
   - **/parent/code/tests** bevat een aantal tests voor de code in ons project. Ik zou hier niet te lang blijven rondhangen, dat hebben wij ook niet gedaan.
+  - **/parent/code/visualisation**: bevat de manim code voor het visualiseren van een oplossing
+    - **media** is de output map voor manim visualisaties
+  
 - **/parent/data**: bevat de verschillende databestanden. Er zijn twee "kaarten": "Holland" en "Nationaal", met elk eigen stations.
 - **/parent/docs**: bevat een schematische weergave van ons project, voor wat extra overzicht.
 
