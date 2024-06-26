@@ -14,6 +14,7 @@ from parent.code.helpers.score import calculate_score
 # Default directory for all functions in this file, can be changed if needed
 # Don't delete! Used by all functions in this file.
 experiments_root_dir = "parent/code/experiments"
+code_root_dir = "parent/code"
 
 def write_scores_to_csv(scores: "np.ndarray", 
                         filename: str, 
@@ -51,7 +52,6 @@ def write_scores_to_csv(scores: "np.ndarray",
         if not filename.endswith(".csv"):
             filename += ".csv"
 
-
         np.savetxt(f"{csv_results_dir}{filename}", 
                    scores, delimiter = ",")
 
@@ -85,7 +85,6 @@ def read_scores_from_csv(filename: str,
     # Add .csv extension if not present
     if not filename.endswith(".csv"):
         filename += ".csv"
-
 
     # Read scores from CSV file
     scores = np.loadtxt(f"{csv_results_dir}{filename}", delimiter=",")

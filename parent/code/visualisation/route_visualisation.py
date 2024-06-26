@@ -96,7 +96,7 @@ class RouteVisualisationScene(BaseScene):
         self.output 
         """
 
-        self.output = read_solution_from_csv(self.filepath, file_path = "for_manim", map = self.map)
+        self.output = read_solution_from_csv(filename = self.filepath, file_path = "custom_file_path", map = self.map)
         
         # Save number of routes for later reference
         self.n_routes = len(self.output)
@@ -155,10 +155,18 @@ class RouteVisualisationScene(BaseScene):
 
         Pre
         ---
-        Route input is a list of route objects.  
+        Route input is a list of route objects. Color is a manim color 
+        contained in self.colors.
+
+        Post
+        ---
+        Calls upon set_color() to set color of line in route. Shifts train 
+        by playing a shifting animation.  
         """ 
 
+        # Variable to check if train needs to be made
         start_route = 0
+
         for connection in route:
             time = connection[2]
 
@@ -180,8 +188,22 @@ class RouteVisualisationScene(BaseScene):
             shift = self.train.animate.move_to(dot_end.get_center())
             self.play(shift, run_time = 0.4, rate_func = m.smooth)
 
-    # Set color depending on if already colored
     def set_color(self, line: m.Line, color: m.manim_colors) -> None:
+        """
+        Colors route a color or calls upon set_multiple_colors.
+
+        Pre
+        ---
+        Line is a line object corresponding to an existing connection in 
+        RailNL(self.map). Color is a manim color contained in self.colors.
+
+        Post
+        ---
+        Sets color of line uniformly if line is not already colored by 
+        playing coloring animation.
+        Calls upon set_multiple_color if color is added to an already
+        colored line.
+        """
 
         # If line not yet colored just color
         if not line in self.line_colors_dict:
@@ -195,8 +217,21 @@ class RouteVisualisationScene(BaseScene):
                 colors.append(color)
                 self.set_multiple_colors(line, colors)
 
-    # Set line with multiple colors 
     def set_multiple_colors(self, line: m.Line, colors: list) -> None:
+        """
+        Colors line with multiple colors using line_colors_dict.
+
+        Pre
+        ---
+        Line is a line object corresponding to an existing connection in 
+        RailNL(self.map). Color is a manim color contained in self.colors.
+
+        Post
+        ---
+        Plays an animation transforming an already colored line to a 
+        line with an additional color by creating several uniquely colored
+        line segments.
+        """
 
         # Find start and end brutally
         starting_point = line.start
@@ -231,29 +266,63 @@ class RouteVisualisationScene(BaseScene):
         self.play(m.Transform(line, new_line), run_time = 0.1)
 
     def is_video(self):
+        """
+        Method to use in construct() to create either image or video.
+        """
         return True
     
     def place_labels(self):
+        """
+        Places RailNL and score labels within scene.
+
+        Pre
+        ---
+        Self.map and self.output are initialized. 
+        Camera is properly positioned.
+
+        Post
+        ---
+        Places a descriptive and score label in the left bottom corner
+        of the animation.
+
+        """
+
+        # Create a descriptive and score label from map and output.
         label = m.Text(f"RailNL - {self.map}")
         score = m.Text(f"Score = {calculate_score(self.output, self.map)}")
 
+        # Get camera size to place labels
         position = self.camera.frame.get_center()
         height = self.camera.frame.get_height()
         width = self.camera.frame.get_width()
 
+        # Move labels to bottom left corner
         label.move_to(position)
         score.move_to(position)
 
+        # Scale labels
         label.scale(self.label_scale)
         score.scale(self.label_scale)
 
+        # Move labels apart from each other
         label.shift(m.LEFT * width * 0.25 - m.UP * height * 0.25)
         score.shift(m.LEFT * width * 0.25 - m.UP * height * 0.3)
 
+        # Add labels to screen
         self.add(label)
         self.add(score)
 
     def construct(self):
+        """
+        Main method called upon by Super.__init__().
+
+        Post
+        ---
+        Adds dots, lines and labels to frame. Plays video showing 
+        moving train and dynamically coloring lines in algorithm output.
+
+        """
+
         self.add(self.dots, self.connections)
         self.place_labels()
         
