@@ -37,7 +37,10 @@ conda install --file requirements.txt
 ```
 
 # Aan de slag
-## Experimentatie
+
+We nemen je mee langs de hoogtepunten van ons project aan de hand van drie onderdelen:
+
+## 1. Experimentatie
 Als je een idee wilt krijgen van hoe de oplossingsruimte van dit probleem eruit ziet,
 kun je daarvoor ons experimentgerichte algoritme gebruiken: `Random_Greedy`. We hebben een voorbeeldje klaargezet. Run het volgende:
 
@@ -51,7 +54,7 @@ parent/code/experiments/plots/Heuristics matter: Random vs Greedy algorithm.pdf
 ```
 Het interpreteren van de resultaten laten we aan de lezer, maar het moge duidelijk zijn dat wij heuristieken belangrijk vinden bij het oplossen van dit probleem.
 
-## Autorun Hillclimber
+## 2. Autorun Hillclimber
 > Dit duurt ietjes langer, maar het is het waard!
 
 Om de beste oplossing te vinden voor ons probleem, hebben we een iteratief algoritme geïmplementeerd: de Hillclimber. Daarover later meer. We hebben met schade en schande geleerd welke instellingen optimale resultaten genereren, en vervolgens wilden we even achterover gaan zitten. Daarvoor is `autorun_hillclimber`. Deze functie runt het hillclimber algoritme met optimale instellingen automatisch N keer, en slaat de resultaten op in een door de gebruiker gekozen projectmap.
@@ -70,7 +73,7 @@ parent/code/autorun_hillclimber/mijn_eerste_project/
 Ook vind je hier een submap genaamd 'solutions'. Dit bevat de oplossing geproduceerd door elke run als een csv bestand. Neem eens een kijkje bij je project en zie hoe jouw beste oplossing eruit ziet!
 
 
-## Manim
+## 3. Manim
 Alle visualisaties zijn gemaakt met de Mathematical Animation library Manim. 
 Er zijn drie verschillende visualisaties voor zowel Holland als Nationaal. 
 Er is een basale kaartvisualisatie, een video die een route visualiseert op de 
@@ -139,37 +142,45 @@ De hierop volgende lijst beschrijft de belangrijkste mappen en files in het proj
 - **/parent/data**: bevat de verschillende databestanden. Er zijn twee "kaarten": "Holland" en "Nationaal", met elk eigen stations.
 - **/parent/docs**: bevat een schematische weergave van ons project, voor wat extra overzicht.
 
-# Extra uitleg per onderdeel
+# Documentatie
 
 ## Algoritmes
-Wij hebben eigenlijk twee algoritmes geschreven, maar in beide zijn er veel argumenten te variëren of aan/uit te zetten.
+> Wij hebben twee algoritmes geschreven, in beide zijn er veel argumenten te variëren of aan/uit te zetten.
+
 ### Random_Greedy
 Het Random_Greedy algoritme is onze experimenten-toolbox. Afhankelijk van de opties die je kiest is hij random, greedy, anderszijds deterministisch of iets ertussenin. Je kunt verschillende varianten van het algoritme runnen door de parameters van de run-method aan te passen. 
 
-Het runnen van Random_Greedy gaat in twee stappen: Om het Random_Greedy algoritme te gebruiken, moet je de klasse initialiseren met het gewenste kaartbereik en vervolgens de run methode aanroepen met de gewenste parameters. Hier is een voorbeeld:
+Het runnen van Random_Greedy gaat in twee stappen: Eerst initialiseer je de klasse met het gewenste kaartbereik en vervolgens roep je de run method aan met de gewenste parameters. Hier is een voorbeeld:
 
-1. Initialiseer het algoritme, met als argument de kaart
+1. Initialiseer het algoritme voor de kleinere kaart: Holland
 ```
-algoritme = Random_Greedy("Holland")
-```
-2. Roep de run methode aan met de gewenste parameters. 
+from parent.code.algorithms.random_greedy import Random_Greedy
 
-Bijvoorbeeld, voor een random algoritme op de kaart "Holland":
-```
-random_routes = algoritme.run(next_connection_choice="random", 
-                 starting_stations="fully_random", 
-                 final_number_of_routes=7, 
-                 route_time_limit=120)
-```
-Of voor een greedy algorithme op de kaart "Holland":
-```
-greedy_routes = algoritme.run(next_connection_choice="greedy", 
-                 starting_stations="fully_random", 
-                 final_number_of_routes=7, 
-                 route_time_limit=120)
+random_greedy = Random_Greedy("Holland")
 ```
 
-Zoals je kunt zien zijn er nog veel meer argumenten die je aan kunt passen. Hoe dit precies werkt staat duidelijk beschreven in de docstring.
+2. Run het algoritme met gewenste parameters (dit zijn er een hoop; dit voorbeeld is een heuristiek die we als Hillclimber start state gebruiken voor Holland):
+```
+solution = random_greedy.run(starting_stations = "original_stations_only_hard", final_number_of_routes = 4)
+```
+Of voor een greedy algorithme met het maximale aantal routes en maximale lengte per route:
+```
+solution = random_greedy.run(next_connection_choice="greedy", 
+                            starting_stations="fully_random", 
+                            final_number_of_routes=7, 
+                            route_time_limit=120)
+```
+
+3. Sla de gegenereerde oplossing op
+```
+from parent.code.helpers.csv_helpers import write_solution_to_csv
+
+write_solution_to_csv(solution, filename = "Random_Greedy_solution_1.csv", map = "Holland")
+```
+
+4. De oplossing staat nu in `parent/code/experiments/solutions`. 
+
+> De run method van Random_Greedy bevat nog veel meer opties, die uitgebreid staan beschreven in de docstring van de method. 
 
 
 ### Hillclimber
