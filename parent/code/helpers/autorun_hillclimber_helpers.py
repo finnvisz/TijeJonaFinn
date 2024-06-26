@@ -21,11 +21,13 @@ def combine_projects(project_names: tuple[str]):
 
     - project_names: tuple of strings, names of the projects to combine.
     """
-    
-    assert len(project_names) > 1, "Need at least two projects to combine."
-
     # Set the root directory where the projects are stored
     root_dir = "parent/code/autorun_hillclimber"
+
+    # Check input
+    assert len(project_names) > 1, "Need at least two projects to combine."
+    # Assert that the project directories exist
+    assert all([os.path.exists(f"{root_dir}/{project_name}") for project_name in project_names]), "Not all projects exist."
 
     # Combine log files
     combine_logfiles(project_names, root_dir)
@@ -85,6 +87,15 @@ def combine_logfiles(project_names: tuple[str],
 
     print(f"Combined log file has {df_log_combined.shape[1]} columns.")
 
+    # Rename the logfiles that were integrated with the first to make
+    # room for new data in these duplicate projects
+    for project_name in project_names[1:]:
+        os.rename(f"{root_dir}/{project_name}/log.csv",
+                    f"{root_dir}/{project_name}/log_already_merged.csv")
+        if os.path.exists(f"{root_dir}/{project_name}/log_aggregated.csv"):
+            os.rename(f"{root_dir}/{project_name}/log_aggregated.csv",
+                        f"{root_dir}/{project_name}/log_aggregated_already_merged.csv")
+
 def combine_endscores(project_names: tuple[str], 
                       root_dir: str = "parent/code/autorun_hillclimber"
                       ) -> None:
@@ -120,6 +131,12 @@ def combine_endscores(project_names: tuple[str],
         print(f"End scores file from '{project_names[i]}' had {list_of_np_arrays[i].size} rows.")
 
     print(f"Combined end_scores file has {end_scores_combined.size} rows.")
+
+    # Rename the end_scores files that were integrated with the first to make
+    # room for new data in these duplicate projects
+    for project_name in project_names[1:]:
+        os.rename(f"{root_dir}/{project_name}/end_scores.csv",
+                    f"{root_dir}/{project_name}/end_scores_already_merged.csv")
 
 def combine_solution_directories(project_names: tuple[str], 
                                  root_dir: str = "parent/code/autorun_hillclimber"
@@ -197,3 +214,11 @@ def combine_solution_directories(project_names: tuple[str],
 
     n_solutions_combined = len(os.listdir(f"{root_dir}/{project_names[0]}/solutions"))
     print(f"Combined solution directory has {n_solutions_combined} solutions.")
+
+    # Rename the solutions directories that were integrated with the first to make
+    # room for new data in these duplicate projects
+    for project_name in project_names[1:]:
+        os.rename(f"{root_dir}/{project_name}/solutions",
+                    f"{root_dir}/{project_name}/solutions_already_merged")
+        
+        os.mkdir(f"{root_dir}/{project_name}/solutions")
