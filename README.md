@@ -192,7 +192,12 @@ In de map experimetns zitten drie python bestanden.
 Dit is een klasse. Gegeven een algoritme en de kaart ("Holland" of "Nationaal) kan je een algoritme een aantal keer runnen. Elke run berekent het de score van de lijnvoering. Daarna berekent het meteen de gemiddelde score en geeft het een lijst met alle scores aan je terug.
 
 ### Starting bins
-Ook dit is een klasse. De Sort_Starting klasse is ontworpen om een verzameling stations te sorteren op basis van hun connectiviteit. Deze klasse maakt gebruik van combinaties van stations en verdeelt deze in bins (bakken) afhankelijk van hun connectiviteitsgraad.
+Ook dit is een klasse. De Sort_Starting klasse is ontworpen om een verzameling stations te sorteren op basis van hun connectiviteit. Deze klasse maakt gebruik van combinaties van stations en verdeelt deze in bins (bakken) afhankelijk van hun connectiviteitsgraad. Hiermee probeerden we verschillende startstations te vergelijken voor Random_Greedy, maar hier is uiteindelijk geen concrete heuristiek uitgekomen.
+
+
+## Autorun voor Hillclimber
+Deze functie is bewust zo simpel mogelijk gehouden. Het idee is dat Hillclimber al perfect is afgesteld, dus die details zijn allemaal niet toegankelijk vanuit de argumenten van autorun_hillclimber. Er zijn 4 argumenten:
+- ignore
 
 ## Helpers
 Hier wordt het echt leuk. Deze map bevat een verzameling functies voor het verwerken, opslaan, lezen en visualiseren van scores en oplossingen gegenereerd door verschillende algoritmen. Hier volgt een korte uitleg van de belangrijkste modules:
