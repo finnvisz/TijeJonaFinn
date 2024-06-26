@@ -225,10 +225,6 @@ Schrijft een lijst van Route-objecten naar een CSV-bestand.
 6. read_solution_from_csv
 Leest een oplossing voor het RailNL-probleem van een CSV-bestand en geeft een lijst van Route-objecten.
 
-### statistics
-7. calculate_p_value
-Berekent de p-waarde om te bepalen of het verschil tussen twee sets scores significant is.
-
 ### plots
 1. plot_scores
 Maakt een histogram van de scores van 1 tot 4 samples.
