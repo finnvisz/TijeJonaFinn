@@ -78,7 +78,7 @@ Er zijn drie verschillende visualisaties voor zowel Holland als Nationaal.
 Er is een basale kaartvisualisatie, een video die een route visualiseert op de 
 betreffende kaart, en ten slotte een afbeelding van de volledige route op de kaart.
 
-De visualisaties lezen af vanuit het bestand visualisation_settings.csv. Dit 
+De visualisaties lezen vanuit het bestand visualisation_settings.csv. Dit 
 bestand bevat één regel tekst in de vorm: kaart,relatief_pad. De kaart is
 Holland of Nationaal, en het relatieve pad wordt gegeven vanaf de code folder 
 naar een csv output file van de vorm zoals vereist in de opdrachtomschrijving. 
@@ -87,9 +87,21 @@ Na het creeëren van een output file door het runnen van een experiment, moet je
 het script set_manim_settings.py aanroepen om visualisation_settings.csv te
 overschrijven met de juiste settings. Bijvoorbeeld als volgt:
 
+```
+python3 set_manim_settings.py kaart relative_path_to_file/file.csv
+```
 
+Daarna kun je direct één van de drie visualisaties aanroepen op de door jou
+ingestelde kaart en lijnvoering. Het makkelijkste is om de VSCode manim sideview
+extension te downloaden. Alternatief kun je het ook gemakkelijk vanaf de 
+commandline runnen als volgt. 
 
-Run het volgende:
+```
+manim -pql script_to_animate.py class_to_animate
+```
+
+Run bijvoorbeeld het volgende script waarin ik bovenstaande heb geïmplementeerd.
+
 ```
 python3 parent/main3.py
 ```
