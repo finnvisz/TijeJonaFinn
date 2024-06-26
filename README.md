@@ -183,7 +183,10 @@ Er zijn parameters voor de hillclimber die je kan veranderen in de run-methode:
 Voor meer details, raadpleeg de documentatie en het commentaar binnen de klasse-definitie.
 
 ## Autorun voor Hillclimber
-TODO (Jona)
+De functie run_hillclimber initialiseert een startstaat met het Random_Greedy algoritme, voert het Hillclimber algoritme uit en geeft de oplossing.
+
+De functie autorun_hillclimber voert het Hillclimber algoritme meerdere keren uit. Kies zelf het aantal runs en de projectnaam, geef ook mee welke kaart je gebruikt en of het toegestaan is bestaande projecten te overschrijven. Hij slaat de resultaten automatisch op in een projectmap met de projectnaam.
+Het schrijft de oplossing en score van een run naar een CSV-bestand onder het kopje solutions in je projectmap, en alle tussentijdse scores naar een CSV bestand log.csv in je projectmap. Zie het kopje helpers - plots voor wat je met dit bestand kunt doen.
 
 ## Experiments
 In de map experimetns zitten drie python bestanden. 
