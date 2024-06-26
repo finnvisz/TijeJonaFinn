@@ -207,6 +207,7 @@ Er zijn 4 argumenten:
 - `project_name`: Projectnaam om gegenereerde data in op te slaan.
 - `maprange`: Kaart om het algoritme op te runnen ("Holland" of "Nationaal"). De default is "Holland"
 - `allow_overwrite`: Standaard is het niet toegestaan om een projectnaam te kiezen die al in gebruik is, om het overschrijven / mixen van resultaten te voorkomen. Als je `allow_overwrite` op `True` zet is het kiezen van een bestaande projectnaam wel toegestaan, en worden nieuwe resultaten toegevoegd aan dit bestaande project.
+- `demo_mode`: Speciaal toegevoegd voor "Aan de slag" in deze README. Als `True` wordt elke run van het Hillclimber algoritme met maar 600 iteraties gerunt, als versnelde demonstratie van hoe het in het echt zou gaan.
 
 ### Over de data
 
