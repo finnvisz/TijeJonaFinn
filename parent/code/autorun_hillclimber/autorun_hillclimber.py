@@ -29,14 +29,14 @@ def run_hillclimber(maprange: str, project_dir: str, demo_mode: bool) -> list[Ro
         
     elif maprange == "Nationaal":
         # Random_Greedy parameters
-        final_number_of_routes = (10, 11, 12)
+        final_number_of_routes = (11, 12)
         route_time_limit = [180, 140, 160]
         
         # Hillclimber parameters
         iterations = 600000
-        cap = 20000
+        cap = 60000
         improve_routes = True
-        original_connections_only = False
+        original_connections_only = True
         
     # If demo mode is enabled, reduce the number of iterations drastically
     if demo_mode:
