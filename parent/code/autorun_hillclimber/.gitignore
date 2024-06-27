@@ -2,3 +2,5 @@
 # Make sure to make a manual backup of your log files
 log.csv
 log_aggregated.csv
+log_before_merge.csv
+log_already_merged.csv
